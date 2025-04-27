@@ -352,9 +352,12 @@ export default function BuyStock() {
                       <span className="font-medium">{parseInt(shares).toLocaleString()}</span>
                     </div>
                     <Separator className="my-3" />
-                    <div className="flex justify-between items-center text-lg font-bold">
-                      <span>Total Amount</span>
-                      <span className="text-primary">₹{(company?.currentPrice ? parseInt(shares) * parseFloat(company.currentPrice) : 0).toLocaleString()}</span>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Total Amount</span>
+                      <span className="text-primary">₹{(company?.currentPrice ? (parseInt(shares) * parseFloat(company.currentPrice)).toLocaleString('en-IN', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                      }) : '0.00')}</span>
                     </div>
                   </div>
                 </div>
