@@ -11,15 +11,29 @@ export default function ActivityHistory() {
   const { user } = useAuth();
   const [, setLocation] = useLocation();
 
-  const { data: activityData, isError } = useQuery({
+  const { data: activityData, isError, isLoading } = useQuery({
     queryKey: ['activity-history'],
     queryFn: async () => {
-      const response = await fetch('/api/user/activity-history');
+      const response = await fetch('/api/user/activity-history', {
+        credentials: 'include'
+      });
       if (!response.ok) throw new Error('Failed to fetch activity history');
       return response.json();
     },
-    enabled: !!user // Only run query if user is logged in
+    enabled: !!user
   });
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto py-6">
+        <Card>
+          <CardContent className="flex items-center justify-center py-10">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const handleDownloadPDF = async (type: string = 'all') => {
     try {

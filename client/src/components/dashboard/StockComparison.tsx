@@ -326,10 +326,11 @@ export function StockComparison({ className, initialCompanyIds = [] }: StockComp
         </div>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-col gap-4">
-          {selectedCompanyIds.length > 0 && (
-            <div className="flex items-start gap-4">
-              <div className="flex-1">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+          <div className="lg:col-span-3 space-y-4">
+            {selectedCompanyIds.length > 0 && (
+              <div className="flex items-start gap-4">
+                <div className="flex-1">
                 <Button 
                   onClick={generateInsights}
                   disabled={isGeneratingInsights || isLoading || isRefetching || selectedCompanyIds.length === 0}
@@ -458,7 +459,37 @@ export function StockComparison({ className, initialCompanyIds = [] }: StockComp
             </TabsContent>
           </Tabs>
         </div>
-        <div className="w-full md:w-1/4">
+        <div className="lg:col-span-1">
+          {!showAddSelect && selectedCompanyIds.length < 7 && (
+            <Button 
+              variant="outline"
+              onClick={() => setShowAddSelect(true)}
+              className="w-full mb-4"
+            >
+              <Plus className="h-4 w-4 mr-2" /> Add Stock
+            </Button>
+          )}
+          {showAddSelect && (
+            <Select onValueChange={handleAddCompany}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a stock" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Companies</SelectLabel>
+                  {filteredCompanies.map((company: Company) => (
+                    <SelectItem 
+                      key={company.id} 
+                      value={company.id.toString()}
+                      disabled={selectedCompanyIds.includes(company.id)}
+                    >
+                      {company.name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          )}
           {data?.companies?.length > 0 ? (
             <div className="border rounded-lg h-full overflow-hidden">
               <div className="bg-muted/30 px-4 py-2 border-b">
