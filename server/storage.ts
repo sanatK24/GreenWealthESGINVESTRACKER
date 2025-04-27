@@ -1,5 +1,7 @@
 import { db } from "@db";
 import { eq, desc, and } from "drizzle-orm";
+import fs from 'fs/promises';
+import path from 'path';
 import { 
   companies,
   sectors,
@@ -15,43 +17,80 @@ import {
   InsertStockPriceHistory
 } from "@shared/schema";
 
+async function readJsonFile(filename: string) {
+  try {
+    const filePath = path.join(process.cwd(), 'db-export', filename);
+    const data = await fs.readFile(filePath, 'utf-8');
+    return JSON.parse(data);
+  } catch (error) {
+    console.error(`Error reading ${filename}:`, error);
+    return null;
+  }
+}
+
+async function writeJsonFile(filename: string, data: any) {
+  try {
+    const filePath = path.join(process.cwd(), 'db-export', filename);
+    await fs.writeFile(filePath, JSON.stringify(data, null, 2));
+  } catch (error) {
+    console.error(`Error writing ${filename}:`, error);
+  }
+}
+
 // Companies
 export async function getCompanies(page = 1, limit = 5) {
   try {
     const offset = (page - 1) * limit;
-    const companiesData = await db.query.companies.findMany({
-      orderBy: [desc(companies.esgScore)],
-      limit,
-      offset,
-    });
-    
-    // Use a raw SQL count(*) query that will be interpreted correctly
-    const totalCount = await db.$client.query('SELECT COUNT(*) FROM companies');
-    
-    // Ensure we have valid count data
-    const total = totalCount && totalCount.rows && totalCount.rows[0] && totalCount.rows[0].count
-      ? parseInt(totalCount.rows[0].count)
-      : 0;
-    
-    return {
-      companies: companiesData,
-      pagination: {
-        total,
-        page,
+    try {
+      const companiesData = await db.query.companies.findMany({
+        orderBy: [desc(companies.esgScore)],
         limit,
-        from: total > 0 ? offset + 1 : 0,
-        to: Math.min(offset + limit, total),
-        hasNextPage: offset + limit < total,
-      }
-    };
+        offset,
+      });
+      
+      const totalCount = await db.$client.query('SELECT COUNT(*) FROM companies');
+      const total = totalCount?.rows?.[0]?.count ? parseInt(totalCount.rows[0].count) : 0;
+      
+      return {
+        companies: companiesData,
+        pagination: {
+          total,
+          page,
+          limit,
+          from: total > 0 ? offset + 1 : 0,
+          to: Math.min(offset + limit, total),
+          hasNextPage: offset + limit < total,
+        }
+      };
+    } catch (dbError) {
+      // Fallback to JSON file if database is unavailable
+      console.log("Database unavailable, falling back to JSON file");
+      const companiesData = await readJsonFile('companies.json');
+      if (!companiesData) throw new Error("JSON fallback failed");
+      
+      const total = companiesData.length;
+      const paginatedCompanies = companiesData.slice(offset, offset + limit);
+      
+      return {
+        companies: paginatedCompanies,
+        pagination: {
+          total,
+          page,
+          limit,
+          from: total > 0 ? offset + 1 : 0,
+          to: Math.min(offset + limit, total),
+          hasNextPage: offset + limit < total,
+        }
+      };
+    }
   } catch (error) {
     console.error("Error in getCompanies:", error);
     return {
       companies: [],
       pagination: {
         total: 0,
-        page: page,
-        limit: limit,
+        page,
+        limit,
         from: 0,
         to: 0,
         hasNextPage: false,
