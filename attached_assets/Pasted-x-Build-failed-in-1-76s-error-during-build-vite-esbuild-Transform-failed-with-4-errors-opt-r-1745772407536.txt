@@ -1,0 +1,44 @@
+x Build failed in 1.76s
+error during build:
+[vite:esbuild] Transform failed with 4 errors:
+/opt/render/project/src/client/src/components/dashboard/StockComparison.tsx:576:8: ERROR: Unexpected closing "CardContent" tag does not match opening "div" tag
+/opt/render/project/src/client/src/components/dashboard/StockComparison.tsx:577:6: ERROR: Unexpected closing "Card" tag does not match opening "CardContent" tag
+/opt/render/project/src/client/src/components/dashboard/StockComparison.tsx:579:0: ERROR: The character "}" is not valid inside a JSX element
+/opt/render/project/src/client/src/components/dashboard/StockComparison.tsx:579:1: ERROR: Unexpected end of file before a closing "Card" tag
+file: /opt/render/project/src/client/src/components/dashboard/StockComparison.tsx:576:8
+Unexpected closing "CardContent" tag does not match opening "div" tag
+574|            )}
+575|          </div>
+576|        </CardContent>
+   |          ^
+577|      </Card>
+578|    );
+Unexpected closing "Card" tag does not match opening "CardContent" tag
+575|          </div>
+576|        </CardContent>
+577|      </Card>
+   |        ^
+578|    );
+579|  }
+The character "}" is not valid inside a JSX element
+577|      </Card>
+578|    );
+579|  }
+   |  ^
+Unexpected end of file before a closing "Card" tag
+577|      </Card>
+578|    );
+579|  }
+   |   ^
+    at failureErrorWithLog (/opt/render/project/src/node_modules/vite/node_modules/esbuild/lib/main.js:1472:15)
+    at /opt/render/project/src/node_modules/vite/node_modules/esbuild/lib/main.js:755:50
+    at responseCallbacks.<computed> (/opt/render/project/src/node_modules/vite/node_modules/esbuild/lib/main.js:622:9)
+    at handleIncomingPacket (/opt/render/project/src/node_modules/vite/node_modules/esbuild/lib/main.js:677:12)
+    at Socket.readFromStdout (/opt/render/project/src/node_modules/vite/node_modules/esbuild/lib/main.js:600:7)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:189:23)
+==> Build failed 😞
+==> Common ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys
