@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "name": "Energy",
+    "esgScore": 78,
+    "createdAt": "2025-04-25T06:59:18.496Z",
+    "updatedAt": "2025-04-25T06:59:18.496Z"
+  },
+  {
+    "id": 2,
+    "name": "Technology",
+    "esgScore": 72,
+    "createdAt": "2025-04-25T06:59:18.566Z",
+    "updatedAt": "2025-04-25T06:59:18.566Z"
+  },
+  {
+    "id": 3,
+    "name": "Consumer",
+    "esgScore": 65,
+    "createdAt": "2025-04-25T06:59:18.631Z",
+    "updatedAt": "2025-04-25T06:59:18.631Z"
+  },
+  {
+    "id": 4,
+    "name": "Healthcare",
+    "esgScore": 82,
+    "createdAt": "2025-04-25T06:59:18.698Z",
+    "updatedAt": "2025-04-25T06:59:18.698Z"
+  },
+  {
+    "id": 5,
+    "name": "Materials",
+    "esgScore": 60,
+    "createdAt": "2025-04-25T06:59:18.764Z",
+    "updatedAt": "2025-04-25T06:59:18.764Z"
+  }
+]

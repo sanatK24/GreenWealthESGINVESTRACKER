@@ -29,24 +29,14 @@ export default function BuyStock() {
   const [showCertificate, setShowCertificate] = useState(false);
   const [paymentDetails, setPaymentDetails] = useState<any>(null);
 
-  // Get company data with improved error handling
+  // Get company data
   const { 
     data: company, 
-    isLoading: isLoadingCompany,
-    error: companyError
+    isLoading: isLoadingCompany
   } = useQuery({
     queryKey: ['/api/companies', params?.id],
     queryFn: getQueryFn({ on401: 'returnNull' }),
     enabled: !!params?.id,
-    retry: 1,
-    onError: (error) => {
-      console.error('Failed to fetch company data:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to load company details. Please try again.',
-        variant: 'destructive'
-      });
-    }
   });
 
   // Get current user
@@ -93,23 +83,20 @@ export default function BuyStock() {
     }
   });
 
-  // Calculate amount with improved validation
+  // Calculate amount whenever shares change
   useEffect(() => {
     if (company?.currentPrice) {
       const shareCount = parseInt(shares) || 0;
       const calculatedAmount = shareCount * parseFloat(company.currentPrice);
       setAmount(calculatedAmount.toFixed(2));
-    } else {
-      setAmount(''); // Clear amount if company data is not available
     }
   }, [shares, company]);
 
-  // Handle number of shares change with validation
+  // Handle number of shares change
   const handleSharesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Only allow positive numbers
     const value = e.target.value.replace(/[^0-9]/g, '');
-    if (value && parseInt(value) > 0) {
-      setShares(value);
-    }
+    setShares(value);
   };
 
   // Handle PayPal payment success
@@ -138,34 +125,10 @@ export default function BuyStock() {
   };
 
   // Show loading while fetching data
-  if (isLoadingCompany) {
+  if (isLoadingCompany || isLoadingUser) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
-          <p>Loading company details...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Handle company fetch error
-  if (companyError) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <Info className="h-6 w-6 text-red-500 mb-2" />
-          <p className="text-red-500">
-            Failed to load company details. Please try again.
-          </p>
-          <Button 
-            variant="outline"
-            onClick={() => window.location.reload()}
-            className="mt-4"
-          >
-            Refresh Page
-          </Button>
-        </div>
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -185,6 +148,14 @@ export default function BuyStock() {
     }, 0);
     return <div className="flex items-center justify-center min-h-screen">Redirecting to companies list...</div>;
   }
+
+  // Calculate ESG score style
+  const getScoreColor = (score: number) => {
+    if (score >= 80) return 'text-green-600';
+    if (score >= 60) return 'text-green-500';
+    if (score >= 40) return 'text-yellow-500';
+    return 'text-red-500';
+  };
 
   // If we have payment details, show the certificate
   if (showCertificate && paymentDetails) {

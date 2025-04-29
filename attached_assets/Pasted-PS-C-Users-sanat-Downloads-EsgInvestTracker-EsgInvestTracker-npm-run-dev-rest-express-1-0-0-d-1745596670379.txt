@@ -1,0 +1,248 @@
+PS C:\Users\sanat\Downloads\EsgInvestTracker\EsgInvestTracker> npm run dev
+
+> rest-express@1.0.0 dev
+> node --loader ts-node/esm --experimental-specifier-resolution=node ./server/index.ts
+
+(node:27424) ExperimentalWarning: Custom ESM Loaders is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27424) ExperimentalWarning: The Node.js specifier resolution flag is experimental. It could change or be removed at any time.
+C:\Users\sanat\Downloads\EsgInvestTracker\EsgInvestTracker\node_modules\ts-node\src\index.ts:859
+    return new TSError(diagnosticText, diagnosticCodes, diagnostics);
+           ^
+TSError: ⨯ Unable to compile TypeScript:
+server/routes.ts:109:27 - error TS2345: Argument of type '{}' is not assignable to parameter of type 'RequestData'.    
+  Property 'payment_source' is missing in type '{}' but required in type 'RequestData'.
+
+109       request.requestBody({});
+                              ~~
+
+  node_modules/@types/paypal__checkout-server-sdk/lib/orders/lib.d.ts:555:9
+    555         payment_source: PaymentSource;
+                ~~~~~~~~~~~~~~
+    'payment_source' is declared here.
+server/routes.ts:758:32 - error TS2339: Property 'id' does not exist on type 'User'.
+
+758       const userId = req.user?.id;
+                                   ~~
+server/routes.ts:775:20 - error TS2304: Cannot find name 'eq'.
+
+775             where: eq(userLoginRecords.userId, userId),
+                       ~~
+server/routes.ts:775:23 - error TS2552: Cannot find name 'userLoginRecords'. Did you mean 'loginRecords'?
+
+775             where: eq(userLoginRecords.userId, userId),
+                          ~~~~~~~~~~~~~~~~
+
+  server/routes.ts:768:11
+    768           loginRecords,
+                  ~~~~~~~~~~~~
+    'loginRecords' is declared here.
+server/routes.ts:776:23 - error TS2304: Cannot find name 'desc'.
+
+776             orderBy: [desc(userLoginRecords.loginTimestamp)]
+                          ~~~~
+server/routes.ts:776:28 - error TS2552: Cannot find name 'userLoginRecords'. Did you mean 'loginRecords'?
+
+776             orderBy: [desc(userLoginRecords.loginTimestamp)]
+                               ~~~~~~~~~~~~~~~~
+
+  server/routes.ts:768:11
+    768           loginRecords,
+                  ~~~~~~~~~~~~
+    'loginRecords' is declared here.
+server/routes.ts:779:20 - error TS2304: Cannot find name 'eq'.
+
+779             where: eq(userActions.userId, userId),
+                       ~~
+server/routes.ts:779:23 - error TS2304: Cannot find name 'userActions'.
+
+779             where: eq(userActions.userId, userId),
+                          ~~~~~~~~~~~
+server/routes.ts:780:23 - error TS2304: Cannot find name 'desc'.
+
+780             orderBy: [desc(userActions.timestamp)]
+                          ~~~~
+server/routes.ts:780:28 - error TS2304: Cannot find name 'userActions'.
+
+780             orderBy: [desc(userActions.timestamp)]
+                               ~~~~~~~~~~~
+server/routes.ts:783:20 - error TS2304: Cannot find name 'eq'.
+
+783             where: eq(orderHistory.userId, userId),
+                       ~~
+server/routes.ts:783:23 - error TS2304: Cannot find name 'orderHistory'.
+
+783             where: eq(orderHistory.userId, userId),
+                          ~~~~~~~~~~~~
+server/routes.ts:784:23 - error TS2304: Cannot find name 'desc'.
+
+784             orderBy: [desc(orderHistory.timestamp)]
+                          ~~~~
+server/routes.ts:784:28 - error TS2304: Cannot find name 'orderHistory'.
+
+784             orderBy: [desc(orderHistory.timestamp)]
+                               ~~~~~~~~~~~~
+server/routes.ts:787:20 - error TS2304: Cannot find name 'or'.
+
+787             where: or(
+                       ~~
+server/routes.ts:788:15 - error TS2304: Cannot find name 'eq'.
+
+788               eq(chatRecords.senderId, userId),
+                  ~~
+server/routes.ts:788:18 - error TS2304: Cannot find name 'chatRecords'.
+
+788               eq(chatRecords.senderId, userId),
+                     ~~~~~~~~~~~
+server/routes.ts:789:15 - error TS2304: Cannot find name 'eq'.
+
+789               eq(chatRecords.receiverId, userId)
+                  ~~
+server/routes.ts:789:18 - error TS2304: Cannot find name 'chatRecords'.
+
+789               eq(chatRecords.receiverId, userId)
+                     ~~~~~~~~~~~
+server/routes.ts:791:23 - error TS2304: Cannot find name 'desc'.
+
+791             orderBy: [desc(chatRecords.timestamp)]
+                          ~~~~
+server/routes.ts:791:28 - error TS2304: Cannot find name 'chatRecords'.
+
+791             orderBy: [desc(chatRecords.timestamp)]
+                               ~~~~~~~~~~~
+server/routes.ts:794:20 - error TS2304: Cannot find name 'eq'.
+
+794             where: eq(comparisonHistory.userId, userId),
+                       ~~
+server/routes.ts:794:23 - error TS2304: Cannot find name 'comparisonHistory'.
+
+794             where: eq(comparisonHistory.userId, userId),
+                          ~~~~~~~~~~~~~~~~~
+server/routes.ts:795:23 - error TS2304: Cannot find name 'desc'.
+
+795             orderBy: [desc(comparisonHistory.timestamp)]
+                          ~~~~
+server/routes.ts:795:28 - error TS2304: Cannot find name 'comparisonHistory'.
+
+795             orderBy: [desc(comparisonHistory.timestamp)]
+                               ~~~~~~~~~~~~~~~~~
+server/routes.ts:811:22 - error TS2304: Cannot find name 'eq'.
+
+811               where: eq(userLoginRecords.userId, userId),
+                         ~~
+server/routes.ts:811:25 - error TS2304: Cannot find name 'userLoginRecords'.
+
+811               where: eq(userLoginRecords.userId, userId),
+                            ~~~~~~~~~~~~~~~~
+server/routes.ts:812:25 - error TS2304: Cannot find name 'desc'.
+
+812               orderBy: [desc(userLoginRecords.loginTimestamp)]
+                            ~~~~
+server/routes.ts:812:30 - error TS2304: Cannot find name 'userLoginRecords'.
+
+812               orderBy: [desc(userLoginRecords.loginTimestamp)]
+                                 ~~~~~~~~~~~~~~~~
+server/routes.ts:817:22 - error TS2304: Cannot find name 'eq'.
+
+817               where: eq(userActions.userId, userId),
+                         ~~
+server/routes.ts:817:25 - error TS2304: Cannot find name 'userActions'.
+
+817               where: eq(userActions.userId, userId),
+                            ~~~~~~~~~~~
+server/routes.ts:818:25 - error TS2304: Cannot find name 'desc'.
+
+818               orderBy: [desc(userActions.timestamp)]
+                            ~~~~
+server/routes.ts:818:30 - error TS2304: Cannot find name 'userActions'.
+
+818               orderBy: [desc(userActions.timestamp)]
+                                 ~~~~~~~~~~~
+server/routes.ts:823:22 - error TS2304: Cannot find name 'eq'.
+
+823               where: eq(orderHistory.userId, userId),
+                         ~~
+server/routes.ts:823:25 - error TS2304: Cannot find name 'orderHistory'.
+
+823               where: eq(orderHistory.userId, userId),
+                            ~~~~~~~~~~~~
+server/routes.ts:824:25 - error TS2304: Cannot find name 'desc'.
+
+824               orderBy: [desc(orderHistory.timestamp)]
+                            ~~~~
+server/routes.ts:824:30 - error TS2304: Cannot find name 'orderHistory'.
+
+824               orderBy: [desc(orderHistory.timestamp)]
+                                 ~~~~~~~~~~~~
+server/routes.ts:829:22 - error TS2304: Cannot find name 'or'.
+
+829               where: or(
+                         ~~
+server/routes.ts:830:17 - error TS2304: Cannot find name 'eq'.
+
+830                 eq(chatRecords.senderId, userId),
+                    ~~
+server/routes.ts:830:20 - error TS2304: Cannot find name 'chatRecords'.
+
+830                 eq(chatRecords.senderId, userId),
+                       ~~~~~~~~~~~
+server/routes.ts:831:17 - error TS2304: Cannot find name 'eq'.
+
+831                 eq(chatRecords.receiverId, userId)
+                    ~~
+server/routes.ts:831:20 - error TS2304: Cannot find name 'chatRecords'.
+
+831                 eq(chatRecords.receiverId, userId)
+                       ~~~~~~~~~~~
+server/routes.ts:833:25 - error TS2304: Cannot find name 'desc'.
+
+833               orderBy: [desc(chatRecords.timestamp)]
+                            ~~~~
+server/routes.ts:833:30 - error TS2304: Cannot find name 'chatRecords'.
+
+833               orderBy: [desc(chatRecords.timestamp)]
+                                 ~~~~~~~~~~~
+server/routes.ts:838:22 - error TS2304: Cannot find name 'eq'.
+
+838               where: eq(comparisonHistory.userId, userId),
+                         ~~
+server/routes.ts:838:25 - error TS2304: Cannot find name 'comparisonHistory'.
+
+838               where: eq(comparisonHistory.userId, userId),
+                            ~~~~~~~~~~~~~~~~~
+server/routes.ts:839:25 - error TS2304: Cannot find name 'desc'.
+
+839               orderBy: [desc(comparisonHistory.timestamp)]
+                            ~~~~
+server/routes.ts:839:30 - error TS2304: Cannot find name 'comparisonHistory'.
+
+839               orderBy: [desc(comparisonHistory.timestamp)]
+                                 ~~~~~~~~~~~~~~~~~
+server/routes.ts:859:32 - error TS2339: Property 'id' does not exist on type 'User'.
+
+859       const userId = req.user?.id;
+                                   ~~
+
+    at createTSError (C:\Users\sanat\Downloads\EsgInvestTracker\EsgInvestTracker\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\sanat\Downloads\EsgInvestTracker\EsgInvestTracker\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\sanat\Downloads\EsgInvestTracker\EsgInvestTracker\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\sanat\Downloads\EsgInvestTracker\EsgInvestTracker\node_modules\ts-node\src\index.ts:1433:41)
+    at transformSource (C:\Users\sanat\Downloads\EsgInvestTracker\EsgInvestTracker\node_modules\ts-node\src\esm.ts:400:37)
+    at C:\Users\sanat\Downloads\EsgInvestTracker\EsgInvestTracker\node_modules\ts-node\src\esm.ts:278:53
+    at async addShortCircuitFlag (C:\Users\sanat\Downloads\EsgInvestTracker\EsgInvestTracker\node_modules\ts-node\src\esm.ts:409:15)
+    at async nextLoad (node:internal/modules/esm/loader:163:22)
+    at async ESMLoader.load (node:internal/modules/esm/loader:603:20)
+    at async ESMLoader.moduleProvider (node:internal/modules/esm/loader:457:11) {
+  diagnosticCodes: [
+    2345, 2339, 2304, 2552, 2304, 2552,
+    2304, 2304, 2304, 2304, 2304, 2304,
+    2304, 2304, 2304, 2304, 2304, 2304,
+    2304, 2304, 2304, 2304, 2304, 2304,
+    2304, 2304, 2304, 2304, 2304, 2304,
+    2304, 2304, 2304, 2304, 2304, 2304,
+    2304, 2304, 2304, 2304, 2304, 2304,
+    2304, 2304, 2304, 2304, 2304, 2304,
+    2339
+  ]
+}
+PS C:\Users\sanat\Downloads\EsgInvestTracker\EsgInvestTracker> 
