@@ -80,7 +80,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-export function StockComparison({ className, initialCompanyIds = [] }: StockComparisonProps) {
+export default function StockComparison({ className, initialCompanyIds = [] }: StockComparisonProps) {
   const [selectedTimeframe, setSelectedTimeframe] = useState<TimeframeOption>('1m');
   const [selectedCompanyIds, setSelectedCompanyIds] = useState<number[]>(initialCompanyIds);
   const [showAddSelect, setShowAddSelect] = useState(false);
