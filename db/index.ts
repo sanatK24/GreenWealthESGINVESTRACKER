@@ -1,4 +1,3 @@
-
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import ws from 'ws';
@@ -38,24 +37,37 @@ async function createJsonDb() {
 // Initialize database or fallback
 export const pool = useJsonFallback ? null : new Pool({
   connectionString: process.env.DATABASE_URL,
-  max: 10,
-  idleTimeoutMillis: 30000,
+  max: 5, // Reduced from 10 to avoid connection limits
+  idleTimeoutMillis: 10000, // Reduced from 30000 to 10000
   connectionTimeoutMillis: 5000,
   ssl: {
-    rejectUnauthorized: false
+    rejectUnauthorized: false,
+    // Add Neon-specific SSL options
+    ca: process.env.NEON_CA_CERT, // If using custom CA
+    checkServerIdentity: () => undefined // Disable hostname verification
   }
+});
+
+// Add connection handling
+pool.on('connect', (client) => {
+  console.log('Database connection established');
+});
+
+pool.on('error', (err, client) => {
+  console.error('Unexpected error on idle client', err);
+  process.exit(-1);
+});
+
+// Add cleanup on process exit
+process.on('SIGINT', () => {
+  pool.end().then(() => {
+    console.log('Database connection closed');
+    process.exit(0);
+  });
 });
 
 // Initialize drizzle with the pool or use JSON fallback
 export const db = useJsonFallback ? await createJsonDb() : drizzle(pool, { schema });
-
-// Add error handling for the pool
-if (pool) {
-  pool.on('error', (err) => {
-    console.error('Unexpected error on idle client', err);
-    process.exit(-1);
-  });
-}
 
 // Add connection testing function
 export async function testConnection() {
