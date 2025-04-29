@@ -3,7 +3,7 @@ import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StockPriceChart } from "@/components/dashboard/StockPriceChart";
-import { StockComparison } from "@/components/dashboard/StockComparison";
+import StockComparison from "@/components/dashboard/StockComparison";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, LucideInfo } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
