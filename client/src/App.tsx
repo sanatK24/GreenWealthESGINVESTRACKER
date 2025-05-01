@@ -1,3 +1,4 @@
+
 import React from "react";
 import { AuthProvider } from '@/hooks/use-auth';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -8,11 +9,10 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 import { Routes } from '@/routes';
 
-
 export default function App() {
   return (
-    <AuthProvider>
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
         <PaymentProvider>
           <ThemeProvider>
             <TooltipProvider>
@@ -21,7 +21,7 @@ export default function App() {
             </TooltipProvider>
           </ThemeProvider>
         </PaymentProvider>
-      </QueryClientProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
