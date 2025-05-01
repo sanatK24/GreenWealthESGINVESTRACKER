@@ -129,11 +129,10 @@ export async function insertCompany(data: InsertCompany) {
 export async function getCompanyESGBreakdown(limit = 5) {
   try {
     const result = await db.execute(
-      `SELECT name, environmental_score, social_score, governance_score 
+      `SELECT name, "environmentalScore", "socialScore", "governanceScore"
        FROM companies 
-       ORDER BY esg_score DESC 
-       LIMIT $1`,
-      [limit]
+       ORDER BY "esgScore" DESC 
+       LIMIT ${limit}`
     );
     const companiesData = result.rows;
 
