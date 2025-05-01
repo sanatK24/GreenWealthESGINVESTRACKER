@@ -21,15 +21,17 @@ const CompanyTable = () => {
   const [page, setPage] = useState(1);
   const { toast } = useToast();
 
-  const { data, error } = useQuery({
-    queryKey: ["/api/companies", page],
+  const { data: companyData, error: companyError } = useQuery({
+    queryKey: ["/api/company", company.id],
     queryFn: async () => {
-      const response = await fetch(`/api/companies?page=${page}`);
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      const response = await fetch(`/api/company/${company.id}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       return response.json();
     },
-    retry: 1,
-    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    enabled: !!company.id, // Only fetch if company.id is available
+    staleTime: Infinity, // Data is always fresh
   });
 
   if (error) {
