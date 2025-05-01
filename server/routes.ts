@@ -366,7 +366,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get(`${apiPrefix}/company-details/:id`, async (req: Request, res: Response) => {
     try {
       const idParam = req.params.id;
-      // Validate that id is a valid number
       if (!idParam || isNaN(Number(idParam))) {
         return res.status(400).json({ message: "Invalid company ID" });
       }
@@ -378,16 +377,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Company not found" });
       }
 
-      // Get current stock price (using 1d timeframe for current price)
-      const priceHistory = await storage.getStockPriceHistory(id, "1d");
-      const currentPrice = priceHistory?.prices ? JSON.parse(priceHistory.prices)[0]?.price : null;
-
-      // Get yearly trend (using 1y timeframe)
-      const yearlyHistory = await storage.getStockPriceHistory(id, "1y");
-      const yearlyPrices = yearlyHistory?.prices ? JSON.parse(yearlyHistory.prices) : [];
-      const yearlyTrend = yearlyPrices.length > 1 
-        ? ((yearlyPrices[0].price - yearlyPrices[yearlyPrices.length - 1].price) / yearlyPrices[yearlyPrices.length - 1].price * 100).toFixed(2)
-        : 0;
+      // Use the currentPrice directly from the companies table
+      const currentPrice = company.currentPrice || "N/A";
+      const yearlyTrend = company.yearlyTrend || "N/A";
 
       res.json({
         ...company,

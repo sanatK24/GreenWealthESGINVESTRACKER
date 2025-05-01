@@ -27,7 +27,7 @@ const BuyStockPage = () => {
   });
 
   useEffect(() => {
-    if (data?.currentPrice) {
+    if (data?.currentPrice && data.currentPrice !== "N/A") {
       const shareCount = parseInt(shares) || 0;
       const calculatedAmount = shareCount * parseFloat(data.currentPrice);
       setAmount(calculatedAmount.toFixed(2));
@@ -95,7 +95,7 @@ const BuyStockPage = () => {
             <div>
               <CardTitle>{data.name}</CardTitle>
               <p className="text-sm text-muted-foreground">
-                Current Price: ₹{data.currentPrice}
+                Current Price: ₹{data.currentPrice === "N/A" ? "N/A" : data.currentPrice}
               </p>
             </div>
             <div className="flex gap-2">
