@@ -790,15 +790,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const id = parseInt(idParam);
       const buyStockData = await storage.getBuyStockData(id);
-
       if (!buyStockData) {
-        return res.status(404).json({ message: "No buy stock data found" });
+        return res.status(404).json({ error: "Buy stock data not found" });
       }
 
-      res.json({
-        ...buyStockData,
-        minInvestment: 1000,
-        maxInvestment: 1000000
+      // Get company data
+      const company = await storage.getCompanyById(id);
+      if (!company) {
+        return res.status(404).json({ error: "Company not found" });
+      }
+
+      return res.json({
+        id: company.id,
+        name: company.name,
+        ticker: company.ticker,
+        sector: company.sector,
+        esgScore: company.esgScore,
+        environmentalScore: company.environmentalScore,
+        socialScore: company.socialScore,
+        governanceScore: company.governanceScore,
+        yearlyTrend: company.yearlyTrend,
+        currentPrice: parseFloat(company.currentPrice),
+        marketCap: parseFloat(company.marketCap),
+        yearHigh: parseFloat(company.yearHigh),
+        yearLow: parseFloat(company.yearLow),
+        dividendYield: company.dividendYield,
+        peRatio: company.peRatio,
+        description: company.description,
+        buyStockData: {
+          currentPrice: buyStockData.currentPrice,
+          marketCap: buyStockData.marketCap,
+          weekHigh52: buyStockData.weekHigh52,
+          weekLow52: buyStockData.weekLow52,
+          yearlyTrend: buyStockData.yearlyTrend,
+          minInvestment: buyStockData.minInvestment,
+          maxInvestment: buyStockData.maxInvestment,
+        },
       });
     } catch (error) {
       console.error("Error fetching buy stock data:", error);

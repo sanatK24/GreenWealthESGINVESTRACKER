@@ -425,11 +425,13 @@ export async function insertStockPriceHistory(data: InsertStockPriceHistory) {
 // Buy Stock Data Functions
 export async function getBuyStockData(companyId: number) {
   try {
-    const result = await db.execute(
-      `SELECT * FROM buy_stock_data WHERE company_id = $1 ORDER BY updated_at DESC LIMIT 1`,
-      [companyId]
-    );
-    return result.rows?.[0];
+    const result = await db
+      .select()
+      .from(buyStockData)
+      .where(eq(buyStockData.companyId, companyId))
+      .orderBy(desc(buyStockData.updatedAt))
+      .limit(1);
+    return result[0];
   } catch (error) {
     console.error("Error in getBuyStockData:", error);
     return null;
@@ -447,39 +449,27 @@ export async function updateBuyStockData(
   }
 ) {
   try {
-    const result = await db.execute(
-      `INSERT INTO buy_stock_data (
-        company_id,
-        current_price,
-        market_cap,
-        week_high_52,
-        week_low_52,
-        yearly_trend
-      ) VALUES (
-        $1,
-        $2,
-        $3,
-        $4,
-        $5,
-        $6
-      ) ON CONFLICT (company_id)
-      DO UPDATE SET
-        current_price = EXCLUDED.current_price,
-        market_cap = EXCLUDED.market_cap,
-        week_high_52 = EXCLUDED.week_high_52,
-        week_low_52 = EXCLUDED.week_low_52,
-        yearly_trend = EXCLUDED.yearly_trend,
-        updated_at = NOW()
-      RETURNING *`,
-      [
+    const result = await db
+      .insert(buyStockData)
+      .values({
         companyId,
-        data.currentPrice,
-        data.marketCap,
-        data.weekHigh52,
-        data.weekLow52,
-        data.yearlyTrend
-      ]
-    );
+        currentPrice: data.currentPrice,
+        marketCap: data.marketCap,
+        weekHigh52: data.weekHigh52,
+        weekLow52: data.weekLow52,
+        yearlyTrend: data.yearlyTrend,
+      })
+      .onConflictDoUpdate({
+        target: buyStockData.companyId,
+        set: {
+          currentPrice: data.currentPrice,
+          marketCap: data.marketCap,
+          weekHigh52: data.weekHigh52,
+          weekLow52: data.weekLow52,
+          yearlyTrend: data.yearlyTrend,
+          updatedAt: new Date(),
+        },
+      });
     return result.rows?.[0];
   } catch (error) {
     console.error("Error in updateBuyStockData:", error);
