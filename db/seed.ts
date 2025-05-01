@@ -349,8 +349,17 @@ async function seed() {
       new Map(companiesData.map(company => [company.ticker, company])).values()
     );
 
-    // Insert companies
+    // Get existing companies
+    const existingCompanies = await db.select().from(schema.companies);
+    const existingTickers = new Set(existingCompanies.map(c => c.ticker));
+
+    // Insert only new companies
     for (const company of uniqueCompanies) {
+      if (existingTickers.has(company.ticker)) {
+        console.log(`Company with ticker ${company.ticker} already exists, skipping`);
+        continue;
+      }
+      
       // Validate the company data before insertion
       const validatedCompany = insertCompanySchema.parse(company);
       await db.insert(schema.companies).values(validatedCompany);
