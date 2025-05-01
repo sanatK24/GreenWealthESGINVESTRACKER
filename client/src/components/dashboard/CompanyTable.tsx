@@ -169,7 +169,7 @@ const CompanyTable = () => {
             </Link>
           </div>
         </div>
-        </div>
+      </div>
       
     ));
   };
