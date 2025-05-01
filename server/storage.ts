@@ -106,9 +106,11 @@ export async function getCompanyById(id: number) {
   }
 
   try {
-    return await db.query.companies.findFirst({
-      where: eq(companies.id, id),
-    });
+    const result = await db.execute(
+      `SELECT * FROM companies WHERE id = $1 LIMIT 1`,
+      [id]
+    );
+    return result.rows[0];
   } catch (error) {
     console.error("Error in getCompanyById:", error);
     return null;
@@ -123,10 +125,14 @@ export async function insertCompany(data: InsertCompany) {
 // Company ESG Breakdown
 export async function getCompanyESGBreakdown(limit = 5) {
   try {
-    const companiesData = await db.query.companies.findMany({
-      orderBy: [desc(companies.esgScore)],
-      limit,
-    });
+    const result = await db.execute(
+      `SELECT name, environmental_score, social_score, governance_score 
+       FROM companies 
+       ORDER BY esg_score DESC 
+       LIMIT $1`,
+      [limit]
+    );
+    const companiesData = result.rows;
 
     return {
       companies: companiesData.map(company => ({
