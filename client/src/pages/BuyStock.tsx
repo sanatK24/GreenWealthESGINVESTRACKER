@@ -40,7 +40,6 @@ export default function BuyStock() {
     queryKey: ['/api/companies', params?.id],
     enabled: !!params?.id,
     refetchOnMount: false,
-    refetchOnWindowFocus: false,
     queryFn: async () => {
       if (!params?.id) {
         throw new Error('Company ID is required');
