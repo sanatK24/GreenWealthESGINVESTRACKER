@@ -43,22 +43,40 @@ export default function BuyStock() {
       const startTime = performance.now();
       const res = await fetch(`/api/companies/${params?.id}`);
       const endTime = performance.now();
-      console.log(`✅ Company data fetched in ${(endTime - startTime).toFixed(2)}ms`, { 
-        status: res.status,
-        ok: res.ok 
-      });
+      
       if (!res.ok) {
         console.error('❌ Failed to fetch company data', { status: res.status });
         throw new Error('Failed to fetch company data');
       }
+      
       const data = await res.json();
       console.log('📦 Company data:', data);
-      return data;
+      
+      // Ensure all required fields are present
+      return {
+        ...data,
+        name: data.name || 'N/A',
+        description: data.description || 'No description available',
+        esgScore: data.esgScore || 0,
+        environmentalScore: data.environmentalScore || 0,
+        socialScore: data.socialScore || 0,
+        governanceScore: data.governanceScore || 0,
+        currentPrice: data.currentPrice || 'N/A',
+        marketCap: data.marketCap || 'N/A',
+        yearHigh: data.yearHigh || 'N/A',
+        yearlyTrend: data.yearlyTrend || 0
+      };
     },
     enabled: !!params?.id,
-    retry: 1,
+    retry: 2,
+    refetchOnWindowFocus: false,
     onError: (error) => {
       console.error('❌ Company query error:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to fetch company data. Please try again.',
+        variant: 'destructive'
+      });
     }
   });
 
