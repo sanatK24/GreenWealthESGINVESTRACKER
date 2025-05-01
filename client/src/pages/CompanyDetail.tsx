@@ -20,7 +20,9 @@ const CompanyDetail = () => {
       if (!res.ok) throw new Error('Failed to fetch company data');
       return res.json();
     },
-    enabled: !!id
+    enabled: !!id,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false
   });
 
   if (isLoading) {
