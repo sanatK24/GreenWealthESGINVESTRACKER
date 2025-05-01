@@ -168,10 +168,23 @@ export const insertUserSchema = createInsertSchema(users).pick({
   password: true,
 });
 
-export const insertCompanySchema = createInsertSchema(companies).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
+export const insertCompanySchema = createInsertSchema(companies).pick({
+  name: true,
+  ticker: true,
+  sector: true,
+  industry: true,
+  esgScore: true,
+  environmentalScore: true,
+  socialScore: true,
+  governanceScore: true,
+  yearlyTrend: true,
+  currentPrice: true,
+  marketCap: true,
+  weekHigh52: true,
+  weekLow52: true,
+  dividendYield: true,
+  peRatio: true,
+  description: true,
 });
 
 export const insertSectorSchema = createInsertSchema(sectors).omit({

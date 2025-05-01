@@ -364,7 +364,9 @@ async function seed() {
 
     // Insert companies
     for (const company of companiesData) {
-      await db.insert(schema.companies).values(company);
+      // Validate the company data before insertion
+      const validatedCompany = insertCompanySchema.parse(company);
+      await db.insert(schema.companies).values(validatedCompany);
     }
 
     // Get all company IDs after inserting
