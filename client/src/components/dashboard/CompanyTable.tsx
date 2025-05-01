@@ -44,6 +44,8 @@ const CompanyTable = () => {
 
   if (!data) return null;
 
+  if (!data?.companies) return null;
+
   const companyQueries = useQueries({
     queries: data.companies.map((company: any) => ({
       queryKey: ["/api/company", company.id],
