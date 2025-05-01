@@ -39,37 +39,74 @@ export default function BuyStock() {
   const { data: company, error: companyError, isLoading: isLoadingCompany } = useQuery({
     queryKey: ['/api/companies', params?.id],
     queryFn: async () => {
-      console.log('🔄 Fetching company data...', { companyId: params?.id });
+      if (!params?.id) {
+        throw new Error('Company ID is required');
+      }
+
+      console.log('🔄 Fetching company data...', { 
+        companyId: params.id,
+        timestamp: new Date().toISOString()
+      });
+
       const startTime = performance.now();
-      const res = await fetch(`/api/companies/${params?.id}`);
+      const res = await fetch(`/api/companies/${params.id}`, {
+        headers: {
+          'Accept': 'application/json',
+          'Cache-Control': 'no-cache'
+        }
+      });
       const endTime = performance.now();
+      const duration = (endTime - startTime).toFixed(2);
+
+      console.log(`✨ API Response received in ${duration}ms`, { 
+        status: res.status,
+        ok: res.ok,
+        statusText: res.statusText
+      });
       
       if (!res.ok) {
-        console.error('❌ Failed to fetch company data', { status: res.status });
-        throw new Error('Failed to fetch company data');
+        const errorText = await res.text();
+        console.error('❌ Failed to fetch company data', { 
+          status: res.status,
+          error: errorText,
+          endpoint: `/api/companies/${params.id}`
+        });
+        throw new Error(`Failed to fetch company data: ${res.statusText}`);
       }
       
       const data = await res.json();
-      console.log('📦 Company data:', data);
+      console.log('📦 Company data received:', {
+        name: data.name,
+        ticker: data.ticker,
+        esgScore: data.esgScore,
+        currentPrice: data.currentPrice
+      });
       
-      // Ensure all required fields are present
+      // Validate and transform the data
       return {
         ...data,
+        id: data.id || params.id,
         name: data.name || 'N/A',
+        ticker: data.ticker || 'N/A',
         description: data.description || 'No description available',
-        esgScore: data.esgScore || 0,
-        environmentalScore: data.environmentalScore || 0,
-        socialScore: data.socialScore || 0,
-        governanceScore: data.governanceScore || 0,
+        sector: data.sector || 'N/A',
+        industry: data.industry || 'N/A',
+        esgScore: Number(data.esgScore) || 0,
+        environmentalScore: Number(data.environmentalScore) || 0,
+        socialScore: Number(data.socialScore) || 0,
+        governanceScore: Number(data.governanceScore) || 0,
         currentPrice: data.currentPrice || 'N/A',
         marketCap: data.marketCap || 'N/A',
         yearHigh: data.yearHigh || 'N/A',
-        yearlyTrend: data.yearlyTrend || 0
+        yearlyTrend: Number(data.yearlyTrend) || 0,
+        sustainabilityRating: data.sustainabilityRating || 'N/A',
+        esgRiskLevel: data.esgRiskLevel || 'Medium'
       };
     },
     enabled: !!params?.id,
     retry: 2,
     refetchOnWindowFocus: false,
+    staleTime: 30000, // Consider data fresh for 30 seconds
     onError: (error) => {
       console.error('❌ Company query error:', error);
       toast({
