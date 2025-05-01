@@ -38,6 +38,9 @@ export default function BuyStock() {
 
   const { data: company, error: companyError, isLoading: isLoadingCompany } = useQuery({
     queryKey: ['/api/companies', params?.id],
+    enabled: !!params?.id,
+    refetchOnMount: false, // Added to prevent initial refetch
+    refetchOnWindowFocus: false,
     queryFn: async () => {
       if (!params?.id) {
         throw new Error('Company ID is required');
@@ -65,7 +68,7 @@ export default function BuyStock() {
         });
         throw new Error('Failed to fetch company data');
       }
-      
+
       const data = await res.json();
       console.log('📦 Company data:', data);
 
@@ -89,7 +92,7 @@ export default function BuyStock() {
         yearHigh: data.yearHigh || 'N/A',
         yearlyTrend: Number(data.yearlyTrend) || 0
       };
-      
+
       // Validate and transform the data
       return {
         ...data,
@@ -111,7 +114,6 @@ export default function BuyStock() {
         esgRiskLevel: data.esgRiskLevel || 'Medium'
       };
     },
-    enabled: !!params?.id,
     retry: 2,
     refetchOnWindowFocus: false,
     staleTime: 30000, // Consider data fresh for 30 seconds

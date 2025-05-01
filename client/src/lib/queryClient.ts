@@ -34,12 +34,14 @@ export function getQueryFn(options: { on401?: 'returnNull' | 'throw' } = {}) {
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 1,
+      retry: false,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
-      staleTime: 5 * 60 * 1000, // 5 minutes
+      staleTime: 5 * 60 * 1000,
       refetchInterval: false,
       suspense: false,
+      refetchOnReconnect: false,
+      keepPreviousData: true
     },
   },
 });
