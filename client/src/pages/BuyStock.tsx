@@ -37,14 +37,14 @@ export default function BuyStock() {
   const [paymentMethod, setPaymentMethod] = useState('paypal');
 
   const { data: company, error: companyError, isLoading: isLoadingCompany } = useQuery({
-    queryKey: ['/api/companies', id],
+    queryKey: ['/api/company', id],
     enabled: !!id,
     refetchOnMount: false,
     queryFn: async () => {
       if (!id) {
         throw new Error('Company ID is required');
       }
-
+  
       try {
         const res = await fetch(`/api/companies/${id}`);
         if (!res.ok) {
@@ -57,7 +57,7 @@ export default function BuyStock() {
         return data;
       } catch (error) {
         console.error('Failed to fetch company:', error);
-        throw error;
+        const res = await fetch(`/api/company/${id}`);
       }
     },
     onError: (_error) => {
