@@ -344,8 +344,13 @@ async function seed() {
       },
     ];
 
+    // Filter out duplicates based on ticker
+    const uniqueCompanies = Array.from(
+      new Map(companiesData.map(company => [company.ticker, company])).values()
+    );
+
     // Insert companies
-    for (const company of companiesData) {
+    for (const company of uniqueCompanies) {
       // Validate the company data before insertion
       const validatedCompany = insertCompanySchema.parse(company);
       await db.insert(schema.companies).values(validatedCompany);
