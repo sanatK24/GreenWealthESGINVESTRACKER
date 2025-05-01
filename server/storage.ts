@@ -110,6 +110,9 @@ export async function getCompanyById(id: number) {
       `SELECT * FROM companies WHERE id = $1 LIMIT 1`,
       [id]
     );
+    if (!result.rows?.length) {
+      return null;
+    }
     return result.rows[0];
   } catch (error) {
     console.error("Error in getCompanyById:", error);
