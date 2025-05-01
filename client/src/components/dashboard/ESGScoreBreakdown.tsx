@@ -1,106 +1,65 @@
-import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useQuery } from "@tanstack/react-query";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, TooltipProps } from "recharts";
-import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
-import { useToast } from "@/hooks/use-toast";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getQueryFn } from "@/lib/queryClient";
 
-const ESGScoreBreakdown = () => {
-  const [viewOption, setViewOption] = useState<"top5" | "all">("top5");
-  const { toast } = useToast();
-  
-  const { data, isLoading } = useQuery({
-    queryKey: ["/api/companies/esg-breakdown"],
+export function ESGScoreBreakdown() {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['/api/companies/esg-breakdown'],
+    queryFn: getQueryFn(),
     staleTime: 60000,
-    refetchOnWindowFocus: false
+    retry: 2
   });
-  
-  // Handle errors with useEffect to avoid render loops
-  useEffect(() => {
-    if (isLoading === false && (!data || (data as any)?.error)) {
-      toast({
-        title: "Error",
-        description: "Failed to load ESG score breakdown",
-        variant: "destructive",
-      });
-    }
-  }, [data, isLoading, toast]);
 
-  // Custom tooltip for the chart
-  const CustomTooltip = ({ active, payload, label }: TooltipProps<ValueType, NameType>) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-white p-3 border border-slate-200 shadow-sm rounded-md">
-          <p className="font-medium">{label}</p>
-          {payload.map((entry, index) => (
-            <p key={index} style={{ color: entry.color }}>
-              {entry.name}: {entry.value}/100
-            </p>
-          ))}
-        </div>
-      );
-    }
-    return null;
-  };
-
-  const renderContent = () => {
-    if (isLoading) {
-      return (
-        <div className="h-[300px] flex items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-        </div>
-      );
-    }
-
-    if (!data?.companies || data.companies.length === 0) {
-      return (
-        <div className="h-[300px] flex items-center justify-center">
-          <p className="text-slate-500">No ESG score data available</p>
-        </div>
-      );
-    }
-
+  if (isLoading) {
     return (
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart
-          data={data.companies}
-          margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
-        >
-          <XAxis dataKey="name" />
-          <YAxis domain={[0, 100]} />
-          <Tooltip content={<CustomTooltip />} />
-          <Legend />
-          <Bar dataKey="environmental" stackId="a" fill="hsl(var(--chart-1))" name="Environmental" />
-          <Bar dataKey="social" stackId="a" fill="hsl(var(--chart-2))" name="Social" />
-          <Bar dataKey="governance" stackId="a" fill="hsl(var(--chart-3))" name="Governance" />
-        </BarChart>
-      </ResponsiveContainer>
+      <Card>
+        <CardHeader>
+          <CardTitle>ESG Score Breakdown</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div>Loading...</div>
+        </CardContent>
+      </Card>
     );
-  };
+  }
+
+  if (error) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>ESG Score Breakdown</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div>Error loading ESG data</div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>
-      <CardHeader className="px-4 py-3 border-b border-slate-200 flex flex-row items-center justify-between space-y-0">
-        <CardTitle className="text-base font-medium">ESG Score Breakdown</CardTitle>
-        <Select
-          value={viewOption}
-          onValueChange={(value) => setViewOption(value as "top5" | "all")}
-        >
-          <SelectTrigger className="w-[180px] h-8 text-sm bg-transparent border-none">
-            <SelectValue placeholder="View option" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="top5">Top 5 Holdings</SelectItem>
-            <SelectItem value="all">All Holdings</SelectItem>
-          </SelectContent>
-        </Select>
+      <CardHeader>
+        <CardTitle>ESG Score Breakdown</CardTitle>
       </CardHeader>
-      <CardContent className="p-4">
-        {renderContent()}
+      <CardContent>
+        <div className="space-y-4">
+          {data && data.scores ? (
+            <>
+              <div>
+                <h3>Environmental: {data.scores.environmental}</h3>
+              </div>
+              <div>
+                <h3>Social: {data.scores.social}</h3>
+              </div>
+              <div>
+                <h3>Governance: {data.scores.governance}</h3>
+              </div>
+            </>
+          ) : (
+            <div>No ESG data available</div>
+          )}
+        </div>
       </CardContent>
     </Card>
   );
-};
-
-export default ESGScoreBreakdown;
+}
