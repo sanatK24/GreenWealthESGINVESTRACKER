@@ -84,6 +84,15 @@ export default function BuyStock() {
     }
   });
 
+  const [minInvestment] = useState(1000);
+  const [maxInvestment] = useState(1000000);
+  const [formData, setFormData] = useState({
+    investor_name: user?.username || '',
+    investor_email: user?.email || '',
+    amount: 0,
+    payment_method: 'upi'
+  });
+
   // Format helpers
   const formatNumber = (num: number | string) => {
     if (!num) return 'N/A';
@@ -97,6 +106,16 @@ export default function BuyStock() {
       maximumFractionDigits: 2
     });
   };
+
+  useEffect(() => {
+    if (company?.currentPrice) {
+      const shareCount = parseInt(shares) || 0;
+      const calculatedAmount = shareCount * parseFloat(company.currentPrice);
+      if (calculatedAmount >= minInvestment && calculatedAmount <= maxInvestment) {
+        setFormData(prev => ({ ...prev, amount: calculatedAmount }));
+      }
+    }
+  }, [shares, company?.currentPrice, minInvestment, maxInvestment]);
 
   const formatPercentage = (num: number | string) => {
     if (!num) return 'N/A';
@@ -466,27 +485,68 @@ export default function BuyStock() {
                     <CircleDollarSign className="h-6 w-6 text-primary" />
                   </div>
 
-                  <div className="space-y-3">
-                    <div className="flex justify-between">
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
                       <span className="text-muted-foreground">Share Price</span>
-                      <span className="font-medium">
-                        {formatCurrency(company?.currentPrice)}
-                      </span>
+                      <span className="font-medium">{formatCurrency(company?.currentPrice)}</span>
                     </div>
-                    <div className="flex justify-between">
+                    
+                    <div className="flex justify-between items-center">
                       <span className="text-muted-foreground">Number of Shares</span>
-                      <span className="font-medium">
-                        {formatNumber(shares)}
+                      <div className="flex items-center gap-2">
+                        <Input
+                          type="number"
+                          value={shares}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            const numValue = parseInt(value);
+                            if (!isNaN(numValue) && company?.currentPrice) {
+                              const total = numValue * parseFloat(company.currentPrice);
+                              if (total >= minInvestment && total <= maxInvestment) {
+                                setShares(value);
+                              }
+                            }
+                          }}
+                          className="w-24 text-right"
+                        />
+                      </div>
+                    </div>
+
+                    <Slider
+                      min={minInvestment / (company?.currentPrice || 1)}
+                      max={maxInvestment / (company?.currentPrice || 1)}
+                      value={[parseInt(shares) || 0]}
+                      onValueChange={(value) => setShares(value[0].toString())}
+                      className="my-6"
+                    />
+
+                    <div className="text-center text-sm text-muted-foreground">
+                      Min Investment: {formatCurrency(minInvestment)}<br />
+                      Max Investment: {formatCurrency(maxInvestment)}
+                    </div>
+
+                    <Separator className="my-3" />
+                    
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Total Amount</span>
+                      <span className="text-xl font-bold text-primary">
+                        {formatCurrency(formData.amount)}
                       </span>
                     </div>
-                    <Separator className="my-3" />
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Total Amount</span>
-                      <span className="text-primary font-bold">
-                        {amount && parseFloat(amount) > 0 
-                          ? formatCurrency(amount) 
-                          : '₹0.00'}
-                      </span>
+
+                    <div className="mt-4">
+                      <Label>Payment Method</Label>
+                      <Select value={formData.payment_method} onValueChange={(value) => setFormData(prev => ({ ...prev, payment_method: value }))}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select payment method" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="upi">UPI</SelectItem>
+                          <SelectItem value="card">Credit/Debit Card</SelectItem>
+                          <SelectItem value="netbanking">Net Banking</SelectItem>
+                          <SelectItem value="paypal">PayPal</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
                 </div>
