@@ -491,7 +491,7 @@ export default function BuyStock() {
                       <span className="text-muted-foreground">Share Price</span>
                       <span className="font-medium">{formatCurrency(company?.currentPrice)}</span>
                     </div>
-                    
+
                     <div className="flex justify-between items-center">
                       <span className="text-muted-foreground">Number of Shares</span>
                       <div className="flex items-center gap-2">
@@ -527,11 +527,11 @@ export default function BuyStock() {
                     </div>
 
                     <Separator className="my-3" />
-                    
+
                     <div className="flex justify-between items-center">
                       <span className="text-muted-foreground">Total Amount</span>
                       <span className="text-xl font-bold text-primary">
-                        {formatCurrency(formData.amount)}
+                        {formatCurrency(company?.currentPrice ? (parseFloat(company.currentPrice) * parseInt(shares)).toFixed(2) : 'N/A')}
                       </span>
                     </div>
 
