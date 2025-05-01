@@ -139,12 +139,11 @@ const CompanyTable = () => {
                     </div>
                   </>
                 )}
-                </div>
               </div>
-                <div className="text-xs text-primary flex items-center mt-2">
-                <ArrowUp className="h-3 w-3 mr-1" />
-                <span>+{company.yearlyTrend} (1Y Trend)</span>
-              </div>
+            </div>
+            <div className="text-xs text-primary flex items-center mt-2">
+              <ArrowUp className="h-3 w-3 mr-1" />
+              <span>+{company.yearlyTrend} (1Y Trend)</span>
             </div>
           </div>
           <div className="flex flex-col space-y-2">
@@ -170,7 +169,6 @@ const CompanyTable = () => {
           </div>
         </div>
       </div>
-      
     ));
   };
 
@@ -233,9 +231,6 @@ const CompanyTable = () => {
                     {companyQueries.length > 0 && companyQueries[data.companies.indexOf(company)].isSuccess && (
                       <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full ${getScoreClass(companyQueries[data.companies.indexOf(company)].data.socialScore)}`}>
                         {companyQueries[data.companies.indexOf(company)].data.socialScore}
-                      </span>
-                    )}
-                  </TableCell>
                       </span>
                     )}
                   </TableCell>
