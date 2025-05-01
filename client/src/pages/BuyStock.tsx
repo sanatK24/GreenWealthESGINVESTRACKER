@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useLocation, useRoute } from 'wouter';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { getQueryFn, apiRequest, queryClient } from '@/lib/queryClient';
@@ -25,8 +25,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { usePayment } from '@/context/PaymentContext';
 
 export default function BuyStock() {
-  const [, navigate] = useLocation();
-  const [match, params] = useRoute('/buy-stock/:id');
+  const navigate = useNavigate();
+  const { id } = useParams();
   const { toast } = useToast();
   const [shares, setShares] = useState('10');
   const [amount, setAmount] = useState('0');
@@ -37,16 +37,16 @@ export default function BuyStock() {
   const [paymentMethod, setPaymentMethod] = useState('paypal');
 
   const { data: company, error: companyError, isLoading: isLoadingCompany } = useQuery({
-    queryKey: ['/api/companies', params?.id],
-    enabled: !!params?.id,
+    queryKey: ['/api/companies', id],
+    enabled: !!id,
     refetchOnMount: false,
     queryFn: async () => {
-      if (!params?.id) {
+      if (!id) {
         throw new Error('Company ID is required');
       }
 
       try {
-        const res = await fetch(`/api/companies/${params.id}`);
+        const res = await fetch(`/api/companies/${id}`);
         if (!res.ok) {
           throw new Error(`Failed to fetch company data: ${res.status}`);
         }
@@ -59,80 +59,32 @@ export default function BuyStock() {
         console.error('Failed to fetch company:', error);
         throw error;
       }
-
-      const startTime = performance.now();
-      const res = await fetch(`/api/companies/${params.id}`, {
-        headers: {
-          'Accept': 'application/json',
-          'Cache-Control': 'no-cache'
-        }
-      });
-      const endTime = performance.now();
-      const duration = (endTime - startTime).toFixed(2);
-
-      if (!res.ok) {
-        console.error('❌ Failed to fetch company data', { 
-          status: res.status,
-          endpoint: `/api/companies/${params.id}`
-        });
-        throw new Error('Failed to fetch company data');
-      }
-
-      const data = await res.json();
-      console.log('📦 Company data:', data);
-
-      // Validate and transform the data
-      if (!data) throw new Error('No company data received');
-
-      // Return with default values for missing fields
-      return {
-        id: data.id,
-        name: data.name || 'Unknown Company',
-        ticker: data.ticker || 'N/A',
-        description: data.description || 'No description available',
-        sector: data.sector || 'N/A',
-        industry: data.industry || 'N/A',
-        esgScore: Number(data.esgScore) || 0,
-        environmentalScore: Number(data.environmentalScore) || 0,
-        socialScore: Number(data.socialScore) || 0,
-        governanceScore: Number(data.governanceScore) || 0,
-        currentPrice: data.currentPrice || 'N/A',
-        marketCap: data.marketCap || 'N/A',
-        yearHigh: data.yearHigh || 'N/A',
-        yearlyTrend: Number(data.yearlyTrend) || 0
-      };
-
-      // Validate and transform the data
-      return {
-        ...data,
-        id: data.id || params.id,
-        name: data.name || 'N/A',
-        ticker: data.ticker || 'N/A',
-        description: data.description || 'No description available',
-        sector: data.sector || 'N/A',
-        industry: data.industry || 'N/A',
-        esgScore: Number(data.esgScore) || 0,
-        environmentalScore: Number(data.environmentalScore) || 0,
-        socialScore: Number(data.socialScore) || 0,
-        governanceScore: Number(data.governanceScore) || 0,
-        currentPrice: data.currentPrice || 'N/A',
-        marketCap: data.marketCap || 'N/A',
-        yearHigh: data.yearHigh || 'N/A',
-        yearlyTrend: Number(data.yearlyTrend) || 0,
-        sustainabilityRating: data.sustainabilityRating || 'N/A',
-        esgRiskLevel: data.esgRiskLevel || 'Medium'
-      };
     },
-    retry: 2,
-    staleTime: 30000, // Consider data fresh for 30 seconds
-    onError: (error) => {
-      console.error('❌ Company query error:', error);
+    onError: (_error) => {
       toast({
         title: 'Error',
         description: 'Failed to fetch company data. Please try again.',
         variant: 'destructive'
       });
     }
+  });
+
+  const { data: stockPrice, error: priceError, isLoading: isLoadingPrice } = useQuery({
+    queryKey: ['/api/stock-price', id],
+    enabled: !!id,
+    queryFn: async () => {
+      if (!id) {
+        throw new Error('Company ID is required');
+      }
+
+      const res = await fetch(`/api/stock-price/${id}`);
+      if (!res.ok) {
+        throw new Error(`Failed to fetch stock price: ${res.status}`);
+      }
+      return res.json();
+    },
+    retry: 1,
+    staleTime: 1000 * 60 // Cache for 1 minute
   });
 
   const { data: user, isLoading: isLoadingUser, error: userError } = useQuery({
@@ -374,42 +326,25 @@ export default function BuyStock() {
     );
   }
 
-  // Rest of your existing BuyStock component code remains the same
-  // Error handling, loading states, and main purchase form
-  if (companyError || userError) {
+  if (isLoadingCompany || isLoadingPrice || isLoadingUser) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold text-destructive mb-2">
-            Error loading data
-          </h2>
-          <p className="text-muted-foreground">
-            Please try refreshing the page or contact support if the issue persists.
-          </p>
-        </div>
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
       </div>
     );
   }
 
-  if (isLoadingCompany || isLoadingUser) {
+  if (companyError || priceError || userError) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="space-y-4">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-center h-12">
-                <Loader2 className="h-6 w-6 animate-spin text-primary" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-4 w-2/3" />
-                <Skeleton className="h-4 w-1/2" />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+      <div className="p-4">
+        <Card>
+          <CardContent>
+            <div className="text-center">
+              <p className="text-red-500">Error loading company data</p>
+              <Button onClick={() => window.location.reload()}>Try Again</Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -421,7 +356,7 @@ export default function BuyStock() {
     return <div className="flex items-center justify-center min-h-screen">Redirecting to login...</div>;
   }
 
-  if (!company && !isLoadingCompany && !!params?.id) {
+  if (!company && !isLoadingCompany && !!id) {
     setTimeout(() => {
       navigate('/companies');
     }, 0);
@@ -518,10 +453,10 @@ export default function BuyStock() {
                           {formatCurrency(company?.marketCap)}
                         </TableCell>
                         <TableCell>
-                          {formatCurrency(company?.yearHigh)}
+                          {formatCurrency(company?.weekHigh52)}
                         </TableCell>
                         <TableCell className={
-                          company?.yearlyTrend && parseFloat(company.yearlyTrend) > 0 
+                          company?.yearlyTrend && parseFloat(company?.yearlyTrend) > 0 
                             ? 'text-green-600' 
                             : 'text-red-500'
                         }>
