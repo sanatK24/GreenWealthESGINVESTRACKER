@@ -23,6 +23,13 @@ const CompanyTable = () => {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["/api/companies", page],
+    queryFn: async () => {
+      const response = await fetch(`/api/companies?page=${page}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch companies');
+      }
+      return response.json();
+    },
   });
 
   if (error) {
