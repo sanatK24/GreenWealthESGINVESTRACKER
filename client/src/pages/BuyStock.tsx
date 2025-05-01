@@ -39,17 +39,27 @@ export default function BuyStock() {
   const { data: company, error: companyError, isLoading: isLoadingCompany } = useQuery({
     queryKey: ['/api/companies', params?.id],
     enabled: !!params?.id,
-    refetchOnMount: false, // Added to prevent initial refetch
+    refetchOnMount: false,
     refetchOnWindowFocus: false,
     queryFn: async () => {
       if (!params?.id) {
         throw new Error('Company ID is required');
       }
 
-      console.log('🔄 Fetching company data...', { 
-        companyId: params.id,
-        timestamp: new Date().toISOString()
-      });
+      try {
+        const res = await fetch(`/api/companies/${params.id}`);
+        if (!res.ok) {
+          throw new Error(`Failed to fetch company data: ${res.status}`);
+        }
+        const data = await res.json();
+        if (!data) {
+          throw new Error('No company data received');
+        }
+        return data;
+      } catch (error) {
+        console.error('Failed to fetch company:', error);
+        throw error;
+      }
 
       const startTime = performance.now();
       const res = await fetch(`/api/companies/${params.id}`, {
