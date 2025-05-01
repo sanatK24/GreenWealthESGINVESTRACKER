@@ -1,0 +1,73 @@
+10:18:47 AM [express] GET /api/user 304 in 197ms :: {"id":1,"username":"sanat"}
+Error in getCompanyById: error: there is no parameter $1
+    at file:///home/runner/workspace/node_modules/@neondatabase/serverless/index.mjs:1345:74
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Module.getCompanyById (/home/runner/workspace/server/storage.ts:109:20)
+    at async <anonymous> (/home/runner/workspace/server/routes.ts:296:23) {
+  length: 94,
+  severity: 'ERROR',
+  code: '42P02',
+  detail: undefined,
+  hint: undefined,
+  position: '36',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_expr.c',
+  line: '864',
+  routine: 'transformParamRef'
+}
+10:18:47 AM [express] GET /api/companies/5 404 in 282ms :: {"message":"Company not found"}
+Error in getCompanyById: error: there is no parameter $1
+    at file:///home/runner/workspace/node_modules/@neondatabase/serverless/index.mjs:1345:74
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Module.getCompanyById (/home/runner/workspace/server/storage.ts:109:20)
+    at async <anonymous> (/home/runner/workspace/server/routes.ts:296:23) {
+  length: 94,
+  severity: 'ERROR',
+  code: '42P02',
+  detail: undefined,
+  hint: undefined,
+  position: '36',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_expr.c',
+  line: '864',
+  routine: 'transformParamRef'
+}
+10:18:49 AM [express] GET /api/companies/5 404 in 261ms :: {"message":"Company not found"}
+Error in getCompanyById: error: there is no parameter $1
+    at file:///home/runner/workspace/node_modules/@neondatabase/serverless/index.mjs:1345:74
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Module.getCompanyById (/home/runner/workspace/server/storage.ts:109:20)
+    at async <anonymous> (/home/runner/workspace/server/routes.ts:296:23) {
+  length: 94,
+  severity: 'ERROR',
+  code: '42P02',
+  detail: undefined,
+  hint: undefined,
+  position: '36',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_expr.c',
+  line: '864',
+  routine: 'transformParamRef'
+}
+10:18:51 AM [express] GET /api/companies/5 404 in 280ms :: {"message":"Company not found"}
