@@ -47,10 +47,10 @@ export async function getCompanies(page = 1, limit = 5) {
         limit,
         offset,
       });
-      
+
       const totalCount = await db.$client.query('SELECT COUNT(*) FROM companies');
       const total = totalCount?.rows?.[0]?.count ? parseInt(totalCount.rows[0].count) : 0;
-      
+
       return {
         companies: companiesData,
         pagination: {
@@ -67,10 +67,10 @@ export async function getCompanies(page = 1, limit = 5) {
       console.log("Database unavailable, falling back to JSON file");
       const companiesData = await readJsonFile('companies.json');
       if (!companiesData) throw new Error("JSON fallback failed");
-      
+
       const total = companiesData.length;
       const paginatedCompanies = companiesData.slice(offset, offset + limit);
-      
+
       return {
         companies: paginatedCompanies,
         pagination: {
@@ -127,7 +127,7 @@ export async function getCompanyESGBreakdown(limit = 5) {
       orderBy: [desc(companies.esgScore)],
       limit,
     });
-    
+
     return {
       companies: companiesData.map(company => ({
         name: company.name,
@@ -149,11 +149,11 @@ export async function getCompanyComparison() {
       limit: 3,
       orderBy: [desc(companies.esgScore)],
     });
-    
+
     if (!companiesData || companiesData.length === 0) {
       return { companies: [], categories: [] };
     }
-    
+
     // Categories for radar chart
     const categories = [
       { name: "Environmental", values: companiesData.map(c => c.environmentalScore) },
@@ -163,7 +163,7 @@ export async function getCompanyComparison() {
       { name: "Innovation", values: [95, 82, 79] },
       { name: "Transparency", values: [79, 84, 75] },
     ];
-    
+
     return {
       companies: companiesData,
       categories: categories,
@@ -207,7 +207,7 @@ export async function getSectorPerformance() {
   const sectorsData = await db.query.sectors.findMany({
     orderBy: [desc(sectors.esgScore)],
   });
-  
+
   return {
     sectors: sectorsData.map(sector => ({
       name: sector.name,
@@ -219,7 +219,7 @@ export async function getSectorPerformance() {
 // Portfolio Composition
 export async function getPortfolioComposition() {
   const compositionData = await db.query.portfolioComposition.findMany();
-  
+
   return {
     sectors: compositionData.map(item => ({
       name: item.sector,
@@ -249,7 +249,7 @@ export async function updatePortfolioSummary(data: InsertPortfolioSummary) {
 // Sustainability Trends
 export async function getSustainabilityTrends() {
   const trends = await db.query.sustainabilityTrends.findMany();
-  
+
   return {
     trends: trends.map(trend => ({
       month: trend.month,
@@ -278,7 +278,7 @@ export async function getStockPriceHistory(companyId: number, timeframe: string 
         eq(stockPriceHistory.timeframe, timeframe)
       )
     });
-    
+
     return priceHistory;
   } catch (error) {
     console.error("Error getting stock price history:", error);
@@ -296,7 +296,7 @@ export async function getAllStockPriceHistory(companyId: number) {
     const priceHistories = await db.query.stockPriceHistory.findMany({
       where: eq(stockPriceHistory.companyId, companyId)
     });
-    
+
     return {
       timeframes: priceHistories.map(history => ({
         timeframe: history.timeframe,
@@ -312,12 +312,12 @@ export async function getAllStockPriceHistory(companyId: number) {
 export async function compareStockPrices(companyIds: number[], timeframe: string = "1m") {
   try {
     console.log("Storage: compareStockPrices called with IDs:", companyIds, "and timeframe:", timeframe);
-    
+
     // Filter out invalid IDs
     const validCompanyIds = companyIds.filter(id => !isNaN(id) && id > 0);
-    
+
     console.log("Storage: validCompanyIds:", validCompanyIds);
-    
+
     if (validCompanyIds.length === 0) {
       console.log("Storage: No valid company IDs found");
       return { companies: [], prices: [] };
@@ -329,9 +329,9 @@ export async function compareStockPrices(companyIds: number[], timeframe: string
         where: eq(companies.id, id)
       }))
     );
-    
+
     console.log("Storage: companyData retrieved:", companyData.length, "companies");
-    
+
     // Get price histories - look up each company's price data for the specified timeframe
     const priceHistories = await Promise.all(
       validCompanyIds.map(async (id) => {
@@ -345,7 +345,7 @@ export async function compareStockPrices(companyIds: number[], timeframe: string
         return history;
       })
     );
-    
+
     // Filter out null values and map to the required format
     const validCompanies = companyData.filter(company => company !== null);
     const validPrices = priceHistories
@@ -364,9 +364,9 @@ export async function compareStockPrices(companyIds: number[], timeframe: string
           };
         }
       });
-    
+
     console.log("Storage: Returning comparison data with", validCompanies.length, "companies and", validPrices.length, "price histories");
-    
+
     return {
       companies: validCompanies,
       prices: validPrices
@@ -386,7 +386,7 @@ export async function insertStockPriceHistory(data: InsertStockPriceHistory) {
         eq(stockPriceHistory.timeframe, data.timeframe)
       )
     });
-    
+
     if (existingRecord) {
       // Update existing record
       const [updatedRecord] = await db
@@ -400,7 +400,7 @@ export async function insertStockPriceHistory(data: InsertStockPriceHistory) {
           eq(stockPriceHistory.timeframe, data.timeframe)
         ))
         .returning();
-        
+
       return updatedRecord;
     } else {
       // Insert new record
@@ -439,4 +439,39 @@ export async function syncUserWithSupabase(userId: number) {
     throw error;
   }
 }
+<<<<<<< HEAD
 >>>>>>> main
+=======
+
+// Payment handling
+export async function createPayment(userId: number, companyId: number, paymentData: any) {
+  try {
+    const [payment] = await db.insert(payments)
+      .values({
+        userId,
+        companyId,
+        paymentData: JSON.stringify(paymentData),
+        status: 'pending'
+      })
+      .returning();
+
+    return payment;
+  } catch (error) {
+    console.error('Error creating payment:', error);
+    throw error;
+  }
+}
+
+export async function getPaymentHistory(userId: number) {
+  try {
+    const history = await db.select()
+      .from(payments)
+      .where(eq(payments.userId, userId))
+      .orderBy(desc(payments.createdAt));
+    return history;
+  } catch (error) {
+    console.error('Error fetching payment history:', error);
+    throw error;
+  }
+}
+>>>>>>> f5bae4c02fae7de91079882c5fbd79e382eb624d
