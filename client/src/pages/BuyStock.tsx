@@ -39,22 +39,52 @@ export default function BuyStock() {
   const { data: company, error: companyError, isLoading: isLoadingCompany } = useQuery({
     queryKey: ['/api/companies', params?.id],
     queryFn: async () => {
+      console.log('🔄 Fetching company data...', { companyId: params?.id });
+      const startTime = performance.now();
       const res = await fetch(`/api/companies/${params?.id}`);
-      if (!res.ok) throw new Error('Failed to fetch company data');
-      return res.json();
+      const endTime = performance.now();
+      console.log(`✅ Company data fetched in ${(endTime - startTime).toFixed(2)}ms`, { 
+        status: res.status,
+        ok: res.ok 
+      });
+      if (!res.ok) {
+        console.error('❌ Failed to fetch company data', { status: res.status });
+        throw new Error('Failed to fetch company data');
+      }
+      const data = await res.json();
+      console.log('📦 Company data:', data);
+      return data;
     },
     enabled: !!params?.id,
-    retry: 1
+    retry: 1,
+    onError: (error) => {
+      console.error('❌ Company query error:', error);
+    }
   });
 
   const { data: user, isLoading: isLoadingUser, error: userError } = useQuery({
     queryKey: ['/api/user'],
     queryFn: async () => {
+      console.log('🔄 Fetching user data...');
+      const startTime = performance.now();
       const res = await fetch('/api/user');
-      if (!res.ok) throw new Error('Failed to fetch user data');
-      return res.json();
+      const endTime = performance.now();
+      console.log(`✅ User data fetched in ${(endTime - startTime).toFixed(2)}ms`, { 
+        status: res.status,
+        ok: res.ok 
+      });
+      if (!res.ok) {
+        console.error('❌ Failed to fetch user data', { status: res.status });
+        throw new Error('Failed to fetch user data');
+      }
+      const data = await res.json();
+      console.log('👤 User data:', data);
+      return data;
     },
-    retry: 1
+    retry: 1,
+    onError: (error) => {
+      console.error('❌ User query error:', error);
+    }
   });
 
   // Purchase mutation
