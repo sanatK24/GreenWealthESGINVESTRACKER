@@ -36,28 +36,31 @@ export default function BuyStock() {
   const { setPaymentData } = usePayment();
   const [paymentMethod, setPaymentMethod] = useState('paypal');
 
-  const { data: buyStockData, error: buyStockError, isLoading: isLoadingBuyStock } = useQuery({
-    queryKey: ['/api/buy-stock-data', id],
+  const { data: companyData, error: companyError, isLoading: isLoadingCompany } = useQuery({
+    queryKey: ['/api/company', id],
     enabled: !!id,
     queryFn: async () => {
       if (!id) {
         throw new Error('Company ID is required');
       }
 
-      const res = await fetch(`/api/buy-stock-data/${id}`);
+      const res = await fetch(`/api/company/${id}`);
       if (!res.ok) {
-        throw new Error(`Failed to fetch buy stock data: ${res.status}`);
+        throw new Error(`Failed to fetch company data: ${res.status}`);
       }
-      return res.json();
+      const data = await res.json();
+      return data;
     },
     onError: (_error) => {
       toast({
         title: 'Error',
-        description: 'Failed to fetch buy stock data. Please try again.',
+        description: 'Failed to fetch company data. Please try again.',
         variant: 'destructive'
       });
     }
   });
+
+  const buyStockData = companyData?.buyStockData || null;
 
   const { data: user, isLoading: isLoadingUser, error: userError } = useQuery({
     queryKey: ['/api/user'],
@@ -298,7 +301,7 @@ export default function BuyStock() {
     );
   }
 
-  if (isLoadingBuyStock || isLoadingUser) {
+  if (isLoadingCompany || isLoadingUser) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -306,13 +309,13 @@ export default function BuyStock() {
     );
   }
 
-  if (buyStockError || userError) {
+  if (companyError || userError) {
     return (
       <div className="p-4">
         <Card>
           <CardContent>
             <div className="text-center">
-              <p className="text-red-500">Error loading buy stock data</p>
+              <p className="text-red-500">Error loading company data</p>
               <Button onClick={() => window.location.reload()}>Try Again</Button>
             </div>
           </CardContent>
@@ -328,7 +331,7 @@ export default function BuyStock() {
     return <div className="flex items-center justify-center min-h-screen">Redirecting to login...</div>;
   }
 
-  if (!buyStockData && !isLoadingBuyStock && !!id) {
+  if (!buyStockData && !isLoadingCompany && !!id) {
     setTimeout(() => {
       navigate('/companies');
     }, 0);
