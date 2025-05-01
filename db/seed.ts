@@ -342,24 +342,6 @@ async function seed() {
         peRatio: "0.0",
         description: "Plug Power Inc. is a leading provider of hydrogen fuel cell turnkey solutions for the global green hydrogen economy.",
       },
-      {
-        name: "Tesla",
-        ticker: "TSLA",
-        sector: "Electric Vehicles",
-        industry: "Automotive",
-        esgScore: 86,
-        environmentalScore: 92,
-        socialScore: 76,
-        governanceScore: 82,
-        yearlyTrend: 8,
-        currentPrice: "5425.00",
-        marketCap: "1725750000000",
-        yearHigh: "6100.50",
-        yearLow: "4500.00",
-        dividendYield: "0",
-        peRatio: "75.2",
-        description: "Tesla, Inc. designs, develops, manufactures, and sells electric vehicles, energy generation and storage systems. The company operates in renewable energy and electric vehicle manufacturing with a focus on sustainability.",
-      },
     ];
 
     // Insert companies
