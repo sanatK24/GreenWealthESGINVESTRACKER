@@ -3,19 +3,15 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { relations } from "drizzle-orm";
 
-// Users table (keeping original definition)
+// Define tables first
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
-});
-
-// Companies table
 export const companies = pgTable("companies", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
@@ -42,13 +38,6 @@ export const companies = pgTable("companies", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const insertCompanySchema = createInsertSchema(companies).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
-// Sectors table
 export const sectors = pgTable("sectors", {
   id: serial("id").primaryKey(),
   name: text("name").notNull().unique(),
@@ -57,13 +46,6 @@ export const sectors = pgTable("sectors", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const insertSectorSchema = createInsertSchema(sectors).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
-// Portfolio composition table
 export const portfolioComposition = pgTable("portfolio_composition", {
   id: serial("id").primaryKey(),
   sector: text("sector").notNull(),
@@ -72,13 +54,6 @@ export const portfolioComposition = pgTable("portfolio_composition", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const insertPortfolioCompositionSchema = createInsertSchema(portfolioComposition).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
-// Portfolio summary table
 export const portfolioSummary = pgTable("portfolio_summary", {
   id: serial("id").primaryKey(),
   portfolioScore: integer("portfolio_score").notNull(),
@@ -93,12 +68,6 @@ export const portfolioSummary = pgTable("portfolio_summary", {
   lastUpdated: timestamp("last_updated").defaultNow().notNull(),
 });
 
-export const insertPortfolioSummarySchema = createInsertSchema(portfolioSummary).omit({
-  id: true,
-  lastUpdated: true,
-});
-
-// Sustainability trends table
 export const sustainabilityTrends = pgTable("sustainability_trends", {
   id: serial("id").primaryKey(),
   month: text("month").notNull(),
@@ -107,12 +76,6 @@ export const sustainabilityTrends = pgTable("sustainability_trends", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-export const insertSustainabilityTrendSchema = createInsertSchema(sustainabilityTrends).omit({
-  id: true,
-  createdAt: true,
-});
-
-// Stock price history table
 export const stockPriceHistory = pgTable("stock_price_history", {
   id: serial("id").primaryKey(),
   companyId: integer("company_id").notNull().references(() => companies.id),
@@ -122,13 +85,6 @@ export const stockPriceHistory = pgTable("stock_price_history", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const insertStockPriceHistorySchema = createInsertSchema(stockPriceHistory).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
-// Buy Stock Data table
 export const buyStockData = pgTable("buy_stock_data", {
   id: serial("id").primaryKey(),
   companyId: integer("company_id").notNull().references(() => companies.id),
@@ -137,57 +93,23 @@ export const buyStockData = pgTable("buy_stock_data", {
   weekHigh52: decimal("week_high_52", { precision: 10, scale: 2 }).notNull(),
   weekLow52: decimal("week_low_52", { precision: 10, scale: 2 }).notNull(),
   yearlyTrend: decimal("yearly_trend", { precision: 5, scale: 2 }).notNull(),
-  minInvestment: decimal("min_investment", { precision: 10, scale: 2 }).notNull().default(1000),
-  maxInvestment: decimal("max_investment", { precision: 10, scale: 2 }).notNull().default(1000000),
+  minInvestment: decimal("min_investment", { precision: 10, scale: 2 }).notNull().default("1000"),
+  maxInvestment: decimal("max_investment", { precision: 10, scale: 2 }).notNull().default("1000000"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const insertBuyStockDataSchema = createInsertSchema(buyStockData).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
+export const payments = pgTable("payments", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  companyId: integer("company_id").notNull().references(() => companies.id),
+  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
+  shares: integer("shares").notNull(),
+  status: text("status").notNull().default('pending'),
+  paymentData: text("payment_data").notNull(), // JSON string of PayPal response
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
-
-// Define relations
-export const companiesRelations = relations(companies, ({ many }) => ({
-  sectors: many(sectors),
-  priceHistory: many(stockPriceHistory),
-  buyStockData: many(buyStockData),
-  payments: many(payments),
-}));
-
-export const sectorsRelations = relations(sectors, ({ many }) => ({
-  companies: many(companies),
-}));
-
-export const stockPriceHistoryRelations = relations(stockPriceHistory, ({ one }) => ({
-  company: one(companies, {
-    fields: [stockPriceHistory.companyId],
-    references: [companies.id],
-  }),
-}));
-
-export const buyStockDataRelations = relations(buyStockData, ({ one, many }) => ({
-  company: one(companies, {
-    fields: [buyStockData.companyId],
-    references: [companies.id],
-  }),
-  payments: many(payments),
-}));
-
-export const paymentsRelations = relations(payments, ({ one }) => ({
-  company: one(companies, {
-    fields: [payments.companyId],
-    references: [companies.id],
-  }),
-  user: one(users, {
-    fields: [payments.userId],
-    references: [users.id],
-  }),
-}));
-
-// User Activity Logging Tables
 
 export const userLoginRecords = pgTable("user_login_records", {
   id: serial("id").primaryKey(),
@@ -240,7 +162,58 @@ export const comparisonHistory = pgTable("comparison_history", {
   comparisonParams: text("comparison_params").notNull(),
 });
 
-// Create insert schemas for each table
+// Define schemas after tables
+export const insertUserSchema = createInsertSchema(users).pick({
+  username: true,
+  password: true,
+});
+
+export const insertCompanySchema = createInsertSchema(companies).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertSectorSchema = createInsertSchema(sectors).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertPortfolioCompositionSchema = createInsertSchema(portfolioComposition).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertPortfolioSummarySchema = createInsertSchema(portfolioSummary).omit({
+  id: true,
+  lastUpdated: true,
+});
+
+export const insertSustainabilityTrendSchema = createInsertSchema(sustainabilityTrends).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertStockPriceHistorySchema = createInsertSchema(stockPriceHistory).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertBuyStockDataSchema = createInsertSchema(buyStockData).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertPaymentSchema = createInsertSchema(payments).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 export const insertUserLoginRecordSchema = createInsertSchema(userLoginRecords).omit({
   id: true,
   logoutTimestamp: true,
@@ -262,25 +235,45 @@ export const insertComparisonHistorySchema = createInsertSchema(comparisonHistor
   id: true,
 });
 
-// Payments table
-export const payments = pgTable("payments", {
-  id: serial("id").primaryKey(),
-  userId: integer("user_id").notNull().references(() => users.id),
-  companyId: integer("company_id").notNull().references(() => companies.id),
-  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
-  shares: integer("shares").notNull(),
-  status: text("status").notNull().default('pending'),
-  paymentData: text("payment_data").notNull(), // JSON string of PayPal response
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
+// Define relations after tables and schemas
+export const companiesRelations = relations(companies, ({ many }) => ({
+  sectors: many(sectors),
+  priceHistory: many(stockPriceHistory),
+  buyStockData: many(buyStockData),
+  payments: many(payments),
+}));
 
-export const insertPaymentSchema = createInsertSchema(payments).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-});
+export const sectorsRelations = relations(sectors, ({ many }) => ({
+  companies: many(companies),
+}));
 
+export const stockPriceHistoryRelations = relations(stockPriceHistory, ({ one }) => ({
+  company: one(companies, {
+    fields: [stockPriceHistory.companyId],
+    references: [companies.id],
+  }),
+}));
+
+export const buyStockDataRelations = relations(buyStockData, ({ one, many }) => ({
+  company: one(companies, {
+    fields: [buyStockData.companyId],
+    references: [companies.id],
+  }),
+  payments: many(payments),
+}));
+
+export const paymentsRelations = relations(payments, ({ one }) => ({
+  company: one(companies, {
+    fields: [payments.companyId],
+    references: [companies.id],
+  }),
+  user: one(users, {
+    fields: [payments.userId],
+    references: [users.id],
+  }),
+}));
+
+// Define types after everything else
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 
