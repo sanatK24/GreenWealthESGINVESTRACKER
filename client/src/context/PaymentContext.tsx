@@ -1,47 +1,48 @@
 // src/context/PaymentContext.tsx
-import React, { createContext, useContext, useState } from 'react';
-import { supabase } from '@/lib/supabase';
-import { v4 as uuidv4 } from 'uuid';
-
-interface PaymentData {
-  amount: number;
-  shares: number;
-  paymentMethod: string;
-  transactionId: string;
-  roi: number;
-  riskLevel: string;
-}
+import { createContext, useContext, useState, ReactNode } from 'react';
+import { apiRequest } from '@/lib/api';
+import { useToast } from '@/hooks/use-toast';
+import { Company } from '@/shared/schema';
 
 interface PaymentContextType {
-  paymentData: PaymentData;
-  setPaymentData: (data: Partial<PaymentData>) => void;
-  savePayment: (data: PaymentData) => Promise<void>;
+  paymentData: {
+    amount: number;
+    currency: string;
+    payment_method: string;
+    status: string;
+    created_at: string;
+    company: Company;
+  };
+  setPaymentData: (data: Partial<PaymentContextType['paymentData']>) => void;
+  savePayment: (data: PaymentContextType['paymentData']) => Promise<PaymentContextType['paymentData']>;
 }
 
 const PaymentContext = createContext<PaymentContextType | undefined>(undefined);
 
 export const PaymentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [paymentData, setPaymentData] = useState<PaymentData>({
+  const [paymentData, setPaymentData] = useState({
     amount: 0,
-    shares: 0,
-    paymentMethod: '',
-    transactionId: '',
-    roi: 0,
-    riskLevel: ''
+    currency: 'USD',
+    payment_method: 'card',
+    status: 'pending',
+    created_at: new Date().toISOString(),
+    company: null as unknown as Company
   });
 
-  const savePayment = async (data: PaymentData) => {
+  const savePayment = async (data: PaymentContextType['paymentData']) => {
     try {
-      const { error } = await supabase
-        .from('payments')
-        .insert([{
-          user_id: 1, // Replace with actual user ID
-          company_id: 1, // Replace with actual company ID
-          payment_data: data,
-          status: 'pending'
-        }]);
+      const response = await apiRequest('/api/payments', {
+        method: 'POST',
+        body: JSON.stringify(data)
+      });
 
-      if (error) throw error;
+      if (!response.ok) {
+        throw new Error('Payment processing failed');
+      }
+
+      const payment = await response.json();
+      setPaymentData(payment);
+      return payment;
     } catch (error) {
       console.error('Error saving payment:', error);
       throw error;
@@ -50,10 +51,10 @@ export const PaymentProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   return (
     <PaymentContext.Provider 
-      value={{ 
+      value={{
         paymentData, 
         setPaymentData,
-        savePayment 
+        savePayment
       }}
     >
       {children}

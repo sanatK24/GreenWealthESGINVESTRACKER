@@ -412,36 +412,6 @@ export async function insertStockPriceHistory(data: InsertStockPriceHistory) {
     throw error;
   }
 }
-<<<<<<< HEAD
-=======
-// Add near your other imports
-import { supabase } from './services/supabase';
-
-// Add this function to sync user data
-export async function syncUserWithSupabase(userId: number) {
-  try {
-    const user = await getUser(userId);
-    if (!user) return null;
-
-    // Sync with Supabase table
-    const { error } = await supabase
-      .from('users')
-      .upsert({
-        id: user.id,
-        username: user.username,
-        // Add other fields you want to sync
-      });
-
-    if (error) throw error;
-    return user;
-  } catch (error) {
-    console.error('Error syncing with Supabase:', error);
-    throw error;
-  }
-}
-<<<<<<< HEAD
->>>>>>> main
-=======
 
 // Payment handling
 export async function createPayment(userId: number, companyId: number, paymentData: any) {
@@ -474,4 +444,3 @@ export async function getPaymentHistory(userId: number) {
     throw error;
   }
 }
->>>>>>> f5bae4c02fae7de91079882c5fbd79e382eb624d

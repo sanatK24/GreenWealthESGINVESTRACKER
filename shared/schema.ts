@@ -167,27 +167,6 @@ export type InsertSustainabilityTrend = z.infer<typeof insertSustainabilityTrend
 export type StockPriceHistory = typeof stockPriceHistory.$inferSelect;
 export type InsertStockPriceHistory = z.infer<typeof insertStockPriceHistorySchema>;
 
-// Payments table
-export const payments = pgTable("payments", {
-  id: serial("id").primaryKey(),
-  userId: integer("user_id").references(() => users.id),
-  companyId: integer("company_id").references(() => companies.id),
-  paymentData: text("payment_data").notNull(),
-  status: text("status").notNull().default("pending"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
-
-export const insertPaymentSchema = createInsertSchema(payments).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
-export type Payment = typeof payments.$inferSelect;
-export type InsertPayment = z.infer<typeof insertPaymentSchema>;
-
-
 // User Activity Logging Tables
 
 export const userLoginRecords = pgTable("user_login_records", {

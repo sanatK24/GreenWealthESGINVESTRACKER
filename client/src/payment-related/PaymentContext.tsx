@@ -1,8 +1,8 @@
 // src/context/PaymentContext.tsx
-import React, { createContext, useContext, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { createContext, useContext, useState, ReactNode } from 'react';
 import { PaymentData } from '@/types/payment';
-import { v4 as uuidv4 } from 'uuid';
+import { apiRequest } from '@/lib/api';
+import { useToast } from '@/hooks/use-toast';
 
 interface PaymentContextType {
   paymentData: PaymentData;
@@ -14,28 +14,26 @@ const PaymentContext = createContext<PaymentContextType | undefined>(undefined);
 
 export const PaymentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [paymentData, setPaymentData] = useState<PaymentData>({
-    id: uuidv4(),
-    investor_name: '',
-    investor_email: '',
-    company_name: '',
     amount: 0,
-    roi: 0,
-    risk_level: '',
-    transaction_id: '',
-    payment_method: '',
+    currency: 'USD',
+    payment_method: 'card',
     status: 'pending',
     created_at: new Date().toISOString()
   });
 
   const savePayment = async (data: PaymentData) => {
     try {
-      const { data: payment, error } = await supabase
-        .from('payments')
-        .insert([data])
-        .select()
-        .single();
+      const response = await apiRequest('/api/payments', {
+        method: 'POST',
+        body: JSON.stringify(data)
+      });
 
-      if (error) throw error;
+      if (!response.ok) {
+        throw new Error('Payment processing failed');
+      }
+
+      const payment = await response.json();
+      setPaymentData(payment);
       return payment;
     } catch (error) {
       console.error('Error saving payment:', error);
@@ -45,10 +43,10 @@ export const PaymentProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   return (
     <PaymentContext.Provider 
-      value={{ 
+      value={{
         paymentData, 
         setPaymentData,
-        savePayment 
+        savePayment
       }}
     >
       {children}
