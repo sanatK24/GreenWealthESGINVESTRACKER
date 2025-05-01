@@ -39,6 +39,7 @@ export const queryClient = new QueryClient({
       refetchOnMount: false,
       staleTime: 5 * 60 * 1000, // 5 minutes
       refetchInterval: false,
+      suspense: false,
     },
   },
 });
