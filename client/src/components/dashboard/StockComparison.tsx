@@ -335,7 +335,6 @@ export function StockComparison({ className, initialCompanyIds = [] }: StockComp
             {selectedCompanyIds.length > 0 && (
               <div className="flex items-start gap-4">
                 <div className="flex-1">
-<<<<<<< HEAD
                   <Button 
                     onClick={generateInsights}
                     disabled={isGeneratingInsights || isLoading || isRefetching || selectedCompanyIds.length === 0}
@@ -569,7 +568,6 @@ export function StockComparison({ className, initialCompanyIds = [] }: StockComp
                 <div>
                   <p className="text-muted-foreground mb-4">Select stocks to view detailed ESG and performance metrics</p>
                   {!showAddSelect && selectedCompanyIds.length < 7 && (
-=======
                 <Button 
                   onClick={generateInsights}
                   disabled={isGeneratingInsights || isLoading || isRefetching || selectedCompanyIds.length === 0}
@@ -613,7 +611,7 @@ export function StockComparison({ className, initialCompanyIds = [] }: StockComp
                 <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
                   <p className="mb-4">Select stocks to compare</p>
                   {!showAddSelect && (
->>>>>>> main
+
                     <Button 
                       variant="outline"
                       onClick={() => setShowAddSelect(true)}
@@ -622,11 +620,9 @@ export function StockComparison({ className, initialCompanyIds = [] }: StockComp
                     </Button>
                   )}
                 </div>
-<<<<<<< HEAD
               </div>
             )}
-          </div>
-=======
+          </div>  
               ) : isLoading || companiesLoading ? (
                 <div className="flex items-center justify-center h-full">
                   <div className="flex flex-col items-center gap-4">
@@ -817,7 +813,6 @@ export function StockComparison({ className, initialCompanyIds = [] }: StockComp
               </div>
             </div>
           )}
->>>>>>> main
         </div>
       </CardContent>
     </Card>

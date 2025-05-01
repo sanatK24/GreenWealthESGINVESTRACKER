@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> main
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import ws from 'ws';
@@ -41,7 +37,6 @@ async function createJsonDb() {
 // Initialize database or fallback
 export const pool = useJsonFallback ? null : new Pool({
   connectionString: process.env.DATABASE_URL,
-<<<<<<< HEAD
   max: 5, // Reduced from 10 to avoid connection limits
   idleTimeoutMillis: 10000, // Reduced from 30000 to 10000
   connectionTimeoutMillis: 5000,
@@ -73,19 +68,6 @@ process.on('SIGINT', () => {
 
 // Initialize drizzle with the pool or use JSON fallback
 export const db = useJsonFallback ? await createJsonDb() : drizzle(pool, { schema });
-
-=======
-  max: 10,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 5000,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
-
-// Initialize drizzle with the pool or use JSON fallback
-export const db = useJsonFallback ? await createJsonDb() : drizzle(pool, { schema });
-
 // Add error handling for the pool
 if (pool) {
   pool.on('error', (err) => {
@@ -93,8 +75,6 @@ if (pool) {
     process.exit(-1);
   });
 }
-
->>>>>>> main
 // Add connection testing function
 export async function testConnection() {
   try {

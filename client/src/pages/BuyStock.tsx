@@ -19,10 +19,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { DollarSign, TrendingUp, Leaf, LineChart, Info, ArrowLeft, Loader2, CircleDollarSign } from 'lucide-react';
-<<<<<<< HEAD
 import { Skeleton } from '@/components/ui/skeleton';
-=======
->>>>>>> main
 
 export default function BuyStock() {
   const [, navigate] = useLocation();
@@ -36,27 +33,20 @@ export default function BuyStock() {
   // Get company data
   const { 
     data: company, 
-<<<<<<< HEAD
     isLoading: isLoadingCompany,
     error: companyError
-=======
     isLoading: isLoadingCompany
->>>>>>> main
   } = useQuery({
     queryKey: ['/api/companies', params?.id],
     queryFn: getQueryFn({ on401: 'returnNull' }),
     enabled: !!params?.id,
-<<<<<<< HEAD
     retry: 2,
     refetchOnWindowFocus: false
-=======
->>>>>>> main
   });
 
   // Get current user
   const { 
     data: user, 
-<<<<<<< HEAD
     isLoading: isLoadingUser,
     error: userError
   } = useQuery({
@@ -64,12 +54,10 @@ export default function BuyStock() {
     queryFn: getQueryFn({ on401: 'returnNull' }),
     retry: 2,
     refetchOnWindowFocus: false
-=======
     isLoading: isLoadingUser 
   } = useQuery({
     queryKey: ['/api/user'],
     queryFn: getQueryFn({ on401: 'returnNull' }),
->>>>>>> main
   });
 
   // Purchase stock mutation
@@ -113,7 +101,6 @@ export default function BuyStock() {
       const shareCount = parseInt(shares) || 0;
       const calculatedAmount = shareCount * parseFloat(company.currentPrice);
       setAmount(calculatedAmount.toFixed(2));
-<<<<<<< HEAD
     } else {
       setAmount('0');
     }
@@ -156,7 +143,6 @@ export default function BuyStock() {
       </div>
     );
   }
-=======
     }
   }, [shares, company]);
 
@@ -191,12 +177,10 @@ export default function BuyStock() {
       });
     }
   };
->>>>>>> main
 
   // Show loading while fetching data
   if (isLoadingCompany || isLoadingUser) {
     return (
-<<<<<<< HEAD
       <div className="container mx-auto px-4 py-8">
         <div className="space-y-4">
           <Card>
@@ -214,10 +198,8 @@ export default function BuyStock() {
             </CardContent>
           </Card>
         </div>
-=======
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
->>>>>>> main
       </div>
     );
   }
@@ -235,34 +217,25 @@ export default function BuyStock() {
     setTimeout(() => {
       navigate('/companies');
     }, 0);
-<<<<<<< HEAD
     return <div className="flex items-center justify-center min-h-screen">Company not found</div>;
-=======
     return <div className="flex items-center justify-center min-h-screen">Redirecting to companies list...</div>;
->>>>>>> main
   }
 
   // Calculate ESG score style
   const getScoreColor = (score: number) => {
-<<<<<<< HEAD
     if (!score) return 'text-gray-400';
-=======
->>>>>>> main
     if (score >= 80) return 'text-green-600';
     if (score >= 60) return 'text-green-500';
     if (score >= 40) return 'text-yellow-500';
     return 'text-red-500';
   };
 
-<<<<<<< HEAD
   // Format ESG score
   const formatESGScore = (score: number | undefined) => {
     if (!score) return 'N/A';
     return `${score}/100`;
   };
 
-=======
->>>>>>> main
   // If we have payment details, show the certificate
   if (showCertificate && paymentDetails) {
     return (
@@ -311,15 +284,12 @@ export default function BuyStock() {
             <CardHeader className="pb-2">
               <div className="flex justify-between items-start">
                 <div>
-<<<<<<< HEAD
                   <CardTitle className="text-2xl">{company?.name || 'Loading...'}</CardTitle>
                   <CardDescription>
                     {company?.ticker} • {company?.sector || 'N/A'}
                   </CardDescription>
-=======
                   <CardTitle className="text-2xl">{company?.name}</CardTitle>
                   <CardDescription>{company?.ticker} • {company?.sector}</CardDescription>
->>>>>>> main
                 </div>
                 <div className="bg-primary/10 p-2 rounded-lg">
                   <Leaf className="h-6 w-6 text-primary" />
@@ -332,11 +302,8 @@ export default function BuyStock() {
                 <div>
                   <h3 className="text-lg font-medium mb-2">Company Description</h3>
                   <p className="text-muted-foreground">
-<<<<<<< HEAD
                     {company?.description || "No description available"}
-=======
                     {company?.description || "Loading company description..."}
->>>>>>> main
                   </p>
                 </div>
 
@@ -347,13 +314,13 @@ export default function BuyStock() {
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="bg-muted p-3 rounded-lg">
                       <div className="text-sm text-muted-foreground">ESG Score</div>
-<<<<<<< HEAD
+
                       <div className={`text-xl font-bold ${getScoreColor(company?.esgScore)}`}>
                         {formatESGScore(company?.esgScore)}
-=======
+
                       <div className={`text-xl font-bold ${getScoreColor(company?.esgScore || 0)}`}>
                         {company?.esgScore}/100
->>>>>>> main
+
                       </div>
                     </div>
                     <div className="bg-muted p-3 rounded-lg">
