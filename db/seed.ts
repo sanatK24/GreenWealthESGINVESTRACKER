@@ -372,13 +372,13 @@ async function seed() {
     // Create buy stock data from companies
     const buyStockData = companies.map(company => ({
       companyId: company.id,
-      currentPrice: parseFloat(company.currentPrice),
-      marketCap: parseFloat(company.marketCap),
-      weekHigh52: parseFloat(company.yearHigh),
-      weekLow52: parseFloat(company.yearLow),
-      yearlyTrend: company.yearlyTrend,
-      minInvestment: 1000,
-      maxInvestment: 1000000
+      currentPrice: company.currentPrice ? parseFloat(company.currentPrice) : 0,
+      marketCap: company.marketCap ? parseFloat(company.marketCap) : 0,
+      weekHigh52: company.yearHigh ? parseFloat(company.yearHigh) : 0,
+      weekLow52: company.yearLow ? parseFloat(company.yearLow) : 0,
+      yearlyTrend: company.yearlyTrend || 0,
+      minInvestment: "1000",
+      maxInvestment: "1000000"
     }));
 
     // Insert buy stock data
@@ -396,7 +396,18 @@ async function seed() {
         continue;
       }
 
-      const validatedData = insertBuyStockDataSchema.parse(stockData);
+      // Convert numeric fields back to strings for schema validation
+      const validatedData = insertBuyStockDataSchema.parse({
+        ...stockData,
+        currentPrice: stockData.currentPrice.toString(),
+        marketCap: stockData.marketCap.toString(),
+        weekHigh52: stockData.weekHigh52.toString(),
+        weekLow52: stockData.weekLow52.toString(),
+        yearlyTrend: stockData.yearlyTrend.toString(),
+        minInvestment: stockData.minInvestment.toString(),
+        maxInvestment: stockData.maxInvestment.toString()
+      });
+
       await db.insert(schema.buyStockData).values(validatedData);
       seededBuyStockCount++;
     }
