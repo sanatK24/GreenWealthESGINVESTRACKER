@@ -118,6 +118,66 @@ export async function registerRoutes(app: Express): Promise<Server> {
   }
   const paypalClient = new paypal.core.PayPalHttpClient(environment);
 
+  // Payment-related endpoints
+  app.post(`${apiPrefix}/payments`, async (req: Request, res: Response) => {
+    try {
+      const { userId, companyId, paymentData, shares, amount } = req.body;
+
+      if (!userId || !companyId || !paymentData || !shares || !amount) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+
+      const payment = await storage.createPayment(
+        userId,
+        companyId,
+        paymentData,
+        shares,
+        amount
+      );
+
+      return res.json(payment);
+    } catch (error) {
+      console.error("Error creating payment:", error);
+      return res.status(500).json({ error: "Failed to create payment" });
+    }
+  });
+
+  app.put(`${apiPrefix}/payments/:id/status`, async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { status, paymentData } = req.body;
+
+      if (!id || !status) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+
+      const updatedPayment = await storage.updatePaymentStatus(id, status, paymentData);
+      if (!updatedPayment) {
+        return res.status(404).json({ error: "Payment not found" });
+      }
+
+      return res.json(updatedPayment);
+    } catch (error) {
+      console.error("Error updating payment status:", error);
+      return res.status(500).json({ error: "Failed to update payment status" });
+    }
+  });
+
+  app.get(`${apiPrefix}/payments/company/:id`, async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (!id) {
+        return res.status(400).json({ error: "Invalid company ID" });
+      }
+
+      const payments = await storage.getCompanyPayments(id);
+      return res.json(payments);
+    } catch (error) {
+      console.error("Error fetching company payments:", error);
+      return res.status(500).json({ error: "Failed to fetch company payments" });
+    }
+  });
+
   // PayPal routes
   app.post(`${apiPrefix}/create-order`, async (req: Request, res: Response) => {
     try {

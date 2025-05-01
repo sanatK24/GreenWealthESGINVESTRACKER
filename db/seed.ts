@@ -269,10 +269,25 @@ async function seed() {
     }));
 
     // Insert buy stock data
+    let seededBuyStockCount = 0;
     for (const stockData of buyStockData) {
+      // Check if buy stock data already exists for this company
+      const existingBuyStock = await db
+        .select()
+        .from(schema.buyStockData)
+        .where(eq(schema.buyStockData.companyId, stockData.companyId))
+        .limit(1);
+
+      if (existingBuyStock.length > 0) {
+        console.log(`Buy stock data for company ID ${stockData.companyId} already exists, skipping`);
+        continue;
+      }
+
       const validatedData = insertBuyStockDataSchema.parse(stockData);
       await db.insert(schema.buyStockData).values(validatedData);
+      seededBuyStockCount++;
     }
+    console.log(`Seeded ${seededBuyStockCount} new buy stock data entries`);
 
     // Seed sectors
     const sectorsData = [

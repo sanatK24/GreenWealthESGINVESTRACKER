@@ -154,6 +154,7 @@ export const companiesRelations = relations(companies, ({ many }) => ({
   sectors: many(sectors),
   priceHistory: many(stockPriceHistory),
   buyStockData: many(buyStockData),
+  payments: many(payments),
 }));
 
 export const sectorsRelations = relations(sectors, ({ many }) => ({
@@ -167,37 +168,24 @@ export const stockPriceHistoryRelations = relations(stockPriceHistory, ({ one })
   }),
 }));
 
-export const buyStockDataRelations = relations(buyStockData, ({ one }) => ({
+export const buyStockDataRelations = relations(buyStockData, ({ one, many }) => ({
   company: one(companies, {
     fields: [buyStockData.companyId],
     references: [companies.id],
   }),
+  payments: many(payments),
 }));
 
-// Define types
-export type User = typeof users.$inferSelect;
-export type InsertUser = z.infer<typeof insertUserSchema>;
-
-export type Company = typeof companies.$inferSelect;
-export type InsertCompany = z.infer<typeof insertCompanySchema>;
-
-export type Sector = typeof sectors.$inferSelect;
-export type InsertSector = z.infer<typeof insertSectorSchema>;
-
-export type PortfolioComposition = typeof portfolioComposition.$inferSelect;
-export type InsertPortfolioComposition = z.infer<typeof insertPortfolioCompositionSchema>;
-
-export type PortfolioSummary = typeof portfolioSummary.$inferSelect;
-export type InsertPortfolioSummary = z.infer<typeof insertPortfolioSummarySchema>;
-
-export type SustainabilityTrend = typeof sustainabilityTrends.$inferSelect;
-export type InsertSustainabilityTrend = z.infer<typeof insertSustainabilityTrendSchema>;
-
-export type StockPriceHistory = typeof stockPriceHistory.$inferSelect;
-export type InsertStockPriceHistory = z.infer<typeof insertStockPriceHistorySchema>;
-
-export type BuyStockData = typeof buyStockData.$inferSelect;
-export type InsertBuyStockData = z.infer<typeof insertBuyStockDataSchema>;
+export const paymentsRelations = relations(payments, ({ one }) => ({
+  company: one(companies, {
+    fields: [payments.companyId],
+    references: [companies.id],
+  }),
+  user: one(users, {
+    fields: [payments.userId],
+    references: [users.id],
+  }),
+}));
 
 // User Activity Logging Tables
 
@@ -292,6 +280,30 @@ export const insertPaymentSchema = createInsertSchema(payments).omit({
   createdAt: true,
   updatedAt: true,
 });
+
+export type User = typeof users.$inferSelect;
+export type InsertUser = z.infer<typeof insertUserSchema>;
+
+export type Company = typeof companies.$inferSelect;
+export type InsertCompany = z.infer<typeof insertCompanySchema>;
+
+export type Sector = typeof sectors.$inferSelect;
+export type InsertSector = z.infer<typeof insertSectorSchema>;
+
+export type PortfolioComposition = typeof portfolioComposition.$inferSelect;
+export type InsertPortfolioComposition = z.infer<typeof insertPortfolioCompositionSchema>;
+
+export type PortfolioSummary = typeof portfolioSummary.$inferSelect;
+export type InsertPortfolioSummary = z.infer<typeof insertPortfolioSummarySchema>;
+
+export type SustainabilityTrend = typeof sustainabilityTrends.$inferSelect;
+export type InsertSustainabilityTrend = z.infer<typeof insertSustainabilityTrendSchema>;
+
+export type StockPriceHistory = typeof stockPriceHistory.$inferSelect;
+export type InsertStockPriceHistory = z.infer<typeof insertStockPriceHistorySchema>;
+
+export type BuyStockData = typeof buyStockData.$inferSelect;
+export type InsertBuyStockData = z.infer<typeof insertBuyStockDataSchema>;
 
 export type Payment = typeof payments.$inferSelect;
 export type InsertPayment = z.infer<typeof insertPaymentSchema>;

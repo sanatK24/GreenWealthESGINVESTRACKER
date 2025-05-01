@@ -479,20 +479,53 @@ export async function updateBuyStockData(
 
 // Payment handling
 import { payments, users, companies } from '../shared/schema';
-export async function createPayment(userId: number, companyId: number, paymentData: any) {
+export async function createPayment(userId: number, companyId: number, paymentData: any, shares: number, amount: number) {
   try {
-    const [payment] = await db.insert(payments)
+    // Get current buy stock data to validate the purchase
+    const buyStock = await getBuyStockData(companyId);
+    if (!buyStock) {
+      throw new Error('No buy stock data found for this company');
+    }
+
+    // Validate the purchase amount against min/max investment
+    if (amount < buyStock.minInvestment || amount > buyStock.maxInvestment) {
+      throw new Error('Purchase amount is outside allowed range');
+    }
+
+    const payment = await db
+      .insert(payments)
       .values({
         userId,
         companyId,
+        amount: parseFloat(amount.toFixed(2)),
+        shares,
         paymentData: JSON.stringify(paymentData),
-        status: 'pending'
+        status: 'pending',
       })
       .returning();
 
-    return payment;
+    return payment[0];
   } catch (error) {
     console.error('Error creating payment:', error);
+    throw error;
+  }
+}
+
+export async function updatePaymentStatus(paymentId: number, status: string, paymentData?: any) {
+  try {
+    const payment = await db
+      .update(payments)
+      .set({
+        status,
+        paymentData: paymentData ? JSON.stringify(paymentData) : undefined,
+        updatedAt: new Date(),
+      })
+      .where(eq(payments.id, paymentId))
+      .returning();
+
+    return payment[0];
+  } catch (error) {
+    console.error('Error updating payment status:', error);
     throw error;
   }
 }
@@ -506,6 +539,20 @@ export async function getPaymentHistory(userId: number) {
     return history;
   } catch (error) {
     console.error('Error fetching payment history:', error);
+    throw error;
+  }
+}
+
+export async function getCompanyPayments(companyId: number) {
+  try {
+    const payments = await db
+      .select()
+      .from(payments)
+      .where(eq(payments.companyId, companyId))
+      .orderBy(desc(payments.createdAt));
+    return payments;
+  } catch (error) {
+    console.error('Error fetching company payments:', error);
     throw error;
   }
 }
