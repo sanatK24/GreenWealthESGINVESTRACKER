@@ -128,10 +128,32 @@ export const insertStockPriceHistorySchema = createInsertSchema(stockPriceHistor
   updatedAt: true,
 });
 
+// Buy Stock Data table
+export const buyStockData = pgTable("buy_stock_data", {
+  id: serial("id").primaryKey(),
+  companyId: integer("company_id").notNull().references(() => companies.id),
+  currentPrice: decimal("current_price", { precision: 10, scale: 2 }).notNull(),
+  marketCap: decimal("market_cap", { precision: 20, scale: 2 }),
+  weekHigh52: decimal("week_high_52", { precision: 10, scale: 2 }),
+  weekLow52: decimal("week_low_52", { precision: 10, scale: 2 }),
+  yearlyTrend: decimal("yearly_trend", { precision: 5, scale: 2 }),
+  minInvestment: decimal("min_investment", { precision: 10, scale: 2 }).notNull(),
+  maxInvestment: decimal("max_investment", { precision: 10, scale: 2 }).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const insertBuyStockDataSchema = createInsertSchema(buyStockData).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Define relations
 export const companiesRelations = relations(companies, ({ many }) => ({
   sectors: many(sectors),
   priceHistory: many(stockPriceHistory),
+  buyStockData: many(buyStockData),
 }));
 
 export const sectorsRelations = relations(sectors, ({ many }) => ({
@@ -141,6 +163,13 @@ export const sectorsRelations = relations(sectors, ({ many }) => ({
 export const stockPriceHistoryRelations = relations(stockPriceHistory, ({ one }) => ({
   company: one(companies, {
     fields: [stockPriceHistory.companyId],
+    references: [companies.id],
+  }),
+}));
+
+export const buyStockDataRelations = relations(buyStockData, ({ one }) => ({
+  company: one(companies, {
+    fields: [buyStockData.companyId],
     references: [companies.id],
   }),
 }));
@@ -166,6 +195,9 @@ export type InsertSustainabilityTrend = z.infer<typeof insertSustainabilityTrend
 
 export type StockPriceHistory = typeof stockPriceHistory.$inferSelect;
 export type InsertStockPriceHistory = z.infer<typeof insertStockPriceHistorySchema>;
+
+export type BuyStockData = typeof buyStockData.$inferSelect;
+export type InsertBuyStockData = z.infer<typeof insertBuyStockDataSchema>;
 
 // User Activity Logging Tables
 
@@ -241,7 +273,6 @@ export const insertChatRecordSchema = createInsertSchema(chatRecords).omit({
 export const insertComparisonHistorySchema = createInsertSchema(comparisonHistory).omit({
   id: true,
 });
-
 
 // Payments table
 export const payments = pgTable("payments", {

@@ -14,7 +14,8 @@ import {
   InsertPortfolioComposition,
   InsertPortfolioSummary,
   InsertSustainabilityTrend,
-  InsertStockPriceHistory
+  InsertStockPriceHistory,
+  buyStockData
 } from "@shared/schema";
 
 async function readJsonFile(filename: string) {
@@ -418,6 +419,71 @@ export async function insertStockPriceHistory(data: InsertStockPriceHistory) {
   } catch (error) {
     console.error("Error inserting stock price history:", error);
     throw error;
+  }
+}
+
+// Buy Stock Data Functions
+export async function getBuyStockData(companyId: number) {
+  try {
+    const result = await db.execute(
+      `SELECT * FROM buy_stock_data WHERE company_id = $1 ORDER BY updated_at DESC LIMIT 1`,
+      [companyId]
+    );
+    return result.rows?.[0];
+  } catch (error) {
+    console.error("Error in getBuyStockData:", error);
+    return null;
+  }
+}
+
+export async function updateBuyStockData(
+  companyId: number,
+  data: {
+    currentPrice: number;
+    marketCap?: number;
+    weekHigh52?: number;
+    weekLow52?: number;
+    yearlyTrend?: number;
+  }
+) {
+  try {
+    const result = await db.execute(
+      `INSERT INTO buy_stock_data (
+        company_id,
+        current_price,
+        market_cap,
+        week_high_52,
+        week_low_52,
+        yearly_trend
+      ) VALUES (
+        $1,
+        $2,
+        $3,
+        $4,
+        $5,
+        $6
+      ) ON CONFLICT (company_id)
+      DO UPDATE SET
+        current_price = EXCLUDED.current_price,
+        market_cap = EXCLUDED.market_cap,
+        week_high_52 = EXCLUDED.week_high_52,
+        week_low_52 = EXCLUDED.week_low_52,
+        yearly_trend = EXCLUDED.yearly_trend,
+        updated_at = NOW()
+      RETURNING *`,
+      [
+        companyId,
+        data.currentPrice,
+        data.marketCap,
+        data.weekHigh52,
+        data.weekLow52,
+        data.yearlyTrend
+      ]
+    );
+    return result.rows?.[0];
+  } catch (error) {
+    console.error("Error in updateBuyStockData:", error);
+    return null;
   }
 }
 

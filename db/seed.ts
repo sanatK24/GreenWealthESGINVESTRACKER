@@ -2,7 +2,7 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { db } from "./index.js";
 import * as schema from "../shared/schema.js";
-import { insertCompanySchema, insertSectorSchema, insertPortfolioCompositionSchema, insertPortfolioSummarySchema, insertSustainabilityTrendSchema } from "../shared/schema.js";
+import { insertCompanySchema, insertSectorSchema, insertPortfolioCompositionSchema, insertPortfolioSummarySchema, insertSustainabilityTrendSchema, insertBuyStockDataSchema } from "../shared/schema.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -247,23 +247,88 @@ async function seed() {
       },
     ];
 
-    // Check for existing companies by ticker to avoid duplicate errors
-    const existingCompanies = await db.query.companies.findMany();
-    const existingTickers = new Set(existingCompanies.map(c => c.ticker));
-    
-    let seededCount = 0;
+    // Insert companies
     for (const company of companiesData) {
-      // Skip if company with this ticker already exists
-      if (existingTickers.has(company.ticker)) {
-        console.log(`Company with ticker ${company.ticker} already exists, skipping`);
+      await db.insert(schema.companies).values(company);
+    }
+
+    // Get all company IDs after inserting
+    const companies = await db.select().from(schema.companies);
+    const companyMap = new Map(companies.map(c => [c.ticker, c.id]));
+
+    // Seed buy stock data
+    const buyStockData = [
+      {
+        companyId: companyMap.get("TSLA"),
+        currentPrice: 5425.00,
+        marketCap: 1725750000000,
+        weekHigh52: 6100.50,
+        weekLow52: 4500.00,
+        yearlyTrend: 8,
+        minInvestment: 1000,
+        maxInvestment: 1000000
+      },
+      {
+        companyId: companyMap.get("FSLR"),
+        currentPrice: 1825.75,
+        marketCap: 195250000000,
+        weekHigh52: 2250.00,
+        weekLow52: 1500.00,
+        yearlyTrend: 4,
+        minInvestment: 1000,
+        maxInvestment: 1000000
+      },
+      {
+        companyId: companyMap.get("BYND"),
+        currentPrice: 825.25,
+        marketCap: 52300000000,
+        weekHigh52: 1150.75,
+        weekLow52: 700.00,
+        yearlyTrend: 6,
+        minInvestment: 1000,
+        maxInvestment: 1000000
+      },
+      {
+        companyId: companyMap.get("MSFT"),
+        currentPrice: 32150.50,
+        marketCap: 2392000000000,
+        weekHigh52: 35000.25,
+        weekLow52: 28000.00,
+        yearlyTrend: 3,
+        minInvestment: 1000,
+        maxInvestment: 1000000
+      },
+      {
+        companyId: companyMap.get("ORSTED.CO"),
+        currentPrice: 4250.75,
+        marketCap: 178500000000,
+        weekHigh52: 5150.25,
+        weekLow52: 3500.00,
+        yearlyTrend: 2,
+        minInvestment: 1000,
+        maxInvestment: 1000000
+      },
+      {
+        companyId: companyMap.get("ADG"),
+        currentPrice: 1250.00,
+        marketCap: 20000000000,
+        weekHigh52: 1500.00,
+        weekLow52: 1000.00,
+        yearlyTrend: 5,
+        minInvestment: 1000,
+        maxInvestment: 1000000
+      }
+    ];
+
+    // Insert buy stock data
+    for (const stockData of buyStockData) {
+      if (!stockData.companyId) {
+        console.error(`Company ID not found for ticker`);
         continue;
       }
-      
-      const validatedData = insertCompanySchema.parse(company);
-      await db.insert(schema.companies).values(validatedData);
-      seededCount++;
+      const validatedData = insertBuyStockDataSchema.parse(stockData);
+      await db.insert(schema.buyStockData).values(validatedData);
     }
-    console.log(`Seeded ${seededCount} new companies`);
 
     // Seed sectors
     const sectorsData = [

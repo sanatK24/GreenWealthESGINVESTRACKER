@@ -13,12 +13,13 @@ const BuyStockPage = () => {
   const { toast } = useToast();
   const [shares, setShares] = useState('1');
   const [amount, setAmount] = useState('0');
+  const [companyName, setCompanyName] = useState('');
 
-  // Fetch company details and stock price in a single query
+  // Fetch buy stock data
   const { data, error, isLoading } = useQuery({
-    queryKey: ["/api/company-details", id],
+    queryKey: ["/api/buy-stock-data", id],
     queryFn: async () => {
-      const response = await fetch(`/api/company-details/${id}`);
+      const response = await fetch(`/api/buy-stock-data/${id}`);
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       return response.json();
     },
@@ -27,12 +28,18 @@ const BuyStockPage = () => {
   });
 
   useEffect(() => {
-    if (data?.currentPrice && data.currentPrice !== "N/A") {
+    if (data?.currentPrice) {
       const shareCount = parseInt(shares) || 0;
       const calculatedAmount = shareCount * parseFloat(data.currentPrice);
       setAmount(calculatedAmount.toFixed(2));
     }
   }, [shares, data?.currentPrice]);
+
+  useEffect(() => {
+    if (data?.name) {
+      setCompanyName(data.name);
+    }
+  }, [data?.name]);
 
   const purchaseMutation = useMutation({
     mutationFn: async (data: { shares: number, amount: number }) => {
@@ -51,7 +58,7 @@ const BuyStockPage = () => {
     onSuccess: () => {
       toast({
         title: 'Success',
-        description: `Purchased ${shares} shares of ${data?.name}`
+        description: `Purchased ${shares} shares of ${companyName}`
       });
       navigate('/portfolio');
     },
@@ -78,7 +85,7 @@ const BuyStockPage = () => {
         <Card>
           <CardContent>
             <div className="text-center">
-              <p className="text-red-500">Error loading company data</p>
+              <p className="text-red-500">Error loading buy stock data</p>
               <Button onClick={() => window.location.reload()}>Try Again</Button>
             </div>
           </CardContent>
@@ -93,9 +100,9 @@ const BuyStockPage = () => {
         <CardHeader>
           <div className="flex justify-between items-center">
             <div>
-              <CardTitle>{data.name}</CardTitle>
+              <CardTitle>{companyName}</CardTitle>
               <p className="text-sm text-muted-foreground">
-                Current Price: ₹{data.currentPrice === "N/A" ? "N/A" : data.currentPrice}
+                Current Price: ₹{data.currentPrice}
               </p>
             </div>
             <div className="flex gap-2">

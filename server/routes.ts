@@ -780,6 +780,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Buy Stock Data Endpoint
+  app.get(`${apiPrefix}/buy-stock-data/:id`, async (req: Request, res: Response) => {
+    try {
+      const idParam = req.params.id;
+      if (!idParam || isNaN(Number(idParam))) {
+        return res.status(400).json({ message: "Invalid company ID" });
+      }
+
+      const id = parseInt(idParam);
+      const buyStockData = await storage.getBuyStockData(id);
+
+      if (!buyStockData) {
+        return res.status(404).json({ message: "No buy stock data found" });
+      }
+
+      res.json({
+        ...buyStockData,
+        minInvestment: 1000,
+        maxInvestment: 1000000
+      });
+    } catch (error) {
+      console.error("Error fetching buy stock data:", error);
+      res.status(500).json({ message: "Failed to fetch buy stock data" });
+    }
+  });
+
+  // Update Buy Stock Data Endpoint (for admin use)
+  app.post(`${apiPrefix}/buy-stock-data/:id`, async (req: Request, res: Response) => {
+    try {
+      const idParam = req.params.id;
+      if (!idParam || isNaN(Number(idParam))) {
+        return res.status(400).json({ message: "Invalid company ID" });
+      }
+
+      const id = parseInt(idParam);
+      const updatedData = await storage.updateBuyStockData(id, req.body);
+
+      if (!updatedData) {
+        return res.status(500).json({ message: "Failed to update buy stock data" });
+      }
+
+      res.json(updatedData);
+    } catch (error) {
+      console.error("Error updating buy stock data:", error);
+      res.status(500).json({ message: "Failed to update buy stock data" });
+    }
+  });
+
   // Gemini-powered AI Features
 
   // AI Investment Insights for stock comparison
