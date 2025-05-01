@@ -549,120 +549,76 @@ async function seed() {
     }
     console.log(`Seeded ${seededTrendsCount} new sustainability trends`);
 
-    // Seed stock price history
-    const allCompanies = await db.query.companies.findMany();
-    
-    // For each company, create price history data
-    let seededPriceHistoryCount = 0;
-    for (const company of allCompanies) {
-      // Default to this base price if current price is not set
-      const basePrice = parseFloat(company.currentPrice || "1000.0");
+    // Seed stock price history in batches
+    try {
+      console.log("Seeding stock price history...");
       
-      // Generate pricing data for different timeframes
-      const timeframes = ["1d", "1w", "1m", "6m", "1y", "5y", "max"];
-      const now = new Date();
+      // Get all companies in one query
+      const allCompanies = await db.query.companies.findMany();
       
-      for (const timeframe of timeframes) {
-        // Skip if we already have price history for this company and timeframe
-        const existingPriceHistory = await db.query.stockPriceHistory.findFirst({
-          where: and(
-            eq(schema.stockPriceHistory.companyId, company.id),
-            eq(schema.stockPriceHistory.timeframe, timeframe)
-          )
-        });
+      // Process companies in batches of 5 to avoid connection timeouts
+      const batchSize = 5;
+      for (let i = 0; i < allCompanies.length; i += batchSize) {
+        const batch = allCompanies.slice(i, i + batchSize);
         
-        if (existingPriceHistory) {
-          console.log(`Price history for company ${company.name} (${timeframe}) already exists, skipping`);
-          continue;
-        }
-        
-        // Create prices array based on timeframe
-        const prices = [];
-        let numPoints = 0;
-        let volatility = 0.0;
-        let trendFactor = 0.0;
-        let priceMultiplier = 1.0;
-        
-        // Configure the parameters based on timeframe
-        switch (timeframe) {
-          case "1d":
-            numPoints = 24; // Hourly for a day
-            volatility = 0.02;
-            trendFactor = 0.001;
-            priceMultiplier = 1.0;
-            break;
-          case "1w":
-            numPoints = 7; // Daily for a week
-            volatility = 0.05;
-            trendFactor = 0.003;
-            priceMultiplier = 0.9;
-            break;
-          case "1m":
-            numPoints = 30; // Daily for a month
-            volatility = 0.1;
-            trendFactor = 0.005;
-            priceMultiplier = 0.8;
-            break;
-          case "6m":
-            numPoints = 26; // Weekly for 6 months
-            volatility = 0.15;
-            trendFactor = 0.01;
-            priceMultiplier = 0.7;
-            break;
-          case "1y":
-            numPoints = 12; // Monthly for a year
-            volatility = 0.2;
-            trendFactor = 0.02;
-            priceMultiplier = 0.6;
-            break;
-          case "5y":
-            numPoints = 20; // Quarterly for 5 years
-            volatility = 0.25;
-            trendFactor = 0.03;
-            priceMultiplier = 0.5;
-            break;
-          case "max":
-            numPoints = 15; // Yearly for max timeframe
-            volatility = 0.3;
-            trendFactor = 0.04;
-            priceMultiplier = 0.4;
-            break;
-        }
-        
-        // Generate price points
-        const adjustedBasePrice = basePrice * priceMultiplier;
-        for (let i = 0; i < numPoints; i++) {
-          const randomChange = (Math.random() * 2 - 1) * volatility;
-          const priceFactor = 1 + randomChange + (trendFactor * i);
-          const price = Math.round(adjustedBasePrice * priceFactor * 100) / 100;
+        // Process each company in the batch
+        for (const company of batch) {
+          console.log(`Processing price history for ${company.name}...`);
           
-          prices.push({
-            price: price,
-            date: new Date().toISOString() // Use current date as placeholder
-          });
-        }
-        
-        // Create the price history record with the prices as a JSON string
-        const priceHistory = {
-          companyId: company.id,
-          timeframe: timeframe,
-          prices: JSON.stringify(prices),
-        };
-        
-        try {
-          const validatedData = schema.insertStockPriceHistorySchema.parse(priceHistory);
-          await db.insert(schema.stockPriceHistory).values(validatedData);
-          seededPriceHistoryCount++;
+          // Get existing price history for this company
+          const existingHistories = await db
+            .select()
+            .from(schema.stockPriceHistory)
+            .where(eq(schema.stockPriceHistory.companyId, company.id));
+            
+          // Only process timeframes that don't exist
+          const timeframes = ["1d", "1w", "1m", "6m", "1y", "5y", "max"];
+          const existingTimeframes = new Set(existingHistories.map(h => h.timeframe));
+          const timeframesToProcess = timeframes.filter(t => !existingTimeframes.has(t));
           
-          console.log(`Added price history record for ${company.name} (${timeframe})`);
-        } catch (error) {
-          console.error(`Error seeding price history for ${company.name} (${timeframe}):`, error);
+          if (timeframesToProcess.length === 0) {
+            console.log(`All price history timeframes exist for ${company.name}, skipping`);
+            continue;
+          }
+          
+          // Generate and insert price history in one transaction per timeframe
+          for (const timeframe of timeframesToProcess) {
+            try {
+              // Generate realistic price data
+              const prices = generatePriceHistory(company, timeframe);
+              
+              // Insert in one transaction
+              await db.transaction(async (tx) => {
+                const priceHistory = {
+                  companyId: company.id,
+                  timeframe: timeframe,
+                  prices: JSON.stringify(prices),
+                  lastUpdated: new Date()
+                };
+                
+                await tx.insert(schema.stockPriceHistory).values(priceHistory);
+              });
+              
+              console.log(`Successfully added price history for ${company.name} (${timeframe})`);
+            } catch (error) {
+              console.error(`Error processing ${timeframe} for ${company.name}:`, error);
+              // Continue with next timeframe
+            }
+          }
+          
+          // Add small delay between companies to avoid rate limiting
+          await new Promise(resolve => setTimeout(resolve, 1000));
         }
+        
+        console.log(`Completed batch ${Math.floor(i / batchSize) + 1}`);
       }
+      
+      console.log("Stock price history seeding completed successfully");
+    } catch (error) {
+      console.error("Error seeding stock price history:", error);
+      // Don't throw here since it's not critical for main functionality
     }
-    
-    console.log(`Seeded ${seededPriceHistoryCount} new stock price history records`);
-    
+
     console.log("Database seeding completed successfully");
   } catch (error) {
     console.error("Error seeding database:", error);
@@ -670,3 +626,94 @@ async function seed() {
 }
 
 seed();
+
+// Helper function to generate realistic price history
+function generatePriceHistory(company: any, timeframe: string): Array<{ price: number; date: string }> {
+  const basePrice = parseFloat(company.currentPrice);
+  const prices: Array<{ price: number; date: string }> = [];
+  
+  // Calculate time range based on timeframe
+  const now = new Date();
+  let startDate: Date;
+  switch (timeframe) {
+    case "1d":
+      startDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+      break;
+    case "1w":
+      startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      break;
+    case "1m":
+      startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+      break;
+    case "6m":
+      startDate = new Date(now.getTime() - 180 * 24 * 60 * 60 * 1000);
+      break;
+    case "1y":
+      startDate = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
+      break;
+    case "5y":
+      startDate = new Date(now.getTime() - 5 * 365 * 24 * 60 * 60 * 1000);
+      break;
+    case "max":
+      startDate = new Date(now.getTime() - 10 * 365 * 24 * 60 * 60 * 1000);
+      break;
+    default:
+      throw new Error(`Unknown timeframe: ${timeframe}`);
+  }
+
+  // Generate price points
+  let currentPrice = basePrice;
+  let currentDate = new Date(startDate);
+  
+  // Calculate number of points based on timeframe
+  const pointsPerDay = timeframe === "1d" ? 24 : 1; // Hourly for 1d, daily for others
+  const totalDays = Math.ceil((now.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000));
+  
+  for (let i = 0; i < totalDays * pointsPerDay; i++) {
+    // Calculate price change based on timeframe
+    let change = 0;
+    switch (timeframe) {
+      case "1d":
+        change = (Math.random() * 2 - 1) * (basePrice * 0.02); // 2% daily volatility
+        break;
+      case "1w":
+        change = (Math.random() * 2 - 1) * (basePrice * 0.05); // 5% weekly volatility
+        break;
+      case "1m":
+        change = (Math.random() * 2 - 1) * (basePrice * 0.1); // 10% monthly volatility
+        break;
+      case "6m":
+        change = (Math.random() * 2 - 1) * (basePrice * 0.15); // 15% 6-month volatility
+        break;
+      case "1y":
+        change = (Math.random() * 2 - 1) * (basePrice * 0.2); // 20% yearly volatility
+        break;
+      case "5y":
+      case "max":
+        change = (Math.random() * 2 - 1) * (basePrice * 0.3); // 30% long-term volatility
+        break;
+    }
+    
+    // Apply change with trend factor
+    const trendFactor = (i / (totalDays * pointsPerDay)) * 0.01; // 1% overall trend
+    currentPrice = Math.max(0, currentPrice + change + (basePrice * trendFactor));
+    
+    // Round to 2 decimal places
+    currentPrice = Math.round(currentPrice * 100) / 100;
+    
+    // Add price point
+    prices.push({
+      price: currentPrice,
+      date: currentDate.toISOString()
+    });
+    
+    // Move to next time point
+    if (timeframe === "1d") {
+      currentDate.setHours(currentDate.getHours() + 1);
+    } else {
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+  }
+  
+  return prices;
+}
