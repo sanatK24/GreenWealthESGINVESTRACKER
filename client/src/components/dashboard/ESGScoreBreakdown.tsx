@@ -4,10 +4,10 @@ import { getQueryFn } from "@/lib/queryClient";
 
 export function ESGScoreBreakdown() {
   const { data, isLoading, error } = useQuery({
-    queryKey: ['/api/companies/esg-breakdown'],
+    queryKey: ["/api/companies/esg-breakdown"],
     queryFn: getQueryFn(),
     staleTime: 60000,
-    retry: 2
+    retry: 2,
   });
 
   if (isLoading) {
@@ -63,3 +63,5 @@ export function ESGScoreBreakdown() {
     </Card>
   );
 }
+
+export default ESGScoreBreakdown;
