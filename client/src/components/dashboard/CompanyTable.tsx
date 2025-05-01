@@ -21,25 +21,28 @@ const CompanyTable = () => {
   const [page, setPage] = useState(1);
   const { toast } = useToast();
 
-  const { data, isLoading, error } = useQuery({
+  const { data, error } = useQuery({
     queryKey: ["/api/companies", page],
     queryFn: async () => {
       const response = await fetch(`/api/companies?page=${page}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch companies');
-      }
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       return response.json();
     },
+    retry: 1,
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
   });
 
   if (error) {
     toast({
       title: "Error",
-      description: "Failed to load company data",
+      description: error instanceof Error ? error.message : "Failed to load company data",
       variant: "destructive",
     });
+    return null;
   }
-  
+
+  if (!data) return null;
+
   const getCompanyIcon = (sector: string) => {
     switch (sector.toLowerCase()) {
       case "electric vehicles":
@@ -146,22 +149,6 @@ const CompanyTable = () => {
   };
 
   const renderContent = () => {
-    if (isLoading) {
-      return (
-        <div className="py-8 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-        </div>
-      );
-    }
-
-    if (!data || !data.companies || data.companies.length === 0) {
-      return (
-        <div className="py-8 flex items-center justify-center">
-          <p className="text-slate-500">No company data available</p>
-        </div>
-      );
-    }
-
     return (
       <>
         {/* Desktop view (md+) */}
