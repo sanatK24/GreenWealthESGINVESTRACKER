@@ -53,10 +53,6 @@ export default function BuyStock() {
     queryFn: getQueryFn({ on401: 'returnNull' }),
     retry: 2,
     refetchOnWindowFocus: false
-    isLoading: isLoadingUser 
-  } = useQuery({
-    queryKey: ['/api/user'],
-    queryFn: getQueryFn({ on401: 'returnNull' }),
   });
 
   // Purchase stock mutation
@@ -73,7 +69,6 @@ export default function BuyStock() {
       queryClient.invalidateQueries({ queryKey: ['/api/portfolio/composition'] });
       queryClient.invalidateQueries({ queryKey: ['/api/portfolio/summary'] });
 
-      // Only redirect if we're not showing the certificate
       if (!showCertificate) {
         setTimeout(() => {
           navigate('/portfolio');
@@ -87,7 +82,6 @@ export default function BuyStock() {
         variant: 'destructive'
       });
 
-      // If purchase fails but we were showing a certificate, hide it
       if (showCertificate) {
         setShowCertificate(false);
       }
@@ -127,6 +121,37 @@ export default function BuyStock() {
     return `${value > 0 ? '+' : ''}${value}%`;
   };
 
+  // Get score color based on value
+  const getScoreColor = (score: number) => {
+    if (!score) return 'text-gray-400';
+    if (score >= 80) return 'text-green-600';
+    if (score >= 60) return 'text-green-500';
+    if (score >= 40) return 'text-yellow-500';
+    return 'text-red-500';
+  };
+
+  // Handle payment success
+  const handlePaymentSuccess = (details: any) => {
+    if (company && company.id) {
+      setPaymentDetails({
+        companyName: company.name,
+        shares: parseInt(shares),
+        amount: parseFloat(amount),
+        date: new Date(),
+        esgScore: company.esgScore || 0,
+        paymentId: details.id || details.orderID || 'PAYMENT-' + Math.random().toString(36).substring(2, 10).toUpperCase()
+      });
+
+      setShowCertificate(true);
+
+      purchaseMutation.mutate({
+        companyId: company.id,
+        shares: parseInt(shares),
+        amount: parseFloat(amount)
+      });
+    }
+  };
+
   // Handle errors
   if (companyError || userError) {
     return (
@@ -142,42 +167,8 @@ export default function BuyStock() {
       </div>
     );
   }
-    }
-  }, [shares, company]);
 
-  // Handle number of shares change
-  const handleSharesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Only allow positive numbers
-    const value = e.target.value.replace(/[^0-9]/g, '');
-    setShares(value);
-  };
-
-  // Handle PayPal payment success
-  const handlePaymentSuccess = (details: any) => {
-    if (company && company.id) {
-      // Save payment details for certificate
-      setPaymentDetails({
-        companyName: company.name,
-        shares: parseInt(shares),
-        amount: parseFloat(amount),
-        date: new Date(),
-        esgScore: company.esgScore || 0,
-        paymentId: details.id || details.orderID || 'PAYMENT-' + Math.random().toString(36).substring(2, 10).toUpperCase()
-      });
-
-      // Show certificate
-      setShowCertificate(true);
-
-      // Update portfolio in the background
-      purchaseMutation.mutate({
-        companyId: company.id,
-        shares: parseInt(shares),
-        amount: parseFloat(amount)
-      });
-    }
-  };
-
-  // Show loading while fetching data
+  // Show loading state
   if (isLoadingCompany || isLoadingUser) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -197,8 +188,6 @@ export default function BuyStock() {
             </CardContent>
           </Card>
         </div>
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -211,29 +200,13 @@ export default function BuyStock() {
     return <div className="flex items-center justify-center min-h-screen">Redirecting to login...</div>;
   }
 
-  // Redirect to companies if no company found
+  // Redirect if no company found
   if (!company && !isLoadingCompany && !!params?.id) {
     setTimeout(() => {
       navigate('/companies');
     }, 0);
     return <div className="flex items-center justify-center min-h-screen">Company not found</div>;
-    return <div className="flex items-center justify-center min-h-screen">Redirecting to companies list...</div>;
   }
-
-  // Calculate ESG score style
-  const getScoreColor = (score: number) => {
-    if (!score) return 'text-gray-400';
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-green-500';
-    if (score >= 40) return 'text-yellow-500';
-    return 'text-red-500';
-  };
-
-  // Format ESG score
-  const formatESGScore = (score: number | undefined) => {
-    if (!score) return 'N/A';
-    return `${score}/100`;
-  };
 
   // If we have payment details, show the certificate
   if (showCertificate && paymentDetails) {
@@ -264,7 +237,7 @@ export default function BuyStock() {
     );
   }
 
-  // Otherwise show the purchase form
+  // Main purchase form
   return (
     <div className="container mx-auto px-4 py-8">
       <Button 
@@ -283,10 +256,6 @@ export default function BuyStock() {
             <CardHeader className="pb-2">
               <div className="flex justify-between items-start">
                 <div>
-                  <CardTitle className="text-2xl">{company?.name || 'Loading...'}</CardTitle>
-                  <CardDescription>
-                    {company?.ticker} • {company?.sector || 'N/A'}
-                  </CardDescription>
                   <CardTitle className="text-2xl">{company?.name}</CardTitle>
                   <CardDescription>{company?.ticker} • {company?.sector}</CardDescription>
                 </div>
@@ -302,7 +271,6 @@ export default function BuyStock() {
                   <h3 className="text-lg font-medium mb-2">Company Description</h3>
                   <p className="text-muted-foreground">
                     {company?.description || "No description available"}
-                    {company?.description || "Loading company description..."}
                   </p>
                 </div>
 
@@ -313,34 +281,24 @@ export default function BuyStock() {
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="bg-muted p-3 rounded-lg">
                       <div className="text-sm text-muted-foreground">ESG Score</div>
-
-                      <div className={`text-xl font-bold ${getScoreColor(company?.esgScore)}`}>
-                        {formatESGScore(company?.esgScore)}
-
                       <div className={`text-xl font-bold ${getScoreColor(company?.esgScore || 0)}`}>
                         {company?.esgScore}/100
-
                       </div>
                     </div>
                     <div className="bg-muted p-3 rounded-lg">
                       <div className="text-sm text-muted-foreground">Environmental</div>
-
                       <div className={`text-xl font-bold ${getScoreColor(company?.environmentalScore || 0)}`}>
                         {company?.environmentalScore}/100
                       </div>
                     </div>
                     <div className="bg-muted p-3 rounded-lg">
                       <div className="text-sm text-muted-foreground">Social</div>
-                      <div className={`text-xl font-bold ${getScoreColor(company?.socialScore)}`}>
-                        {formatESGScore(company?.socialScore)}
                       <div className={`text-xl font-bold ${getScoreColor(company?.socialScore || 0)}`}>
                         {company?.socialScore}/100
                       </div>
                     </div>
                     <div className="bg-muted p-3 rounded-lg">
                       <div className="text-sm text-muted-foreground">Governance</div>
-                      <div className={`text-xl font-bold ${getScoreColor(company?.governanceScore)}`}>
-                        {formatESGScore(company?.governanceScore)}
                       <div className={`text-xl font-bold ${getScoreColor(company?.governanceScore || 0)}`}>
                         {company?.governanceScore}/100
                       </div>
@@ -378,16 +336,6 @@ export default function BuyStock() {
                             : 'text-red-500'
                         }>
                           {formatPercentage(company?.yearlyTrend)}
-                          ₹{company?.currentPrice || '8,500.00'}
-                        </TableCell>
-                        <TableCell>
-                          ₹{company?.marketCap || '1,125B'}
-                        </TableCell>
-                        <TableCell>
-                          ₹{company?.yearHigh || '9,710.50'}
-                        </TableCell>
-                        <TableCell className={company?.yearlyTrend > 0 ? 'text-green-600' : 'text-red-500'}>
-                          {company?.yearlyTrend > 0 ? '+' : ''}{company?.yearlyTrend}%
                         </TableCell>
                       </TableRow>
                     </TableBody>
@@ -408,17 +356,6 @@ export default function BuyStock() {
               </CardTitle>
               <CardDescription className="flex items-center gap-2">
                 <Leaf className="h-4 w-4 text-green-500" />
-                {company?.esgScore ? (
-                  <>
-                    ESG Score: {formatESGScore(company.esgScore)} - Invest in sustainable growth
-                  </>
-                ) : (
-                  'Loading ESG Score...'
-                )}
-                Buy {company?.name} Stock
-              </CardTitle>
-              <CardDescription className="flex items-center gap-2">
-                <Leaf className="h-4 w-4 text-green-500" />
                 ESG Score: {company?.esgScore || 0}/100 - Invest in sustainable growth
               </CardDescription>
             </CardHeader>
@@ -430,19 +367,12 @@ export default function BuyStock() {
                   <div className="mt-1.5">
                     <Input
                       id="shares"
-
-                      type="number"
-                      min="1"
+                      type="text"
                       value={shares}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      onChange={(e) => {
                         const value = e.target.value.replace(/[^0-9]/g, '');
                         setShares(value);
                       }}
-
-                      type="text"
-                      value={shares}
-                      onChange={handleSharesChange}
-
                       className="text-lg"
                       placeholder="Enter number of shares"
                     />
@@ -452,24 +382,16 @@ export default function BuyStock() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-muted/50 p-4 rounded-lg">
                     <div className="text-sm text-muted-foreground mb-1">Current Share Price</div>
-
                     <div className="text-2xl font-bold text-primary">
                       {formatCurrency(company?.currentPrice)}
                     </div>
-
-                    <div className="text-2xl font-bold text-primary">₹{company?.currentPrice || '8,500.00'}</div>
-
                   </div>
 
                   <div className="bg-muted/50 p-4 rounded-lg">
                     <div className="text-sm text-muted-foreground mb-1">Market Cap</div>
-
                     <div className="text-2xl font-bold">
                       {formatCurrency(company?.marketCap)}
                     </div>
-
-                    <div className="text-2xl font-bold">₹{company?.marketCap || '1.2T'}</div>
-
                   </div>
                 </div>
 
@@ -485,7 +407,6 @@ export default function BuyStock() {
                   <div className="space-y-3">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Share Price</span>
-
                       <span className="font-medium">
                         {formatCurrency(company?.currentPrice)}
                       </span>
@@ -495,29 +416,15 @@ export default function BuyStock() {
                       <span className="font-medium">
                         {formatNumber(shares)}
                       </span>
-
-                      <span className="font-medium">₹{company?.currentPrice?.toLocaleString() || '0.00'}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Number of Shares</span>
-                      <span className="font-medium">{parseInt(shares).toLocaleString()}</span>
-
                     </div>
                     <Separator className="my-3" />
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Total Amount</span>
-
-                      <span className="text-primary">
+                      <span className="text-primary font-bold">
                         {amount && parseFloat(amount) > 0 
                           ? formatCurrency(amount) 
                           : '₹0.00'}
                       </span>
-
-                      <span className="text-primary">₹{(company?.currentPrice ? (parseInt(shares) * parseFloat(company.currentPrice)).toLocaleString('en-IN', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                      }) : '0.00')}</span>
-
                     </div>
                   </div>
                 </div>
@@ -527,36 +434,9 @@ export default function BuyStock() {
             <CardFooter className="flex flex-col space-y-4 pt-6">
               <PayPalButton 
                 amount={amount}
-
-                description={`Purchase of ${shares} shares of ${company?.name || 'Stock'}`}
-                onSuccess={(details: any) => {
-                  if (company && company.id) {
-                    // Save payment details for certificate
-                    setPaymentDetails({
-                      companyName: company.name,
-                      shares: parseInt(shares),
-                      amount: parseFloat(amount),
-                      date: new Date(),
-                      esgScore: company.esgScore || 0,
-                      paymentId: details.id || details.orderID || 'PAYMENT-' + Math.random().toString(36).substring(2, 10).toUpperCase()
-                    });
-
-                    // Show certificate
-                    setShowCertificate(true);
-
-                    // Update portfolio in the background
-                    purchaseMutation.mutate({
-                      companyId: company.id,
-                      shares: parseInt(shares),
-                      amount: parseFloat(amount)
-                    });
-                  }
-                }}
-                disabled={!company?.currentPrice || parseFloat(amount) <= 0}
-
                 description={`Purchase of ${shares} shares of ${company?.name}`}
                 onSuccess={handlePaymentSuccess}
-  
+                disabled={!company?.currentPrice || parseFloat(amount) <= 0}
               />
               <p className="text-sm text-center text-muted-foreground">
                 Secure payment powered by PayPal
