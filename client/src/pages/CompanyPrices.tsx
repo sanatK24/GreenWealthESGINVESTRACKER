@@ -3,9 +3,7 @@ import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StockPriceChart } from "@/components/dashboard/StockPriceChart";
-<<<<<<< HEAD
 import StockComparison from "@/components/dashboard/StockComparison";
-=======
 import { StockComparison } from "@/components/dashboard/StockComparison";
 >>>>>>> main
 import { Button } from "@/components/ui/button";

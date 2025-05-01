@@ -325,10 +325,7 @@ export default function BuyStock() {
                     </div>
                     <div className="bg-muted p-3 rounded-lg">
                       <div className="text-sm text-muted-foreground">Environmental</div>
-<<<<<<< HEAD
-                      <div className={`text-xl font-bold ${getScoreColor(company?.environmentalScore)}`}>
-                        {formatESGScore(company?.environmentalScore)}
-=======
+
                       <div className={`text-xl font-bold ${getScoreColor(company?.environmentalScore || 0)}`}>
                         {company?.environmentalScore}/100
 >>>>>>> main
