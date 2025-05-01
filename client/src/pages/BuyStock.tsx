@@ -124,7 +124,6 @@ export default function BuyStock() {
       };
     },
     retry: 2,
-    refetchOnWindowFocus: false,
     staleTime: 30000, // Consider data fresh for 30 seconds
     onError: (error) => {
       console.error('❌ Company query error:', error);
