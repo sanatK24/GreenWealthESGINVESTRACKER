@@ -17,9 +17,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectItem } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { DollarSign, TrendingUp, Leaf, LineChart, Info, ArrowLeft, Loader2, CircleDollarSign } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { usePayment } from '@/context/PaymentContext';
 
 export default function BuyStock() {
   const [, navigate] = useLocation();
@@ -28,14 +30,13 @@ export default function BuyStock() {
   const [shares, setShares] = useState('10');
   const [amount, setAmount] = useState('0');
   const [showCertificate, setShowCertificate] = useState(false);
+  const [showProcessing, setShowProcessing] = useState(false);
   const [paymentDetails, setPaymentDetails] = useState<any>(null);
+  const { setPaymentData } = usePayment();
+  const [paymentMethod, setPaymentMethod] = useState('paypal');
 
-  // Get company data
-  const { 
-    data: company, 
-    error: companyError,
-    isLoading: isLoadingCompany
-  } = useQuery({
+  // Existing queries remain the same
+  const { data: company, error: companyError, isLoading: isLoadingCompany } = useQuery({
     queryKey: ['/api/companies', params?.id],
     queryFn: getQueryFn({ on401: 'returnNull' }),
     enabled: !!params?.id,
@@ -43,19 +44,14 @@ export default function BuyStock() {
     refetchOnWindowFocus: false
   });
 
-  // Get current user
-  const { 
-    data: user, 
-    isLoading: isLoadingUser,
-    error: userError
-  } = useQuery({
+  const { data: user, isLoading: isLoadingUser, error: userError } = useQuery({
     queryKey: ['/api/user'],
     queryFn: getQueryFn({ on401: 'returnNull' }),
     retry: 2,
     refetchOnWindowFocus: false
   });
 
-  // Purchase stock mutation
+  // Purchase mutation
   const purchaseMutation = useMutation({
     mutationFn: async (data: { companyId: number, shares: number, amount: number }) => {
       const response = await apiRequest('POST', '/api/portfolio/purchase', data);
@@ -88,7 +84,34 @@ export default function BuyStock() {
     }
   });
 
-  // Calculate amount whenever shares change
+  // Format helpers
+  const formatNumber = (num: number | string) => {
+    if (!num) return 'N/A';
+    return num.toLocaleString('en-IN');
+  };
+
+  const formatCurrency = (num: number | string) => {
+    if (!num) return 'N/A';
+    return '₹' + num.toLocaleString('en-IN', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  };
+
+  const formatPercentage = (num: number | string) => {
+    if (!num) return 'N/A';
+    const value = parseFloat(num.toString());
+    return `${value > 0 ? '+' : ''}${value}%`;
+  };
+
+  const getScoreColor = (score: number) => {
+    if (!score) return 'text-gray-400';
+    if (score >= 80) return 'text-green-600';
+    if (score >= 60) return 'text-green-500';
+    if (score >= 40) return 'text-yellow-500';
+    return 'text-red-500';
+  };
+
   useEffect(() => {
     if (company?.currentPrice) {
       const shareCount = parseInt(shares) || 0;
@@ -99,49 +122,24 @@ export default function BuyStock() {
     }
   }, [shares, company?.currentPrice]);
 
-  // Format numbers
-  const formatNumber = (num: number | string) => {
-    if (!num) return 'N/A';
-    return num.toLocaleString('en-IN');
-  };
-
-  // Format currency
-  const formatCurrency = (num: number | string) => {
-    if (!num) return 'N/A';
-    return '₹' + num.toLocaleString('en-IN', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
-  };
-
-  // Format percentage
-  const formatPercentage = (num: number | string) => {
-    if (!num) return 'N/A';
-    const value = parseFloat(num.toString());
-    return `${value > 0 ? '+' : ''}${value}%`;
-  };
-
-  // Get score color based on value
-  const getScoreColor = (score: number) => {
-    if (!score) return 'text-gray-400';
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-green-500';
-    if (score >= 40) return 'text-yellow-500';
-    return 'text-red-500';
-  };
-
-  // Handle payment success
   const handlePaymentSuccess = (details: any) => {
     if (company && company.id) {
-      setPaymentDetails({
+      const paymentInfo = {
         companyName: company.name,
         shares: parseInt(shares),
         amount: parseFloat(amount),
         date: new Date(),
         esgScore: company.esgScore || 0,
-        paymentId: details.id || details.orderID || 'PAYMENT-' + Math.random().toString(36).substring(2, 10).toUpperCase()
-      });
+        paymentId: details.id || details.orderID || 'PAYMENT-' + Math.random().toString(36).substring(2, 10).toUpperCase(),
+        investor_name: user?.username,
+        investor_email: user?.email,
+        payment_method: paymentMethod,
+        roi: company.yearlyTrend,
+        risk_level: company.esgRiskLevel || 'Medium',
+      };
 
+      setPaymentData(paymentInfo);
+      setPaymentDetails(paymentInfo);
       setShowCertificate(true);
 
       purchaseMutation.mutate({
@@ -152,63 +150,74 @@ export default function BuyStock() {
     }
   };
 
-  // Handle errors
-  if (companyError || userError) {
+  // Show payment processing screen
+  if (showProcessing) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold text-destructive mb-2">
-            Error loading data
-          </h2>
-          <p className="text-muted-foreground">
-            Please try refreshing the page or contact support if the issue persists.
-          </p>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Payment Processing</CardTitle>
+            <CardDescription>Complete your investment in {company?.name}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div>
+                <Label>Payment Method</Label>
+                <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select payment method" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="paypal">PayPal</SelectItem>
+                      <SelectItem value="card">Credit/Debit Card</SelectItem>
+                      <SelectItem value="upi">UPI</SelectItem>
+                      <SelectItem value="netbanking">Net Banking</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="bg-muted p-4 rounded-lg">
+                <h3 className="font-medium mb-2">Investment Summary</h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span>Company:</span>
+                    <span className="font-medium">{company?.name}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Shares:</span>
+                    <span className="font-medium">{shares}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Amount:</span>
+                    <span className="font-medium">{formatCurrency(amount)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>ESG Score:</span>
+                    <span className="font-medium">{company?.esgScore}/100</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter className="flex flex-col space-y-4">
+            <PayPalButton 
+              amount={amount}
+              description={`Purchase of ${shares} shares of ${company?.name}`}
+              onSuccess={handlePaymentSuccess}
+              disabled={!company?.currentPrice || parseFloat(amount) <= 0}
+            />
+            <Button variant="outline" onClick={() => setShowProcessing(false)}>
+              Back to Purchase Details
+            </Button>
+          </CardFooter>
+        </Card>
       </div>
     );
   }
 
-  // Show loading state
-  if (isLoadingCompany || isLoadingUser) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="space-y-4">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-center h-12">
-                <Loader2 className="h-6 w-6 animate-spin text-primary" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-4 w-2/3" />
-                <Skeleton className="h-4 w-1/2" />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    );
-  }
-
-  // Redirect to login if not authenticated
-  if (!user && !isLoadingUser) {
-    setTimeout(() => {
-      navigate('/auth');
-    }, 0);
-    return <div className="flex items-center justify-center min-h-screen">Redirecting to login...</div>;
-  }
-
-  // Redirect if no company found
-  if (!company && !isLoadingCompany && !!params?.id) {
-    setTimeout(() => {
-      navigate('/companies');
-    }, 0);
-    return <div className="flex items-center justify-center min-h-screen">Company not found</div>;
-  }
-
-  // If we have payment details, show the certificate
+  // Show certificate after successful payment
   if (showCertificate && paymentDetails) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -237,7 +246,60 @@ export default function BuyStock() {
     );
   }
 
-  // Main purchase form
+  // Rest of your existing BuyStock component code remains the same
+  // Error handling, loading states, and main purchase form
+  if (companyError || userError) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-destructive mb-2">
+            Error loading data
+          </h2>
+          <p className="text-muted-foreground">
+            Please try refreshing the page or contact support if the issue persists.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isLoadingCompany || isLoadingUser) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="space-y-4">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-center h-12">
+                <Loader2 className="h-6 w-6 animate-spin text-primary" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-4 w-2/3" />
+                <Skeleton className="h-4 w-1/2" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user && !isLoadingUser) {
+    setTimeout(() => {
+      navigate('/auth');
+    }, 0);
+    return <div className="flex items-center justify-center min-h-screen">Redirecting to login...</div>;
+  }
+
+  if (!company && !isLoadingCompany && !!params?.id) {
+    setTimeout(() => {
+      navigate('/companies');
+    }, 0);
+    return <div className="flex items-center justify-center min-h-screen">Company not found</div>;
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
       <Button 
@@ -432,12 +494,13 @@ export default function BuyStock() {
             </CardContent>
 
             <CardFooter className="flex flex-col space-y-4 pt-6">
-              <PayPalButton 
-                amount={amount}
-                description={`Purchase of ${shares} shares of ${company?.name}`}
-                onSuccess={handlePaymentSuccess}
+              <Button 
+                className="w-full"
+                onClick={() => setShowProcessing(true)}
                 disabled={!company?.currentPrice || parseFloat(amount) <= 0}
-              />
+              >
+                Proceed to Payment
+              </Button>
               <p className="text-sm text-center text-muted-foreground">
                 Secure payment powered by PayPal
               </p>
