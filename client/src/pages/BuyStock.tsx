@@ -36,20 +36,25 @@ export default function BuyStock() {
   const { setPaymentData } = usePayment();
   const [paymentMethod, setPaymentMethod] = useState('paypal');
 
-  // Existing queries remain the same
   const { data: company, error: companyError, isLoading: isLoadingCompany } = useQuery({
     queryKey: ['/api/companies', params?.id],
-    queryFn: getQueryFn({ on401: 'returnNull' }),
+    queryFn: async () => {
+      const res = await fetch(`/api/companies/${params?.id}`);
+      if (!res.ok) throw new Error('Failed to fetch company data');
+      return res.json();
+    },
     enabled: !!params?.id,
-    retry: 2,
-    refetchOnWindowFocus: false
+    retry: 1
   });
 
   const { data: user, isLoading: isLoadingUser, error: userError } = useQuery({
     queryKey: ['/api/user'],
-    queryFn: getQueryFn({ on401: 'returnNull' }),
-    retry: 2,
-    refetchOnWindowFocus: false
+    queryFn: async () => {
+      const res = await fetch('/api/user');
+      if (!res.ok) throw new Error('Failed to fetch user data');
+      return res.json();
+    },
+    retry: 1
   });
 
   // Purchase mutation
