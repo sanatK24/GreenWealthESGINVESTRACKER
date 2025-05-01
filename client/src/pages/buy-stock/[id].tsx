@@ -14,33 +14,25 @@ const BuyStockPage = () => {
   const [shares, setShares] = useState('1');
   const [amount, setAmount] = useState('0');
 
-  // Fetch company details
-  const { data: company, error: companyError, isLoading: companyLoading } = useQuery({
-    queryKey: ["/api/company", id],
+  // Fetch company details and stock price in a single query
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["/api/company-details", id],
     queryFn: async () => {
-      const response = await fetch(`/api/company/${id}`);
+      const response = await fetch(`/api/company-details/${id}`);
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       return response.json();
-    }
-  });
-
-  // Fetch current stock price
-  const { data: stockPrice, error: priceError, isLoading: priceLoading } = useQuery({
-    queryKey: ["/api/stock-price", id],
-    queryFn: async () => {
-      const response = await fetch(`/api/stock-price/${id}`);
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      return response.json();
-    }
+    },
+    retry: 1,
+    staleTime: 1000 * 60 * 5 // Cache for 5 minutes
   });
 
   useEffect(() => {
-    if (stockPrice?.currentPrice) {
+    if (data?.currentPrice) {
       const shareCount = parseInt(shares) || 0;
-      const calculatedAmount = shareCount * parseFloat(stockPrice.currentPrice);
+      const calculatedAmount = shareCount * parseFloat(data.currentPrice);
       setAmount(calculatedAmount.toFixed(2));
     }
-  }, [shares, stockPrice?.currentPrice]);
+  }, [shares, data?.currentPrice]);
 
   const purchaseMutation = useMutation({
     mutationFn: async (data: { shares: number, amount: number }) => {
@@ -59,7 +51,7 @@ const BuyStockPage = () => {
     onSuccess: () => {
       toast({
         title: 'Success',
-        description: `Purchased ${shares} shares of ${company?.name}`
+        description: `Purchased ${shares} shares of ${data?.name}`
       });
       navigate('/portfolio');
     },
@@ -72,7 +64,7 @@ const BuyStockPage = () => {
     }
   });
 
-  if (companyLoading || priceLoading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -80,7 +72,7 @@ const BuyStockPage = () => {
     );
   }
 
-  if (companyError || priceError) {
+  if (error) {
     return (
       <div className="p-4">
         <Card>
@@ -101,9 +93,9 @@ const BuyStockPage = () => {
         <CardHeader>
           <div className="flex justify-between items-center">
             <div>
-              <CardTitle>{company?.name}</CardTitle>
+              <CardTitle>{data.name}</CardTitle>
               <p className="text-sm text-muted-foreground">
-                Current Price: ₹{stockPrice?.currentPrice}
+                Current Price: ₹{data.currentPrice}
               </p>
             </div>
             <div className="flex gap-2">

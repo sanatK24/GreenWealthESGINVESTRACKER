@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useQuery, useQueries } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { 
   ArrowUp, 
   ArrowRight, 
@@ -21,12 +21,11 @@ const CompanyTable = () => {
   const [page, setPage] = useState(1);
   const { toast } = useToast();
 
-  const { data, error } = useQuery({
+  const { data, error, isLoading: isCompaniesLoading } = useQuery({
     queryKey: ["/api/companies", page],
     queryFn: async () => {
       const response = await fetch(`/api/companies?page=${page}`);
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-
       return response.json();
     },
     retry: 1,
@@ -42,26 +41,13 @@ const CompanyTable = () => {
     return null;
   }
 
-  if (!data) return null;
-
-  if (!data?.companies) return null;
-
-  const companyQueries = useQueries({
-    queries: data.companies.map((company: any) => ({
-      queryKey: ["/api/company", company.id],
-      queryFn: async () => {
-        const response = await fetch(`/api/company/${company.id}`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      },
-      enabled: !!company.id, // Only fetch if company.id is available
-      staleTime: Infinity, // Data is always fresh
-      retry: 1,
-    })),
-  });
-
+  if (isCompaniesLoading || !data?.companies) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-sm text-slate-500">Loading companies...</div>
+      </div>
+    );
+  }
 
   const getCompanyIcon = (sector: string) => {
     switch (sector.toLowerCase()) {
@@ -87,6 +73,25 @@ const CompanyTable = () => {
     return "bg-blue-100 text-blue-800";
   };
 
+  const renderCompanyData = (company: any) => {
+    if (!company) return <div className="text-sm text-slate-500">Loading...</div>;
+
+    return (
+      <>
+        <div className="text-sm font-medium text-slate-900">{company.esgScore}</div>
+        <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full ${getScoreClass(company.environmentalScore)}`}>
+          {company.environmentalScore}
+        </span>
+        <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full ${getScoreClass(company.socialScore)}`}>
+          {company.socialScore}
+        </span>
+        <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full ${getScoreClass(company.governanceScore)}`}>
+          {company.governanceScore}
+        </span>
+      </>
+    );
+  };
+
   const handleNextPage = () => {
     if (data && data.pagination && data.pagination.hasNextPage) {
       setPage(p => p + 1);
@@ -97,81 +102,6 @@ const CompanyTable = () => {
     if (page > 1) {
       setPage(p => p - 1);
     }
-  };
-
-  // Responsive table content for mobile view
-  const renderMobileContent = (companies: any[]) => {
-    return companies.map((company: any) => (
-      <div key={company.id} className="border-b border-slate-200 py-4 px-4">
-        <div className="flex items-start justify-between">
-          <div className="flex items-start space-x-3">
-            <div className="flex-shrink-0 h-10 w-10 rounded-md bg-slate-100 flex items-center justify-center">
-              {getCompanyIcon(company.sector)}
-            </div>
-            <div>
-              <Link href={`/company/${company.id}`}>
-                <div className="text-sm font-medium text-slate-900 hover:text-primary transition-colors cursor-pointer">
-                  {company.name}
-                </div>
-              </Link>            
-              <div className="text-xs text-slate-500 mt-1">
-                {company.ticker} • {company.sector}
-              </div>
-              <div className="flex items-center space-x-2 mt-2">
-                {companyQueries.length > 0 && companyQueries[data.companies.indexOf(company)].isSuccess && (
-                  <>
-                    <div className="text-sm font-medium flex items-center">
-                      <span className="text-xs text-slate-500 mr-1">ESG:</span>
-                      <span className="font-semibold">{companyQueries[data.companies.indexOf(company)].data.esgScore}</span>
-                    </div>
-                    <div className="text-sm flex items-center">
-                      <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full ${getScoreClass(companyQueries[data.companies.indexOf(company)].data.environmentalScore)}`}>
-                        E: {companyQueries[data.companies.indexOf(company)].data.environmentalScore}
-                      </span>
-                    </div>
-                    <div className="text-sm flex items-center">
-                      <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full ${getScoreClass(companyQueries[data.companies.indexOf(company)].data.socialScore)}`}>
-                        S: {companyQueries[data.companies.indexOf(company)].data.socialScore}
-                      </span>
-                    </div>
-                    <div className="text-sm flex items-center">
-                      <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full ${getScoreClass(companyQueries[data.companies.indexOf(company)].data.governanceScore)}`}>
-                        G: {companyQueries[data.companies.indexOf(company)].data.governanceScore}
-                      </span>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-            <div className="text-xs text-primary flex items-center mt-2">
-              <ArrowUp className="h-3 w-3 mr-1" />
-              <span>+{company.yearlyTrend} (1Y Trend)</span>
-            </div>
-          </div>
-          <div className="flex flex-col space-y-2">
-            <Link href={`/company-prices?id=${company.id}`}>
-              <Button 
-                size="sm" 
-                variant="outline"
-                className="flex items-center gap-1 w-full"
-              >
-                <LineChart className="h-3 w-3" />
-                Chart
-              </Button>
-            </Link>
-            <Link href={`/buy-stock/${company.id}`}>
-              <Button 
-                size="sm" 
-                className="flex items-center gap-1 w-full"
-              >
-                <ShoppingCart className="h-3 w-3" />
-                Buy
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    ));
   };
 
   const renderContent = () => {
@@ -217,31 +147,16 @@ const CompanyTable = () => {
                     <div className="text-sm text-slate-900">{company.sector}</div>
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
-                   {companyQueries.length > 0 && companyQueries[data.companies.indexOf(company)].isSuccess && (
-                    <div className="text-sm font-medium text-slate-900">{companyQueries[data.companies.indexOf(company)].data.esgScore}</div>
-                   )}
+                    {renderCompanyData(company)}
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
-                   {companyQueries.length > 0 && companyQueries[data.companies.indexOf(company)].isSuccess && (
-                      <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full ${getScoreClass(companyQueries[data.companies.indexOf(company)].data.environmentalScore)}`}>
-                        {companyQueries[data.companies.indexOf(company)].data.environmentalScore}
-                      </span>
-                     )}
-
+                    {renderCompanyData(company)}
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
-                    {companyQueries.length > 0 && companyQueries[data.companies.indexOf(company)].isSuccess && (
-                      <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full ${getScoreClass(companyQueries[data.companies.indexOf(company)].data.socialScore)}`}>
-                        {companyQueries[data.companies.indexOf(company)].data.socialScore}
-                      </span>
-                    )}
+                    {renderCompanyData(company)}
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
-                    {companyQueries.length > 0 && companyQueries[data.companies.indexOf(company)].isSuccess && (
-                      <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full ${getScoreClass(companyQueries[data.companies.indexOf(company)].data.governanceScore)}`}>
-                        {companyQueries[data.companies.indexOf(company)].data.governanceScore}
-                      </span>
-                    )}
+                    {renderCompanyData(company)}
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
                     <div className="text-sm text-primary flex items-center">
@@ -250,12 +165,12 @@ const CompanyTable = () => {
                     </div>
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
-                    <div className="flex space-x-2">
+                    <div className="flex flex-col space-y-2">
                       <Link href={`/company-prices?id=${company.id}`}>
                         <Button 
                           size="sm" 
                           variant="outline"
-                          className="flex items-center gap-1"
+                          className="flex items-center gap-1 w-full"
                         >
                           <LineChart className="h-3 w-3" />
                           Chart
@@ -264,7 +179,7 @@ const CompanyTable = () => {
                       <Link href={`/buy-stock/${company.id}`}>
                         <Button 
                           size="sm" 
-                          className="flex items-center gap-1"
+                          className="flex items-center gap-1 w-full"
                         >
                           <ShoppingCart className="h-3 w-3" />
                           Buy
@@ -280,30 +195,92 @@ const CompanyTable = () => {
 
         {/* Mobile view */}
         <div className="md:hidden">
-          {renderMobileContent(data.companies)}
+          {data.companies.map((company: any) => (
+            <div key={company.id} className="border-b border-slate-200 py-4 px-4">
+              <div className="flex items-center gap-4">
+                <div className="flex-shrink-0 h-10 w-10 rounded-md bg-slate-100 flex items-center justify-center">
+                  {getCompanyIcon(company.sector)}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <Link href={`/company/${company.id}`}>
+                    <div className="text-sm font-medium text-slate-900 hover:text-primary transition-colors cursor-pointer">
+                      {company.name}
+                    </div>
+                  </Link>
+                  <div className="text-xs text-slate-500 mt-1">
+                    {company.ticker} • {company.sector}
+                  </div>
+                  <div className="flex items-center space-x-2 mt-2">
+                    <div className="text-sm font-medium flex items-center">
+                      <span className="text-xs text-slate-500 mr-1">ESG:</span>
+                      <span className="font-semibold">{company.esgScore}</span>
+                    </div>
+                    <div className="text-sm flex items-center">
+                      <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full ${getScoreClass(company.environmentalScore)}`}>
+                        E: {company.environmentalScore}
+                      </span>
+                    </div>
+                    <div className="text-sm flex items-center">
+                      <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full ${getScoreClass(company.socialScore)}`}>
+                        S: {company.socialScore}
+                      </span>
+                    </div>
+                    <div className="text-sm flex items-center">
+                      <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full ${getScoreClass(company.governanceScore)}`}>
+                        G: {company.governanceScore}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-xs text-primary flex items-center mt-2">
+                    <ArrowUp className="h-3 w-3 mr-1" />
+                    <span>+{company.yearlyTrend} (1Y Trend)</span>
+                  </div>
+                </div>
+                <div className="flex flex-col space-y-2">
+                  <Link href={`/company-prices?id=${company.id}`}>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      className="flex items-center gap-1 w-full"
+                    >
+                      <LineChart className="h-3 w-3" />
+                      Chart
+                    </Button>
+                  </Link>
+                  <Link href={`/buy-stock/${company.id}`}>
+                    <Button 
+                      size="sm" 
+                      className="flex items-center gap-1 w-full"
+                    >
+                      <ShoppingCart className="h-3 w-3" />
+                      Buy
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Pagination controls */}
         <div className="px-4 py-3 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="text-xs text-slate-500">
-            Showing {data.pagination?.from || 0} to {data.pagination?.to || 0} of {data.pagination?.total || 0} companies
+            Page {data.pagination.currentPage} of {data.pagination.totalPages}
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-2">
             <Button
-              variant="outline" 
+              variant="outline"
               size="sm"
-              className="px-2 py-1 text-sm border border-slate-300 bg-white text-slate-600 hover:bg-slate-50"
-              disabled={page === 1}
               onClick={handlePreviousPage}
+              disabled={!data.pagination.hasPreviousPage}
             >
               Previous
             </Button>
             <Button
               variant="outline"
               size="sm"
-              className="px-2 py-1 text-sm border border-slate-300 bg-white text-slate-600 hover:bg-slate-50"
-              disabled={!data?.pagination?.hasNextPage}
               onClick={handleNextPage}
+              disabled={!data.pagination.hasNextPage}
             >
               Next
             </Button>

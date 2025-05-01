@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import * as storage from "./storage";
 import { z } from "zod";
@@ -9,24 +9,66 @@ import {
   insertPortfolioSummarySchema,
   insertSustainabilityTrendSchema,
   insertStockPriceHistorySchema,
-  companies
 } from "@shared/schema";
 import { db } from "../db";
-import { inArray, eq, desc, or } from "drizzle-orm";
 import { setupAuth } from "./auth";
 import paypal from "@paypal/checkout-server-sdk";
 import { generateInvestmentInsights, chatWithInvestorAssistant } from "./services/gemini";
-import { Request, Response } from 'express';
-import { db } from '../db';
-import {
-  users,
-  userLoginRecords,
-  userActions,
-  orderHistory,
-  chatRecords,
-  comparisonHistory
-} from '../shared/schema';
-import { eq, desc, or } from 'drizzle-orm';
+import { users, userLoginRecords, userActions, orderHistory, chatRecords, comparisonHistory } from "../shared/schema";
+import { desc, eq, or } from "drizzle-orm";
+
+// Define database table interfaces
+interface UserLoginRecord {
+  id: number;
+  userId: number;
+  loginTimestamp: Date;
+  logoutTimestamp: Date | null;
+  loginStatus: string;
+  ipAddress: string;
+  sessionKey: string;
+  deviceInfo: string;
+}
+
+interface UserAction {
+  id: number;
+  userId: number;
+  timestamp: Date;
+  actionType: string;
+  actionDetails: string;
+  sessionId: string;
+  deviceInfo: string;
+}
+
+interface Order {
+  id: number;
+  userId: number;
+  orderId: string;
+  timestamp: Date;
+  companyId: number;
+  shares: number;
+  amount: number;
+  orderDetails: string;
+  orderTotal: number;
+  paymentMethod: string;
+  orderStatus: string;
+}
+
+interface ChatRecord {
+  id: number;
+  senderId: number;
+  receiverId: number;
+  timestamp: Date;
+  message: string;
+  sessionId: string;
+  deviceInfo: string;
+}
+
+interface ComparisonHistory {
+  id: number;
+  userId: number;
+  timestamp: Date;
+  companyIds: number[];
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const apiPrefix = "/api";
@@ -35,7 +77,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   setupAuth(app);
 
   // News API endpoint
-  app.get(`${apiPrefix}/news`, async (req, res) => {
+  app.get(`${apiPrefix}/news`, async (req: Request, res: Response) => {
     try {
       const apiKey = process.env.NEWS_API_KEY;
       if (!apiKey) {
@@ -77,7 +119,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const paypalClient = new paypal.core.PayPalHttpClient(environment);
 
   // PayPal routes
-  app.post(`${apiPrefix}/create-order`, async (req, res) => {
+  app.post(`${apiPrefix}/create-order`, async (req: Request, res: Response) => {
     try {
       const { value, description } = req.body;
 
@@ -107,7 +149,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post(`${apiPrefix}/capture-order`, async (req, res) => {
+  app.post(`${apiPrefix}/capture-order`, async (req: Request, res: Response) => {
     try {
       const { orderID } = req.body;
 
@@ -140,7 +182,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // The specific routes must come before the parameterized routes
 
   // ESG Score Breakdown
-  app.get(`${apiPrefix}/companies/esg-breakdown`, async (req, res) => {
+  app.get(`${apiPrefix}/companies/esg-breakdown`, async (req: Request, res: Response) => {
     try {
       const breakdown = await storage.getCompanyESGBreakdown();
       res.json(breakdown);
@@ -151,7 +193,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Company Comparison - make sure this is before any parameterized routes
-  app.get(`${apiPrefix}/companies/comparison`, async (req, res) => {
+  app.get(`${apiPrefix}/companies/comparison`, async (req: Request, res: Response) => {
     try {
       const comparison = await storage.getCompanyComparison();
       res.json(comparison);
@@ -162,7 +204,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Compare companies - must be before :id routes
-  app.get(`${apiPrefix}/companies/compare`, async (req, res) => {
+  app.get(`${apiPrefix}/companies/compare`, async (req: Request, res: Response) => {
     try {
       console.log("API route: /companies/compare called with query params:", req.query);
 
@@ -249,7 +291,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Single company endpoint (for direct /api/company/:id access)
-  app.get(`${apiPrefix}/company/:id`, async (req, res) => {
+  app.get(`${apiPrefix}/company/:id`, async (req: Request, res: Response) => {
     try {
       const idParam = req.params.id;
       // Validate that id is a valid number
@@ -272,7 +314,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // General company routes
-  app.get(`${apiPrefix}/companies`, async (req, res) => {
+  app.get(`${apiPrefix}/companies`, async (req: Request, res: Response) => {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 5;
@@ -284,7 +326,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get(`${apiPrefix}/companies/:id`, async (req, res) => {
+  app.get(`${apiPrefix}/companies/:id`, async (req: Request, res: Response) => {
     try {
       const idParam = req.params.id;
       // Validate that id is a valid number
@@ -306,7 +348,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post(`${apiPrefix}/companies`, async (req, res) => {
+  app.post(`${apiPrefix}/companies`, async (req: Request, res: Response) => {
     try {
       const validatedData = insertCompanySchema.parse(req.body);
       const newCompany = await storage.insertCompany(validatedData);
@@ -320,8 +362,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Combined company details and stock price endpoint
+  app.get(`${apiPrefix}/company-details/:id`, async (req: Request, res: Response) => {
+    try {
+      const idParam = req.params.id;
+      // Validate that id is a valid number
+      if (!idParam || isNaN(Number(idParam))) {
+        return res.status(400).json({ message: "Invalid company ID" });
+      }
+
+      const id = parseInt(idParam);
+      const company = await storage.getCompanyById(id);
+
+      if (!company) {
+        return res.status(404).json({ message: "Company not found" });
+      }
+
+      // Get current stock price (using 1d timeframe for current price)
+      const priceHistory = await storage.getStockPriceHistory(id, "1d");
+      const currentPrice = priceHistory?.prices ? JSON.parse(priceHistory.prices)[0]?.price : null;
+
+      // Get yearly trend (using 1y timeframe)
+      const yearlyHistory = await storage.getStockPriceHistory(id, "1y");
+      const yearlyPrices = yearlyHistory?.prices ? JSON.parse(yearlyHistory.prices) : [];
+      const yearlyTrend = yearlyPrices.length > 1 
+        ? ((yearlyPrices[0].price - yearlyPrices[yearlyPrices.length - 1].price) / yearlyPrices[yearlyPrices.length - 1].price * 100).toFixed(2)
+        : 0;
+
+      res.json({
+        ...company,
+        currentPrice,
+        yearlyTrend
+      });
+    } catch (error) {
+      console.error("Error fetching company details:", error);
+      res.status(500).json({ message: "Failed to fetch company details" });
+    }
+  });
+
   // Sectors
-  app.get(`${apiPrefix}/sectors`, async (req, res) => {
+  app.get(`${apiPrefix}/sectors`, async (req: Request, res: Response) => {
     try {
       const sectors = await storage.getSectors();
       res.json({ sectors });
@@ -331,7 +411,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post(`${apiPrefix}/sectors`, async (req, res) => {
+  app.post(`${apiPrefix}/sectors`, async (req: Request, res: Response) => {
     try {
       const validatedData = insertSectorSchema.parse(req.body);
       const newSector = await storage.insertSector(validatedData);
@@ -346,7 +426,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Sector Performance
-  app.get(`${apiPrefix}/sectors/performance`, async (req, res) => {
+  app.get(`${apiPrefix}/sectors/performance`, async (req: Request, res: Response) => {
     try {
       const performance = await storage.getSectorPerformance();
       res.json(performance);
@@ -357,7 +437,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Portfolio Composition
-  app.get(`${apiPrefix}/portfolio/composition`, async (req, res) => {
+  app.get(`${apiPrefix}/portfolio/composition`, async (req: Request, res: Response) => {
     try {
       const composition = await storage.getPortfolioComposition();
       res.json(composition);
@@ -367,7 +447,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post(`${apiPrefix}/portfolio/composition`, async (req, res) => {
+  app.post(`${apiPrefix}/portfolio/composition`, async (req: Request, res: Response) => {
     try {
       const validatedData = insertPortfolioCompositionSchema.parse(req.body);
       const newComposition = await storage.insertPortfolioComposition(validatedData);
@@ -382,7 +462,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Portfolio Summary
-  app.get(`${apiPrefix}/portfolio/summary`, async (req, res) => {
+  app.get(`${apiPrefix}/portfolio/summary`, async (req: Request, res: Response) => {
     try {
       const summary = await storage.getPortfolioSummary();
       res.json(summary);
@@ -392,7 +472,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post(`${apiPrefix}/portfolio/summary`, async (req, res) => {
+  app.post(`${apiPrefix}/portfolio/summary`, async (req: Request, res: Response) => {
     try {
       const validatedData = insertPortfolioSummarySchema.parse(req.body);
       const newSummary = await storage.updatePortfolioSummary(validatedData);
@@ -407,7 +487,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Sustainability Trends
-  app.get(`${apiPrefix}/portfolio/sustainability-trend`, async (req, res) => {
+  app.get(`${apiPrefix}/portfolio/sustainability-trend`, async (req: Request, res: Response) => {
     try {
       const trends = await storage.getSustainabilityTrends();
       res.json(trends);
@@ -417,7 +497,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post(`${apiPrefix}/portfolio/sustainability-trend`, async (req, res) => {
+  app.post(`${apiPrefix}/portfolio/sustainability-trend`, async (req: Request, res: Response) => {
     try {
       const validatedData = insertSustainabilityTrendSchema.parse(req.body);
       const newTrend = await storage.insertSustainabilityTrend(validatedData);
@@ -432,7 +512,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Purchase Stock API
-  app.post(`${apiPrefix}/portfolio/purchase`, async (req, res) => {
+  app.post(`${apiPrefix}/portfolio/purchase`, async (req: Request, res: Response) => {
     try {
       // Check if user is authenticated
       if (!req.isAuthenticated()) {
@@ -463,7 +543,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       try {
         // Check if this sector already exists in the portfolio
         const portfolio = await storage.getPortfolioComposition();
-        const existingSector = portfolio.sectors.find(s => s.name === company.sector);
+        const existingSector = portfolio.sectors.find((s: any) => s.name === company.sector);
 
         if (!existingSector) {
           // Add this sector to portfolio composition
@@ -514,7 +594,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Stock Price History
-  app.get(`${apiPrefix}/companies/:id/price-history`, async (req, res) => {
+  app.get(`${apiPrefix}/companies/:id/price-history`, async (req: Request, res: Response) => {
     try {
       const idParam = req.params.id;
       const timeframe = req.query.timeframe as string || "1m";
@@ -560,7 +640,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get(`${apiPrefix}/companies/:id/all-price-history`, async (req, res) => {
+  app.get(`${apiPrefix}/companies/:id/all-price-history`, async (req: Request, res: Response) => {
     try {
       const idParam = req.params.id;
 
@@ -589,7 +669,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post(`${apiPrefix}/companies/:id/price-history`, async (req, res) => {
+  app.post(`${apiPrefix}/companies/:id/price-history`, async (req: Request, res: Response) => {
     try {
       const idParam = req.params.id;
 
@@ -621,7 +701,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get(`${apiPrefix}/companies/compare`, async (req, res) => {
+  app.get(`${apiPrefix}/companies/compare`, async (req: Request, res: Response) => {
     try {
       console.log("API route: /companies/compare called with query params:", req.query);
       const companyIdsParam = req.query.ids as string;
@@ -711,7 +791,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Gemini-powered AI Features
 
   // AI Investment Insights for stock comparison
-  app.get(`${apiPrefix}/ai/insights`, async (req, res) => {
+  app.get(`${apiPrefix}/ai/insights`, async (req: Request, res: Response) => {
     try {
       const idsParam = req.query.ids as string;
       const timeframe = req.query.timeframe as string || "1m";
@@ -762,9 +842,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       if (companies.length === 0) {
+        return res.status(404).json({ message: "No companies found" });
+      }
+
+      // Generate insights with Gemini
+      const insights = await generateInvestmentInsights({
+        companies,
+        timeframe,
+        priceData
+      });
+
+      res.json({ insights });
+    } catch (error) {
+      console.error("Error generating investment insights:", error);
+      res.status(500).json({ message: "Failed to generate insights" });
+    }
+  });
+
+  // Investor Assistant Chatbot
+  app.post(`${apiPrefix}/ai/chat`, async (req: Request, res: Response) => {
+    try {
+      const { message, userName, previousMessages } = req.body;
+
+      if (!message) {
+        return res.status(400).json({ message: "Message is required" });
+      }
+
+      // Generate chat response with Gemini
+      const chatResponse = await chatWithInvestorAssistant({
+        userMessage: message,
+        userName: userName || "Investor",
+        previousMessages: previousMessages || []
+      });
+
+      res.json({ response: chatResponse });
+    } catch (error) {
+      console.error("Error processing chat:", error);
+      res.status(500).json({ message: "Failed to process chat message" });
+    }
+  });
 
   // User Activity History
-  app.get(`${apiPrefix}/user/activity-history`, async (req, res) => {
+  app.get(`${apiPrefix}/user/activity-history`, async (req: Request, res: Response) => {
     try {
       if (!req.isAuthenticated()) {
         return res.status(401).json({ message: "Authentication required" });
@@ -772,8 +891,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const userId = req.user?.id;
       const type = req.query.type as string;
-      const startDate = req.query.startDate ? new Date(req.query.startDate as string) : undefined;
-      const endDate = req.query.endDate ? new Date(req.query.endDate as string) : undefined;
 
       let activityData: any = {};
 
@@ -854,6 +971,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
               orderBy: [desc(comparisonHistory.timestamp)]
             });
             break;
+          default:
+            return res.status(400).json({ message: "Invalid activity type" });
         }
       }
 
@@ -865,7 +984,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Generate PDF of activity history
-  app.get(`${apiPrefix}/user/activity-history/pdf`, async (req, res) => {
+  app.get(`${apiPrefix}/user/activity-history/pdf`, async (req: Request, res: Response) => {
     try {
       if (!req.isAuthenticated()) {
         return res.status(401).json({ message: "Authentication required" });
@@ -887,46 +1006,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error generating PDF:", error);
       res.status(500).json({ message: "Failed to generate PDF" });
-    }
-  });
-
-        return res.status(404).json({ message: "No companies found" });
-      }
-
-      // Generate insights with Gemini
-      const insights = await generateInvestmentInsights({
-        companies,
-        timeframe,
-        priceData
-      });
-
-      res.json({ insights });
-    } catch (error) {
-      console.error("Error generating investment insights:", error);
-      res.status(500).json({ message: "Failed to generate insights" });
-    }
-  });
-
-  // Investor Assistant Chatbot
-  app.post(`${apiPrefix}/ai/chat`, async (req, res) => {
-    try {
-      const { message, userName, previousMessages } = req.body;
-
-      if (!message) {
-        return res.status(400).json({ message: "Message is required" });
-      }
-
-      // Generate chat response with Gemini
-      const chatResponse = await chatWithInvestorAssistant({
-        userMessage: message,
-        userName: userName || "Investor",
-        previousMessages: previousMessages || []
-      });
-
-      res.json({ response: chatResponse });
-    } catch (error) {
-      console.error("Error processing chat:", error);
-      res.status(500).json({ message: "Failed to process chat message" });
     }
   });
 
