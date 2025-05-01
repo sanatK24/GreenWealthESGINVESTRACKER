@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueries } from "@tanstack/react-query";
 import { 
   ArrowUp, 
   ArrowRight, 
@@ -21,17 +21,16 @@ const CompanyTable = () => {
   const [page, setPage] = useState(1);
   const { toast } = useToast();
 
-  const { data: companyData, error: companyError } = useQuery({
-    queryKey: ["/api/company", company.id],
+  const { data, error } = useQuery({
+    queryKey: ["/api/companies", page],
     queryFn: async () => {
-      const response = await fetch(`/api/company/${company.id}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      const response = await fetch(`/api/companies?page=${page}`);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
       return response.json();
     },
-    enabled: !!company.id, // Only fetch if company.id is available
-    staleTime: Infinity, // Data is always fresh
+    retry: 1,
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
   });
 
   if (error) {
@@ -44,6 +43,23 @@ const CompanyTable = () => {
   }
 
   if (!data) return null;
+
+  const companyQueries = useQueries({
+    queries: data.companies.map((company: any) => ({
+      queryKey: ["/api/company", company.id],
+      queryFn: async () => {
+        const response = await fetch(`/api/company/${company.id}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      },
+      enabled: !!company.id, // Only fetch if company.id is available
+      staleTime: Infinity, // Data is always fresh
+      retry: 1,
+    })),
+  });
+
 
   const getCompanyIcon = (sector: string) => {
     switch (sector.toLowerCase()) {
@@ -95,27 +111,34 @@ const CompanyTable = () => {
                 <div className="text-sm font-medium text-slate-900 hover:text-primary transition-colors cursor-pointer">
                   {company.name}
                 </div>
-              </Link>
-              <div className="text-xs text-slate-500 mt-1">{company.ticker} • {company.sector}</div>
+              </Link>            
+              <div className="text-xs text-slate-500 mt-1">
+                {company.ticker} • {company.sector}
+              </div>
               <div className="flex items-center space-x-2 mt-2">
-                <div className="text-sm font-medium flex items-center">
-                  <span className="text-xs text-slate-500 mr-1">ESG:</span>
-                  <span className="font-semibold">{company.esgScore}</span>
-                </div>
-                <div className="text-sm flex items-center">
-                  <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full ${getScoreClass(company.environmentalScore)}`}>
-                    E: {company.environmentalScore}
-                  </span>
-                </div>
-                <div className="text-sm flex items-center">
-                  <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full ${getScoreClass(company.socialScore)}`}>
-                    S: {company.socialScore}
-                  </span>
-                </div>
-                <div className="text-sm flex items-center">
-                  <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full ${getScoreClass(company.governanceScore)}`}>
-                    G: {company.governanceScore}
-                  </span>
+                {companyQueries.length > 0 && companyQueries[data.companies.indexOf(company)].isSuccess && (
+                  <>
+                    <div className="text-sm font-medium flex items-center">
+                      <span className="text-xs text-slate-500 mr-1">ESG:</span>
+                      <span className="font-semibold">{companyQueries[data.companies.indexOf(company)].data.esgScore}</span>
+                    </div>
+                    <div className="text-sm flex items-center">
+                      <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full ${getScoreClass(companyQueries[data.companies.indexOf(company)].data.environmentalScore)}`}>
+                        E: {companyQueries[data.companies.indexOf(company)].data.environmentalScore}
+                      </span>
+                    </div>
+                    <div className="text-sm flex items-center">
+                      <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full ${getScoreClass(companyQueries[data.companies.indexOf(company)].data.socialScore)}`}>
+                        S: {companyQueries[data.companies.indexOf(company)].data.socialScore}
+                      </span>
+                    </div>
+                    <div className="text-sm flex items-center">
+                      <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full ${getScoreClass(companyQueries[data.companies.indexOf(company)].data.governanceScore)}`}>
+                        G: {companyQueries[data.companies.indexOf(company)].data.governanceScore}
+                      </span>
+                    </div>
+                  </>
+                )}
                 </div>
               </div>
               <div className="text-xs text-primary flex items-center mt-2">
@@ -188,27 +211,35 @@ const CompanyTable = () => {
                         <div className="text-sm text-slate-500">{company.ticker}</div>
                       </div>
                     </div>
-                  </TableCell>
+                  </TableCell>            
                   <TableCell className="whitespace-nowrap">
                     <div className="text-sm text-slate-900">{company.sector}</div>
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
-                    <div className="text-sm font-medium text-slate-900">{company.esgScore}</div>
+                    {companyQueries.length > 0 && companyQueries[data.companies.indexOf(company)].isSuccess && (
+                      <div className="text-sm font-medium text-slate-900">{companyQueries[data.companies.indexOf(company)].data.esgScore}</div>
+                    )}
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
-                    <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full ${getScoreClass(company.environmentalScore)}`}>
-                      {company.environmentalScore}
-                    </span>
+                    {companyQueries.length > 0 && companyQueries[data.companies.indexOf(company)].isSuccess && (
+                      <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full ${getScoreClass(companyQueries[data.companies.indexOf(company)].data.environmentalScore)}`}>
+                        {companyQueries[data.companies.indexOf(company)].data.environmentalScore}
+                      </span>
+                    )}
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
-                    <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full ${getScoreClass(company.socialScore)}`}>
-                      {company.socialScore}
-                    </span>
+                    {companyQueries.length > 0 && companyQueries[data.companies.indexOf(company)].isSuccess && (
+                      <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full ${getScoreClass(companyQueries[data.companies.indexOf(company)].data.socialScore)}`}>
+                        {companyQueries[data.companies.indexOf(company)].data.socialScore}
+                      </span>
+                    )}
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
-                    <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full ${getScoreClass(company.governanceScore)}`}>
-                      {company.governanceScore}
-                    </span>
+                    {companyQueries.length > 0 && companyQueries[data.companies.indexOf(company)].isSuccess && (
+                      <span className={`px-2 py-0.5 inline-flex text-xs leading-5 font-medium rounded-full ${getScoreClass(companyQueries[data.companies.indexOf(company)].data.governanceScore)}`}>
+                        {companyQueries[data.companies.indexOf(company)].data.governanceScore}
+                      </span>
+                    )}
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
                     <div className="text-sm text-primary flex items-center">
