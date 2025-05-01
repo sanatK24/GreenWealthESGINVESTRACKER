@@ -438,10 +438,9 @@ export async function syncUserWithSupabase(userId: number) {
   }
 }
 
-// Payment handling with Supabase sync
+// Payment handling
 export async function createPayment(userId: number, companyId: number, paymentData: any) {
   try {
-    // First store in Replit DB
     const [payment] = await db.insert(payments)
       .values({
         userId,
@@ -451,20 +450,22 @@ export async function createPayment(userId: number, companyId: number, paymentDa
       })
       .returning();
 
-    // Then sync to Supabase
-    const { error } = await supabase
-      .from('payments')
-      .insert([{
-        user_id: userId,
-        company_id: companyId,
-        payment_data: paymentData,
-        status: 'pending'
-      }]);
-
-    if (error) throw error;
     return payment;
   } catch (error) {
     console.error('Error creating payment:', error);
+    throw error;
+  }
+}
+
+export async function getPaymentHistory(userId: number) {
+  try {
+    const history = await db.select()
+      .from(payments)
+      .where(eq(payments.userId, userId))
+      .orderBy(desc(payments.createdAt));
+    return history;
+  } catch (error) {
+    console.error('Error fetching payment history:', error);
     throw error;
   }
 }
