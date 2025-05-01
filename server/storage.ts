@@ -423,7 +423,7 @@ export async function insertStockPriceHistory(data: InsertStockPriceHistory) {
 }
 
 // Buy Stock Data Functions
-export async function getBuyStockData(companyId: number) {
+export async function getBuyStockData(companyId: number): Promise<BuyStockData | null> {
   try {
     const result = await db
       .select()
@@ -431,10 +431,15 @@ export async function getBuyStockData(companyId: number) {
       .where(eq(buyStockData.companyId, companyId))
       .orderBy(desc(buyStockData.updatedAt))
       .limit(1);
+    
+    if (result.length === 0) {
+      return null;
+    }
+    
     return result[0];
   } catch (error) {
-    console.error("Error in getBuyStockData:", error);
-    return null;
+    console.error(`Error fetching buy stock data for company ${companyId}:`, error);
+    throw new Error(`Failed to fetch buy stock data: ${error.message}`);
   }
 }
 
@@ -447,33 +452,56 @@ export async function updateBuyStockData(
     weekLow52?: number;
     yearlyTrend?: number;
   }
-) {
+): Promise<BuyStockData | null> {
+  // Validate required fields
+  if (!data.currentPrice || isNaN(data.currentPrice)) {
+    throw new Error("currentPrice is required and must be a valid number");
+  }
+
   try {
-    const result = await db
-      .insert(buyStockData)
-      .values({
-        companyId,
-        currentPrice: data.currentPrice,
-        marketCap: data.marketCap,
-        weekHigh52: data.weekHigh52,
-        weekLow52: data.weekLow52,
-        yearlyTrend: data.yearlyTrend,
-      })
-      .onConflictDoUpdate({
-        target: buyStockData.companyId,
-        set: {
+    const result = await db.transaction(async (tx) => {
+      // First check if company exists
+      const company = await tx
+        .select()
+        .from(companies)
+        .where(eq(companies.id, companyId))
+        .limit(1);
+
+      if (company.length === 0) {
+        throw new Error(`Company with ID ${companyId} not found`);
+      }
+
+      // Insert or update buy stock data
+      const updatedData = await tx
+        .insert(buyStockData)
+        .values({
+          companyId,
           currentPrice: data.currentPrice,
-          marketCap: data.marketCap,
-          weekHigh52: data.weekHigh52,
-          weekLow52: data.weekLow52,
-          yearlyTrend: data.yearlyTrend,
+          marketCap: data.marketCap || company[0].marketCap || 0,
+          weekHigh52: data.weekHigh52 || 0,
+          weekLow52: data.weekLow52 || 0,
+          yearlyTrend: data.yearlyTrend || 0,
           updatedAt: new Date(),
-        },
-      });
-    return result.rows?.[0];
+        })
+        .onConflictDoUpdate({
+          target: buyStockData.companyId,
+          set: {
+            currentPrice: data.currentPrice,
+            marketCap: data.marketCap || company[0].marketCap || 0,
+            weekHigh52: data.weekHigh52 || 0,
+            weekLow52: data.weekLow52 || 0,
+            yearlyTrend: data.yearlyTrend || 0,
+            updatedAt: new Date(),
+          },
+        });
+
+      return updatedData.rows?.[0];
+    });
+
+    return result;
   } catch (error) {
-    console.error("Error in updateBuyStockData:", error);
-    return null;
+    console.error(`Error updating buy stock data for company ${companyId}:`, error);
+    throw new Error(`Failed to update buy stock data: ${error.message}`);
   }
 }
 

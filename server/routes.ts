@@ -360,13 +360,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const id = parseInt(idParam);
-      const company = await storage.getCompanyById(id);
-
-      if (!company) {
-        return res.status(404).json({ message: "Company not found" });
+      const buyStockData = await storage.getBuyStockData(id);
+      if (!buyStockData) {
+        return res.status(404).json({ error: "Buy stock data not found" });
       }
 
-      res.json(company);
+      // Get company data
+      const company = await storage.getCompanyById(id);
+      if (!company) {
+        return res.status(404).json({ error: "Company not found" });
+      }
+
+      return res.json({
+        id: company.id,
+        name: company.name,
+        ticker: company.ticker,
+        sector: company.sector,
+        industry: company.industry,
+        esgScore: company.esgScore,
+        environmentalScore: company.environmentalScore,
+        socialScore: company.socialScore,
+        governanceScore: company.governanceScore,
+        description: company.description,
+        buyStockData: {
+          currentPrice: buyStockData.currentPrice,
+          marketCap: buyStockData.marketCap,
+          weekHigh52: buyStockData.weekHigh52,
+          weekLow52: buyStockData.weekLow52,
+          yearlyTrend: buyStockData.yearlyTrend,
+          minInvestment: buyStockData.minInvestment,
+          maxInvestment: buyStockData.maxInvestment
+        }
+      });
     } catch (error) {
       console.error("Error fetching company:", error);
       res.status(500).json({ message: "Failed to fetch company" });
@@ -395,13 +420,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const id = parseInt(idParam);
-      const company = await storage.getCompanyById(id);
-
-      if (!company) {
-        return res.status(404).json({ message: "Company not found" });
+      const buyStockData = await storage.getBuyStockData(id);
+      if (!buyStockData) {
+        return res.status(404).json({ error: "Buy stock data not found" });
       }
 
-      res.json(company);
+      // Get company data
+      const company = await storage.getCompanyById(id);
+      if (!company) {
+        return res.status(404).json({ error: "Company not found" });
+      }
+
+      return res.json({
+        id: company.id,
+        name: company.name,
+        ticker: company.ticker,
+        sector: company.sector,
+        industry: company.industry,
+        esgScore: company.esgScore,
+        environmentalScore: company.environmentalScore,
+        socialScore: company.socialScore,
+        governanceScore: company.governanceScore,
+        description: company.description,
+        buyStockData: {
+          currentPrice: buyStockData.currentPrice,
+          marketCap: buyStockData.marketCap,
+          weekHigh52: buyStockData.weekHigh52,
+          weekLow52: buyStockData.weekLow52,
+          yearlyTrend: buyStockData.yearlyTrend,
+          minInvestment: buyStockData.minInvestment,
+          maxInvestment: buyStockData.maxInvestment
+        }
+      });
     } catch (error) {
       console.error("Error fetching company:", error);
       res.status(500).json({ message: "Failed to fetch company" });
@@ -431,20 +481,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const id = parseInt(idParam);
-      const company = await storage.getCompanyById(id);
-
-      if (!company) {
-        return res.status(404).json({ message: "Company not found" });
+      const buyStockData = await storage.getBuyStockData(id);
+      if (!buyStockData) {
+        return res.status(404).json({ error: "Buy stock data not found" });
       }
 
-      // Use the currentPrice directly from the companies table
-      const currentPrice = company.currentPrice || "N/A";
-      const yearlyTrend = company.yearlyTrend || "N/A";
+      // Get company data
+      const company = await storage.getCompanyById(id);
+      if (!company) {
+        return res.status(404).json({ error: "Company not found" });
+      }
 
-      res.json({
-        ...company,
-        currentPrice,
-        yearlyTrend
+      return res.json({
+        id: company.id,
+        name: company.name,
+        ticker: company.ticker,
+        sector: company.sector,
+        industry: company.industry,
+        esgScore: company.esgScore,
+        environmentalScore: company.environmentalScore,
+        socialScore: company.socialScore,
+        governanceScore: company.governanceScore,
+        description: company.description,
+        buyStockData: {
+          currentPrice: buyStockData.currentPrice,
+          marketCap: buyStockData.marketCap,
+          weekHigh52: buyStockData.weekHigh52,
+          weekLow52: buyStockData.weekLow52,
+          yearlyTrend: buyStockData.yearlyTrend,
+          minInvestment: buyStockData.minInvestment,
+          maxInvestment: buyStockData.maxInvestment
+        }
       });
     } catch (error) {
       console.error("Error fetching company details:", error);

@@ -36,55 +36,27 @@ export default function BuyStock() {
   const { setPaymentData } = usePayment();
   const [paymentMethod, setPaymentMethod] = useState('paypal');
 
-  const { data: company, error: companyError, isLoading: isLoadingCompany } = useQuery({
-    queryKey: ['/api/company', id],
+  const { data: buyStockData, error: buyStockError, isLoading: isLoadingBuyStock } = useQuery({
+    queryKey: ['/api/buy-stock-data', id],
     enabled: !!id,
-    refetchOnMount: false,
     queryFn: async () => {
       if (!id) {
         throw new Error('Company ID is required');
       }
-  
-      try {
-        const res = await fetch(`/api/companies/${id}`);
-        if (!res.ok) {
-          throw new Error(`Failed to fetch company data: ${res.status}`);
-        }
-        const data = await res.json();
-        if (!data) {
-          throw new Error('No company data received');
-        }
-        return data;
-      } catch (error) {
-        console.error('Failed to fetch company:', error);
-        const res = await fetch(`/api/company/${id}`);
+
+      const res = await fetch(`/api/buy-stock-data/${id}`);
+      if (!res.ok) {
+        throw new Error(`Failed to fetch buy stock data: ${res.status}`);
       }
+      return res.json();
     },
     onError: (_error) => {
       toast({
         title: 'Error',
-        description: 'Failed to fetch company data. Please try again.',
+        description: 'Failed to fetch buy stock data. Please try again.',
         variant: 'destructive'
       });
     }
-  });
-
-  const { data: stockPrice, error: priceError, isLoading: isLoadingPrice } = useQuery({
-    queryKey: ['/api/stock-price', id],
-    enabled: !!id,
-    queryFn: async () => {
-      if (!id) {
-        throw new Error('Company ID is required');
-      }
-
-      const res = await fetch(`/api/stock-price/${id}`);
-      if (!res.ok) {
-        throw new Error(`Failed to fetch stock price: ${res.status}`);
-      }
-      return res.json();
-    },
-    retry: 1,
-    staleTime: 1000 * 60 // Cache for 1 minute
   });
 
   const { data: user, isLoading: isLoadingUser, error: userError } = useQuery({
@@ -121,7 +93,7 @@ export default function BuyStock() {
     onSuccess: () => {
       toast({
         title: 'Stock purchased!',
-        description: `You've successfully purchased ${shares} shares of ${company?.name}`,
+        description: `You've successfully purchased ${shares} shares of ${buyStockData?.name}`,
       });
       queryClient.invalidateQueries({ queryKey: ['/api/portfolio/composition'] });
       queryClient.invalidateQueries({ queryKey: ['/api/portfolio/summary'] });
@@ -169,14 +141,14 @@ export default function BuyStock() {
   };
 
   useEffect(() => {
-    if (company?.currentPrice) {
+    if (buyStockData?.currentPrice) {
       const shareCount = parseInt(shares) || 0;
-      const calculatedAmount = shareCount * parseFloat(company.currentPrice);
+      const calculatedAmount = shareCount * parseFloat(buyStockData.currentPrice);
       if (calculatedAmount >= minInvestment && calculatedAmount <= maxInvestment) {
         setFormData(prev => ({ ...prev, amount: calculatedAmount }));
       }
     }
-  }, [shares, company?.currentPrice, minInvestment, maxInvestment]);
+  }, [shares, buyStockData?.currentPrice, minInvestment, maxInvestment]);
 
   const formatPercentage = (num: number | string) => {
     if (!num) return 'N/A';
@@ -193,29 +165,29 @@ export default function BuyStock() {
   };
 
   useEffect(() => {
-    if (company?.currentPrice) {
+    if (buyStockData?.currentPrice) {
       const shareCount = parseInt(shares) || 0;
-      const calculatedAmount = shareCount * parseFloat(company.currentPrice);
+      const calculatedAmount = shareCount * parseFloat(buyStockData.currentPrice);
       setAmount(calculatedAmount.toFixed(2));
     } else {
       setAmount('0');
     }
-  }, [shares, company?.currentPrice]);
+  }, [shares, buyStockData?.currentPrice]);
 
   const handlePaymentSuccess = (details: any) => {
-    if (company && company.id) {
+    if (buyStockData && buyStockData.id) {
       const paymentInfo = {
-        companyName: company.name,
+        companyName: buyStockData.name,
         shares: parseInt(shares),
         amount: parseFloat(amount),
         date: new Date(),
-        esgScore: company.esgScore || 0,
+        esgScore: buyStockData.esgScore || 0,
         paymentId: details.id || details.orderID || 'PAYMENT-' + Math.random().toString(36).substring(2, 10).toUpperCase(),
         investor_name: user?.username,
         investor_email: user?.email,
         payment_method: paymentMethod,
-        roi: company.yearlyTrend,
-        risk_level: company.esgRiskLevel || 'Medium',
+        roi: buyStockData.yearlyTrend,
+        risk_level: buyStockData.esgRiskLevel || 'Medium',
       };
 
       setPaymentData(paymentInfo);
@@ -223,7 +195,7 @@ export default function BuyStock() {
       setShowCertificate(true);
 
       purchaseMutation.mutate({
-        companyId: company.id,
+        companyId: buyStockData.id,
         shares: parseInt(shares),
         amount: parseFloat(amount)
       });
@@ -237,7 +209,7 @@ export default function BuyStock() {
         <Card>
           <CardHeader>
             <CardTitle>Payment Processing</CardTitle>
-            <CardDescription>Complete your investment in {company?.name}</CardDescription>
+            <CardDescription>Complete your investment in {buyStockData?.name}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -263,7 +235,7 @@ export default function BuyStock() {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>Company:</span>
-                    <span className="font-medium">{company?.name}</span>
+                    <span className="font-medium">{buyStockData?.name}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Shares:</span>
@@ -275,7 +247,7 @@ export default function BuyStock() {
                   </div>
                   <div className="flex justify-between">
                     <span>ESG Score:</span>
-                    <span className="font-medium">{company?.esgScore}/100</span>
+                    <span className="font-medium">{buyStockData?.esgScore}/100</span>
                   </div>
                 </div>
               </div>
@@ -284,9 +256,9 @@ export default function BuyStock() {
           <CardFooter className="flex flex-col space-y-4">
             <PayPalButton 
               amount={amount}
-              description={`Purchase of ${shares} shares of ${company?.name}`}
+              description={`Purchase of ${shares} shares of ${buyStockData?.name}`}
               onSuccess={handlePaymentSuccess}
-              disabled={!company?.currentPrice || parseFloat(amount) <= 0}
+              disabled={!buyStockData?.currentPrice || parseFloat(amount) <= 0}
             />
             <Button variant="outline" onClick={() => setShowProcessing(false)}>
               Back to Purchase Details
@@ -326,7 +298,7 @@ export default function BuyStock() {
     );
   }
 
-  if (isLoadingCompany || isLoadingPrice || isLoadingUser) {
+  if (isLoadingBuyStock || isLoadingUser) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -334,13 +306,13 @@ export default function BuyStock() {
     );
   }
 
-  if (companyError || priceError || userError) {
+  if (buyStockError || userError) {
     return (
       <div className="p-4">
         <Card>
           <CardContent>
             <div className="text-center">
-              <p className="text-red-500">Error loading company data</p>
+              <p className="text-red-500">Error loading buy stock data</p>
               <Button onClick={() => window.location.reload()}>Try Again</Button>
             </div>
           </CardContent>
@@ -356,11 +328,11 @@ export default function BuyStock() {
     return <div className="flex items-center justify-center min-h-screen">Redirecting to login...</div>;
   }
 
-  if (!company && !isLoadingCompany && !!id) {
+  if (!buyStockData && !isLoadingBuyStock && !!id) {
     setTimeout(() => {
       navigate('/companies');
     }, 0);
-    return <div className="flex items-center justify-center min-h-screen">Company not found</div>;
+    return <div className="flex items-center justify-center min-h-screen">Buy stock data not found</div>;
   }
 
   return (
@@ -381,8 +353,8 @@ export default function BuyStock() {
             <CardHeader className="pb-2">
               <div className="flex justify-between items-start">
                 <div>
-                  <CardTitle className="text-2xl">{company?.name}</CardTitle>
-                  <CardDescription>{company?.ticker} • {company?.sector}</CardDescription>
+                  <CardTitle className="text-2xl">{buyStockData?.name}</CardTitle>
+                  <CardDescription>{buyStockData?.ticker} • {buyStockData?.sector}</CardDescription>
                 </div>
                 <div className="bg-primary/10 p-2 rounded-lg">
                   <Leaf className="h-6 w-6 text-primary" />
@@ -395,7 +367,7 @@ export default function BuyStock() {
                 <div>
                   <h3 className="text-lg font-medium mb-2">Company Description</h3>
                   <p className="text-muted-foreground">
-                    {company?.description || "No description available"}
+                    {buyStockData?.description || "No description available"}
                   </p>
                 </div>
 
@@ -406,26 +378,26 @@ export default function BuyStock() {
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="bg-muted p-3 rounded-lg">
                       <div className="text-sm text-muted-foreground">ESG Score</div>
-                      <div className={`text-xl font-bold ${getScoreColor(company?.esgScore || 0)}`}>
-                        {company?.esgScore}/100
+                      <div className={`text-xl font-bold ${getScoreColor(buyStockData?.esgScore || 0)}`}>
+                        {buyStockData?.esgScore}/100
                       </div>
                     </div>
                     <div className="bg-muted p-3 rounded-lg">
                       <div className="text-sm text-muted-foreground">Environmental</div>
-                      <div className={`text-xl font-bold ${getScoreColor(company?.environmentalScore || 0)}`}>
-                        {company?.environmentalScore}/100
+                      <div className={`text-xl font-bold ${getScoreColor(buyStockData?.environmentalScore || 0)}`}>
+                        {buyStockData?.environmentalScore}/100
                       </div>
                     </div>
                     <div className="bg-muted p-3 rounded-lg">
                       <div className="text-sm text-muted-foreground">Social</div>
-                      <div className={`text-xl font-bold ${getScoreColor(company?.socialScore || 0)}`}>
-                        {company?.socialScore}/100
+                      <div className={`text-xl font-bold ${getScoreColor(buyStockData?.socialScore || 0)}`}>
+                        {buyStockData?.socialScore}/100
                       </div>
                     </div>
                     <div className="bg-muted p-3 rounded-lg">
                       <div className="text-sm text-muted-foreground">Governance</div>
-                      <div className={`text-xl font-bold ${getScoreColor(company?.governanceScore || 0)}`}>
-                        {company?.governanceScore}/100
+                      <div className={`text-xl font-bold ${getScoreColor(buyStockData?.governanceScore || 0)}`}>
+                        {buyStockData?.governanceScore}/100
                       </div>
                     </div>
                   </div>
@@ -447,20 +419,20 @@ export default function BuyStock() {
                     <TableBody>
                       <TableRow>
                         <TableCell className="font-medium">
-                          {formatCurrency(company?.currentPrice)}
+                          {formatCurrency(buyStockData?.currentPrice)}
                         </TableCell>
                         <TableCell>
-                          {formatCurrency(company?.marketCap)}
+                          {formatCurrency(buyStockData?.marketCap)}
                         </TableCell>
                         <TableCell>
-                          {formatCurrency(company?.weekHigh52)}
+                          {formatCurrency(buyStockData?.weekHigh52)}
                         </TableCell>
                         <TableCell className={
-                          company?.yearlyTrend && parseFloat(company?.yearlyTrend) > 0 
+                          buyStockData?.yearlyTrend && parseFloat(buyStockData?.yearlyTrend) > 0 
                             ? 'text-green-600' 
                             : 'text-red-500'
                         }>
-                          {formatPercentage(company?.yearlyTrend)}
+                          {formatPercentage(buyStockData?.yearlyTrend)}
                         </TableCell>
                       </TableRow>
                     </TableBody>
@@ -477,11 +449,11 @@ export default function BuyStock() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <DollarSign className="h-5 w-5 text-primary" />
-                Buy {company?.name || 'Stock'}
+                Buy {buyStockData?.name || 'Stock'}
               </CardTitle>
               <CardDescription className="flex items-center gap-2">
                 <Leaf className="h-4 w-4 text-green-500" />
-                ESG Score: {company?.esgScore || 0}/100 - Invest in sustainable growth
+                ESG Score: {buyStockData?.esgScore || 0}/100 - Invest in sustainable growth
               </CardDescription>
             </CardHeader>
 
@@ -508,14 +480,14 @@ export default function BuyStock() {
                   <div className="bg-muted/50 p-4 rounded-lg">
                     <div className="text-sm text-muted-foreground mb-1">Current Share Price</div>
                     <div className="text-2xl font-bold text-primary">
-                      {formatCurrency(company?.currentPrice)}
+                      {formatCurrency(buyStockData?.currentPrice)}
                     </div>
                   </div>
 
                   <div className="bg-muted/50 p-4 rounded-lg">
                     <div className="text-sm text-muted-foreground mb-1">Market Cap</div>
                     <div className="text-2xl font-bold">
-                      {formatCurrency(company?.marketCap)}
+                      {formatCurrency(buyStockData?.marketCap)}
                     </div>
                   </div>
                 </div>
@@ -532,7 +504,9 @@ export default function BuyStock() {
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
                       <span className="text-muted-foreground">Share Price</span>
-                      <span className="font-medium">{formatCurrency(company?.currentPrice)}</span>
+                      <span className="font-medium">
+                        {formatCurrency(buyStockData?.currentPrice)}
+                      </span>
                     </div>
 
                     <div className="flex justify-between items-center">
@@ -544,8 +518,8 @@ export default function BuyStock() {
                           onChange={(e) => {
                             const value = e.target.value;
                             const numValue = parseInt(value);
-                            if (!isNaN(numValue) && company?.currentPrice) {
-                              const total = numValue * parseFloat(company.currentPrice);
+                            if (!isNaN(numValue) && buyStockData?.currentPrice) {
+                              const total = numValue * parseFloat(buyStockData.currentPrice);
                               if (total >= minInvestment && total <= maxInvestment) {
                                 setShares(value);
                               }
@@ -557,8 +531,8 @@ export default function BuyStock() {
                     </div>
 
                     <Slider
-                      min={minInvestment / (company?.currentPrice || 1)}
-                      max={maxInvestment / (company?.currentPrice || 1)}
+                      min={minInvestment / (buyStockData?.currentPrice || 1)}
+                      max={maxInvestment / (buyStockData?.currentPrice || 1)}
                       value={[parseInt(shares) || 0]}
                       onValueChange={(value) => setShares(value[0].toString())}
                       className="my-6"
@@ -574,7 +548,7 @@ export default function BuyStock() {
                     <div className="flex justify-between items-center">
                       <span className="text-muted-foreground">Total Amount</span>
                       <span className="text-xl font-bold text-primary">
-                        {formatCurrency(company?.currentPrice ? (parseFloat(company.currentPrice) * parseInt(shares)).toFixed(2) : 'N/A')}
+                        {formatCurrency(buyStockData?.currentPrice ? (parseFloat(buyStockData.currentPrice) * parseInt(shares)).toFixed(2) : 'N/A')}
                       </span>
                     </div>
 
@@ -601,7 +575,7 @@ export default function BuyStock() {
               <Button 
                 className="w-full"
                 onClick={() => setShowProcessing(true)}
-                disabled={!company?.currentPrice || parseFloat(amount) <= 0}
+                disabled={!buyStockData?.currentPrice || parseFloat(amount) <= 0}
               >
                 Proceed to Payment
               </Button>
