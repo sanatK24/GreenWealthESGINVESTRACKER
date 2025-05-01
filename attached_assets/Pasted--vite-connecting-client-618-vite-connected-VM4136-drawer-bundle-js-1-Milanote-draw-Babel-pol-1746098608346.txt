@@ -1,0 +1,51 @@
+[vite] connecting...
+client:618 [vite] connected.
+VM4136 drawer.bundle.js:1 Milanote draw: Babel polyfill was already loaded. Error: only one instance of babel-polyfill is allowed
+    at Object.<anonymous> (VM4136 drawer.bundle.js:1:299299)
+    at Object.<anonymous> (VM4136 drawer.bundle.js:1:299771)
+    at __webpack_require__ (VM4136 drawer.bundle.js:1:119)
+    at Object.<anonymous> (VM4136 drawer.bundle.js:1:375769)
+    at Object.<anonymous> (VM4136 drawer.bundle.js:1:376371)
+    at __webpack_require__ (VM4136 drawer.bundle.js:1:119)
+    at VM4136 drawer.bundle.js:1:631
+    at VM4136 drawer.bundle.js:1:679
+(anonymous) @ VM4136 drawer.bundle.js:1
+(anonymous) @ VM4136 drawer.bundle.js:1
+__webpack_require__ @ VM4136 drawer.bundle.js:1
+(anonymous) @ VM4136 drawer.bundle.js:1
+(anonymous) @ VM4136 drawer.bundle.js:1Understand this warning
+/companies:1 Unchecked runtime.lastError: The message port closed before a response was received.Understand this error
+fd_content_pre_check.js:23 form detection precheck code injected
+/companies:1 Unchecked runtime.lastError: The message port closed before a response was received.Understand this error
+BuyStock.tsx:46 🔄 Fetching company data... Object
+/api/companies/5:1 
+            
+            
+           Failed to load resource: the server responded with a status of 404 (Not Found)Understand this error
+hook.js:608 ❌ Failed to fetch company data Object
+overrideMethod @ hook.js:608Understand this error
+BuyStock.tsx:46 🔄 Fetching company data... Object
+/api/companies/5:1 
+            
+            
+           Failed to load resource: the server responded with a status of 404 (Not Found)Understand this error
+hook.js:608 ❌ Failed to fetch company data Object
+overrideMethod @ hook.js:608Understand this error
+BuyStock.tsx:46 🔄 Fetching company data... Object
+/api/companies/5:1 
+            
+            
+           Failed to load resource: the server responded with a status of 404 (Not Found)Understand this error
+hook.js:608 ❌ Failed to fetch company data Object
+overrideMethod @ hook.js:608Understand this error
+drawer.bundle.js:1 Milanote draw: Babel polyfill was already loaded. Error: only one instance of babel-polyfill is allowed
+    at Object.<anonymous> (drawer.bundle.js:1:299299)
+    at Object.<anonymous> (drawer.bundle.js:1:299771)
+    at __webpack_require__ (drawer.bundle.js:1:119)
+    at Object.<anonymous> (drawer.bundle.js:1:375769)
+    at Object.<anonymous> (drawer.bundle.js:1:376371)
+    at __webpack_require__ (drawer.bundle.js:1:119)
+    at drawer.bundle.js:1:631
+    at drawer.bundle.js:1:679
+(anonymous) @ drawer.bundle.js:1Understand this warning
+5:1 Unchecked runtime.lastError: The message port closed before a response was received.Understand this error
