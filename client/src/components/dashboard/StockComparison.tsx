@@ -577,3 +577,5 @@ export function StockComparison({ className, initialCompanyIds = [] }: StockComp
     </Card>
   );
 }
+
+export default StockComparison;
