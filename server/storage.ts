@@ -414,6 +414,7 @@ export async function insertStockPriceHistory(data: InsertStockPriceHistory) {
 }
 
 // Payment handling
+import { payments, users, companies } from '../shared/schema';
 export async function createPayment(userId: number, companyId: number, paymentData: any) {
   try {
     const [payment] = await db.insert(payments)

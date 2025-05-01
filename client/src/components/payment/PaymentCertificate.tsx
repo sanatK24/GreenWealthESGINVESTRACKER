@@ -19,6 +19,7 @@ interface PaymentCertificateProps {
 
 export function PaymentCertificate({ transactionDetails }: PaymentCertificateProps) {
   const certificateRef = useRef<HTMLDivElement>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
   
   const handlePrint = () => {
     const content = certificateRef.current;

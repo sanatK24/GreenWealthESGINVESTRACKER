@@ -241,3 +241,26 @@ export const insertChatRecordSchema = createInsertSchema(chatRecords).omit({
 export const insertComparisonHistorySchema = createInsertSchema(comparisonHistory).omit({
   id: true,
 });
+
+
+// Payments table
+export const payments = pgTable("payments", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  companyId: integer("company_id").notNull().references(() => companies.id),
+  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
+  shares: integer("shares").notNull(),
+  status: text("status").notNull().default('pending'),
+  paymentData: text("payment_data").notNull(), // JSON string of PayPal response
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const insertPaymentSchema = createInsertSchema(payments).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type Payment = typeof payments.$inferSelect;
+export type InsertPayment = z.infer<typeof insertPaymentSchema>;
