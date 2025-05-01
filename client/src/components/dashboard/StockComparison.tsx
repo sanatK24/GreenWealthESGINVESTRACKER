@@ -32,59 +32,7 @@ interface StockComparisonProps {
   initialCompanyIds?: number[];
 }
 
-// Main chart colors for lines
-const CHART_COLORS = [
-  '#10b981', // green
-  '#3b82f6', // blue
-  '#f43f5e', // red
-  '#a855f7', // purple
-  '#f59e0b', // amber
-  '#06b6d4', // cyan
-  '#84cc16', // lime
-];
-
-// Light colors for area fills
-const CHART_COLORS_LIGHT = [
-  'rgba(16, 185, 129, 0.2)',  // green
-  'rgba(59, 130, 246, 0.2)',  // blue
-  'rgba(244, 63, 94, 0.2)',   // red
-  'rgba(168, 85, 247, 0.2)',  // purple
-  'rgba(245, 158, 11, 0.2)',  // amber
-  'rgba(6, 182, 212, 0.2)',   // cyan
-  'rgba(132, 204, 22, 0.2)',  // lime
-];
-
-// Custom tooltip for the chart
-const CustomTooltip = ({ active, payload, label }: any) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="bg-card border border-border p-3 rounded-md shadow-md">
-        <p className="font-medium text-sm mb-2">{`Date: ${label}`}</p>
-        <div className="space-y-1.5">
-          {payload.map((entry: any, index: number) => (
-            <div key={`tooltip-${index}`} className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-1.5">
-                <div 
-                  className="w-3 h-3 rounded-full" 
-                  style={{ backgroundColor: entry.color }}
-                />
-                <span className="text-sm">{entry.name}</span>
-              </div>
-              <span className="text-sm font-medium">₹{entry.value}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-  return null;
-};
-
-<<<<<<< HEAD
-export default function StockComparison({ className, initialCompanyIds = [] }: StockComparisonProps) {
-=======
 export function StockComparison({ className, initialCompanyIds = [] }: StockComparisonProps) {
->>>>>>> main
   const [selectedTimeframe, setSelectedTimeframe] = useState<TimeframeOption>('1m');
   const [selectedCompanyIds, setSelectedCompanyIds] = useState<number[]>(initialCompanyIds);
   const [showAddSelect, setShowAddSelect] = useState(false);
@@ -303,6 +251,51 @@ export function StockComparison({ className, initialCompanyIds = [] }: StockComp
     }
   };
 
+
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-card border border-border p-3 rounded-md shadow-md">
+          <p className="font-medium text-sm mb-2">{`Date: ${label}`}</p>
+          <div className="space-y-1.5">
+            {payload.map((entry: any, index: number) => (
+              <div key={`tooltip-${index}`} className="flex items-center justify-between gap-3">
+                <div 
+                  className="w-3 h-3 rounded-full" 
+                  style={{ backgroundColor: entry.color }}
+                />
+                <span className="text-sm">{entry.name}</span>
+                <span className="text-sm font-medium">₹{entry.value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  // Main chart colors for lines
+  const CHART_COLORS = [
+    '#10b981', // green
+    '#3b82f6', // blue
+    '#f43f5e', // red
+    '#a855f7', // purple
+    '#f59e0b', // amber
+    '#06b6d4', // cyan
+    '#84cc16', // lime
+  ];
+
+  // Light colors for area fills
+  const CHART_COLORS_LIGHT = [
+    'rgba(16, 185, 129, 0.2)',  // green
+    'rgba(59, 130, 246, 0.2)',  // blue
+    'rgba(244, 63, 94, 0.2)',   // red
+    'rgba(168, 85, 247, 0.2)',  // purple
+    'rgba(245, 158, 11, 0.2)',  // amber
+    'rgba(6, 182, 212, 0.2)',   // cyan
+    'rgba(132, 204, 22, 0.2)',  // lime
+  ];
 
   return (
     <Card className={cn("w-full", className)}>
@@ -568,50 +561,6 @@ export function StockComparison({ className, initialCompanyIds = [] }: StockComp
                 <div>
                   <p className="text-muted-foreground mb-4">Select stocks to view detailed ESG and performance metrics</p>
                   {!showAddSelect && selectedCompanyIds.length < 7 && (
-                <Button 
-                  onClick={generateInsights}
-                  disabled={isGeneratingInsights || isLoading || isRefetching || selectedCompanyIds.length === 0}
-                  className="w-full"
-                  variant="outline"
-                >
-                  {(isGeneratingInsights || isLoading || isRefetching) && (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  )}
-                  {hasInsights ? 'Regenerate Insights' : 'Generate Insights'}
-                </Button>
-              </div>
-              {hasInsights && (
-                <div className="flex-[2] p-4 border rounded-lg bg-background/50">
-                  <AIInsights 
-                    companyIds={selectedCompanyIds} 
-                    timeframe={selectedTimeframe}
-                  />
-                </div>
-              )}
-            </div>
-          )}
-
-          <Tabs 
-            defaultValue={selectedTimeframe} 
-            onValueChange={(value) => setSelectedTimeframe(value as TimeframeOption)}
-            className="w-full"
-          >
-            <TabsList className="grid grid-cols-7 mb-4">
-              <TabsTrigger value="1d">1D</TabsTrigger>
-              <TabsTrigger value="1w">1W</TabsTrigger>
-              <TabsTrigger value="1m">1M</TabsTrigger>
-              <TabsTrigger value="6m">6M</TabsTrigger>
-              <TabsTrigger value="1y">1Y</TabsTrigger>
-              <TabsTrigger value="5y">5Y</TabsTrigger>
-              <TabsTrigger value="max">Max</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value={selectedTimeframe} className="w-full h-[400px]">
-              {selectedCompanyIds.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
-                  <p className="mb-4">Select stocks to compare</p>
-                  {!showAddSelect && (
-
                     <Button 
                       variant="outline"
                       onClick={() => setShowAddSelect(true)}
@@ -622,197 +571,7 @@ export function StockComparison({ className, initialCompanyIds = [] }: StockComp
                 </div>
               </div>
             )}
-          </div>  
-              ) : isLoading || companiesLoading ? (
-                <div className="flex items-center justify-center h-full">
-                  <div className="flex flex-col items-center gap-4">
-                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                    <p className="text-muted-foreground">Loading price data...</p>
-                  </div>
-                </div>
-              ) : error ? (
-                <div className="flex items-center justify-center h-full text-muted-foreground">
-                  <p>Error loading comparison data. Please try again.</p>
-                </div>
-              ) : chartData.length === 0 ? (
-                <div className="flex items-center justify-center h-full text-muted-foreground">
-                  <p>No price data available for this timeframe.</p>
-                </div>
-              ) : (
-                <ResponsiveContainer width="100%" height="100%">
-                  {chartType === 'line' ? (
-                    <LineChart
-                      data={chartData}
-                      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                      <XAxis dataKey="date" />
-                      <YAxis 
-                        domain={['auto', 'auto']}
-                        tickFormatter={(value) => `₹${value}`}
-                      />
-                      <Tooltip content={<CustomTooltip />} />
-                      <Legend />
-                      <ReferenceLine y={0} stroke="#666" />
-                      {data?.companies?.map((company: Company, index: number) => (
-                        <Line 
-                          key={company.id}
-                          type="monotone" 
-                          dataKey={company.name} 
-                          name={company.name} 
-                          stroke={CHART_COLORS[index % CHART_COLORS.length]} 
-                          strokeWidth={2}
-                          activeDot={{ r: 6 }}
-                          dot={false}
-                        />
-                      ))}
-                    </LineChart>
-                  ) : (
-                    <ComposedChart
-                      data={chartData}
-                      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                      <XAxis dataKey="date" />
-                      <YAxis 
-                        domain={['auto', 'auto']}
-                        tickFormatter={(value) => `₹${value}`}
-                      />
-                      <Tooltip content={<CustomTooltip />} />
-                      <Legend />
-                      <ReferenceLine y={0} stroke="#666" />
-                      {data?.companies?.map((company: Company, index: number) => (
-                        <Area 
-                          key={company.id}
-                          type="monotone" 
-                          dataKey={company.name} 
-                          name={company.name} 
-                          fill={CHART_COLORS_LIGHT[index % CHART_COLORS_LIGHT.length]}
-                          stroke={CHART_COLORS[index % CHART_COLORS.length]} 
-                          strokeWidth={2}
-                          activeDot={{ r: 6 }}
-                        />
-                      ))}
-                    </ComposedChart>
-                  )}
-                </ResponsiveContainer>
-              )}
-            </TabsContent>
-          </Tabs>
-        </div>
-        <div className="lg:col-span-1">
-          {!showAddSelect && selectedCompanyIds.length < 7 && (
-            <Button 
-              variant="outline"
-              onClick={() => setShowAddSelect(true)}
-              className="w-full mb-4"
-            >
-              <Plus className="h-4 w-4 mr-2" /> Add Stock
-            </Button>
-          )}
-          {showAddSelect && (
-            <Select onValueChange={handleAddCompany}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select a stock" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Companies</SelectLabel>
-                  {filteredCompanies.map((company: Company) => (
-                    <SelectItem 
-                      key={company.id} 
-                      value={company.id.toString()}
-                      disabled={selectedCompanyIds.includes(company.id)}
-                    >
-                      {company.name}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          )}
-          {data?.companies?.length > 0 ? (
-            <div className="border rounded-lg h-full overflow-hidden">
-              <div className="bg-muted/30 px-4 py-2 border-b">
-                <h4 className="font-medium text-sm">Performance & ESG Metrics</h4>
-              </div>
-              <ScrollArea className="h-[466px] px-4">
-                <div className="space-y-4 py-4">
-                  {companyPerformanceData.map((company: Company & { priceChange: string; percentChange: string; isPositive: boolean }, index: number) => (
-                    <div key={company.id} className="space-y-2 pb-4 border-b border-border/50 last:border-0">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <div 
-                            className="w-3 h-3 rounded-full" 
-                            style={{ backgroundColor: CHART_COLORS[index % CHART_COLORS.length] }}
-                          />
-                          <span className="font-medium">{company.name}</span>
-                        </div>
-                        <Badge 
-                          variant="outline"
-                          className={cn(
-                            "border font-medium",
-                            company.isPositive ? "bg-green-100/20 text-green-600 hover:bg-green-100/20" : "bg-red-100/20 text-red-600 hover:bg-red-100/20"
-                          )}
-                        >
-                          {company.isPositive ? <TrendingUp className="h-3 w-3 mr-1" /> : <TrendingDown className="h-3 w-3 mr-1" />}
-                          {company.percentChange}%
-                        </Badge>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-x-2 gap-y-1">
-                        <div className="flex justify-between">
-                          <span className="text-xs text-muted-foreground">ESG Score</span>
-                          <span className="text-xs font-medium">{company.esgScore}/100</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-xs text-muted-foreground">Env</span>
-                          <span className="text-xs font-medium">{company.environmentalScore}/100</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-xs text-muted-foreground">Social</span>
-                          <span className="text-xs font-medium">{company.socialScore}/100</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-xs text-muted-foreground">Gov</span>
-                          <span className="text-xs font-medium">{company.governanceScore}/100</span>
-                        </div>
-                      </div>
-
-                      <div className="bg-muted/40 p-2 rounded text-xs">
-                        <div className="flex items-start mb-1">
-                          <Info className="h-3 w-3 mr-1 mt-0.5 text-muted-foreground" />
-                          <span className="font-medium text-muted-foreground">Price Change ({selectedTimeframe}):</span>
-                        </div>
-                        <div className="pl-4">
-                          <span className={cn(
-                            "font-medium",
-                            company.isPositive ? "text-green-600" : "text-red-600"
-                          )}>
-                            {company.isPositive ? "+" : ""}{company.priceChange} INR ({company.percentChange}%)
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </ScrollArea>
-            </div>
-          ) : (
-            <div className="border rounded-lg h-full flex items-center justify-center p-4 text-center">
-              <div>
-                <p className="text-muted-foreground mb-4">Select stocks to view detailed ESG and performance metrics</p>
-                {!showAddSelect && selectedCompanyIds.length < 7 && (
-                  <Button 
-                    variant="outline"
-                    onClick={() => setShowAddSelect(true)}
-                  >
-                    <Plus className="h-4 w-4 mr-2" /> Add Stock
-                  </Button>
-                )}
-              </div>
-            </div>
-          )}
+          </div>
         </div>
       </CardContent>
     </Card>
