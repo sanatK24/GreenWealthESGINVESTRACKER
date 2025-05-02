@@ -17,7 +17,15 @@ import { NewsCard } from "@/components/dashboard/NewsCard";
 const Dashboard = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["/api/portfolio/summary"],
-    queryFn: getQueryFn()
+    queryFn: async () => {
+      const response = await fetch("/api/portfolio/summary", {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch portfolio summary');
+      }
+      return response.json();
+    }
   });
 
   const portfolioStats = {
