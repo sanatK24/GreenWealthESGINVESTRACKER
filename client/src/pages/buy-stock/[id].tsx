@@ -18,24 +18,28 @@ const BuyStockPage = () => {
   const { data: companyData, isLoading } = useQuery({
     queryKey: ['company', id],
     queryFn: async () => {
-      const response = await fetch(`/api/companies/${id}`, {
-        headers: {
-          'Accept': 'application/json'
-        }
-      });
-      const company = await response.json();
-      
-      // Get buy stock data
-      const buyStockResponse = await fetch(`/api/buy-stock/${id}`, {
-        headers: {
-          'Accept': 'application/json'
-        }
-      });
+      const response = await fetch('/companies.json');
+      const companies = await response.json();
+      const company = companies.find(c => c.id === parseInt(id as string));
+
+      const buyStockResponse = await fetch('/buy_stock_data.json');
       const buyStockData = await buyStockResponse.json();
+      const stockData = buyStockData.find(b => b.company_id === parseInt(id as string));
+
+      if (!company || !stockData) {
+        throw new Error('Company not found');
+      }
 
       return {
         ...company,
-        buyStockData
+        buyStockData: {
+          currentPrice: stockData.current_price,
+          marketCap: stockData.market_cap,
+          weekHigh52: stockData.week_high_52,
+          weekLow52: stockData.week_low_52,
+          minInvestment: stockData.min_investment,
+          maxInvestment: stockData.max_investment
+        }
       };
     }
   });
