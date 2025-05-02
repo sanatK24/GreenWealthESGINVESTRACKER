@@ -354,15 +354,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get(`${apiPrefix}/company/:id`, async (req: Request, res: Response) => {
     try {
       const idParam = req.params.id;
-      // Validate that id is a valid number
+      const includeBuyStockData = req.query.include === 'buyStockData';
+      
       if (!idParam || isNaN(Number(idParam))) {
         return res.status(400).json({ message: "Invalid company ID" });
       }
 
       const id = parseInt(idParam);
-      const buyStockData = await storage.getBuyStockData(id);
-      if (!buyStockData) {
-        return res.status(404).json({ error: "Buy stock data not found" });
+      const company = await storage.getCompanyById(id);
+      if (!company) {
+        return res.status(404).json({ error: "Company not found" });
+      }
+
+      let buyStockData = null;
+      if (includeBuyStockData) {
+        buyStockData = await storage.getBuyStockData(id);
+        if (!buyStockData) {
+          return res.status(404).json({ error: "Buy stock data not found" });
+        }
       }
 
       // Get company data

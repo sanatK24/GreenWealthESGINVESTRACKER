@@ -22,31 +22,15 @@ const BuyStockPage = () => {
     queryKey: ['buyStockData', id],
     queryFn: async () => {
       try {
-        const response = await fetch(`/api/companies/${id}`);
+        const response = await fetch(`/api/companies/${id}?include=buyStockData`);
         if (!response.ok) {
           throw new Error('Failed to fetch company data');
         }
         const data = await response.json();
-        
-        // Fetch buy stock data
-        const buyStockResponse = await fetch(`/api/buy-stock-data/${id}`);
-        if (!buyStockResponse.ok) {
-          // Create default buy stock data using company data
-          return {
-            ...data,
-            buyStockData: {
-              currentPrice: data.currentPrice || "0",
-              marketCap: data.marketCap || "0",
-              weekHigh52: data.yearHigh || "0",
-              weekLow52: data.yearLow || "0", 
-              yearlyTrend: data.yearlyTrend || "0",
-              minInvestment: "1000",
-              maxInvestment: "1000000"
-            }
-          };
+        if (!data || !data.buyStockData) {
+          throw new Error('Company or buy stock data not found');
         }
-        const buyStockData = await buyStockResponse.json();
-        return { ...data, ...buyStockData };
+        return data;
       } catch (err) {
         throw new Error('Failed to fetch stock data');
       }
