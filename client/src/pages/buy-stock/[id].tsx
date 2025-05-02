@@ -9,8 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 
 // Import data from TypeScript files
-import Companies from '@/data/companies';
-import BuyStockData from '@/data/buy_stock_data';
+import Companies from '@/data/companies.tsx';
+import BuyStockData from '@/data/buy_stock_data.tsx';
 
 const BuyStockPage = () => {
   const navigate = useNavigate();
@@ -22,6 +22,16 @@ const BuyStockPage = () => {
   // Find company and stock data
   const company = Companies.find(c => c.id === parseInt(id as string));
   const stockData = BuyStockData.find(s => s.company_id === parseInt(id as string));
+
+  if (!company) {
+    navigate('/portfolio');
+    toast({
+      title: 'Error',
+      description: 'Company not found',
+      variant: 'destructive'
+    });
+    return null;
+  }
 
   useEffect(() => {
     if (stockData?.current_price) {
@@ -63,7 +73,7 @@ const BuyStockPage = () => {
     });
   };
 
-  if (!company || !stockData) {
+  if (!stockData) {
     return (
       <div className="flex items-center justify-center h-64">
         <div>Company not found</div>
