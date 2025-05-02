@@ -19,6 +19,10 @@ const Dashboard = () => {
     queryKey: ["/api/portfolio/summary"],
     queryFn: async () => {
       const response = await fetch("/api/portfolio/summary", {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
         credentials: 'include'
       });
       if (!response.ok) {
