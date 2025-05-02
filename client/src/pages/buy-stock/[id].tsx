@@ -8,9 +8,9 @@ import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 
-// Import JSON data directly
-import companiesData from '@/../../db-export/companies.json';
-import buyStockData from '@/../../db-export/buy_stock_data.json';
+// Import data from TypeScript files
+import Companies from '@/data/companies';
+import BuyStockData from '@/data/buy_stock_data';
 
 const BuyStockPage = () => {
   const navigate = useNavigate();
@@ -20,8 +20,8 @@ const BuyStockPage = () => {
   const [amount, setAmount] = useState('0');
 
   // Find company and stock data
-  const company = companiesData.find(c => c.id === parseInt(id as string));
-  const stockData = buyStockData.find(s => s.company_id === parseInt(id as string));
+  const company = Companies.find(c => c.id === parseInt(id as string));
+  const stockData = BuyStockData.find(s => s.company_id === parseInt(id as string));
 
   useEffect(() => {
     if (stockData?.current_price) {
