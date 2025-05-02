@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { getQueryFn } from "@/lib/queryClient";
 import { Link } from "wouter";
 import { ExternalLink, Calendar, Newspaper } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
