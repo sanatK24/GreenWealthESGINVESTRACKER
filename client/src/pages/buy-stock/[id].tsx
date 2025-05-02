@@ -100,28 +100,37 @@ const BuyStockPage = () => {
   // Purchase mutation
   const purchaseMutation = useMutation<PurchaseResponse, Error, { shares: number, amount: number }>({
     mutationFn: async (data) => {
-      const response = await fetch(`/api/purchases`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          company_id: companyId,
-          shares: data.shares,
-          amount: data.amount,
-          date: format(new Date(), 'yyyy-MM-dd')
-        })
-      });
-      if (!response.ok) {
-        throw new Error('Purchase failed');
+      try {
+        const response = await fetch(`/api/purchases`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: companyId,
+            shares: data.shares,
+            amount: data.amount,
+            date: format(new Date(), 'yyyy-MM-dd')
+          })
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Purchase failed');
+        }
+        
+        return response.json();
+      } catch (error) {
+        console.error('Purchase error:', error);
+        throw error;
       }
-      return response.json();
     },
     onSuccess: (data) => {
       if (data.success) {
         toast({
           title: 'Success',
-          description: `Successfully invested ₹${amount} in ${company?.name}`
+          description: `Successfully invested ₹${amount} in ${company?.name}`,
+          duration: 5000
         });
         navigate('/portfolio');
       } else {
@@ -131,8 +140,9 @@ const BuyStockPage = () => {
     onError: (error) => {
       toast({
         title: 'Error',
-        description: error.message,
-        variant: 'destructive'
+        description: error.message || 'Failed to process your purchase',
+        variant: 'destructive',
+        duration: 5000
       });
     }
   });
@@ -193,6 +203,9 @@ const BuyStockPage = () => {
       </div>
     );
   }
+
+  // Add purchase loading state
+  const isPurchasing = purchaseMutation.isPending;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -285,9 +298,9 @@ const BuyStockPage = () => {
           <Button 
             className="w-full"
             onClick={() => purchaseMutation.mutate({ shares: parseInt(shares), amount: parseFloat(amount) })}
-            disabled={purchaseMutation.isPending || parseFloat(amount) === 0}
+            disabled={isPurchasing || parseFloat(amount) === 0}
           >
-            {purchaseMutation.isPending ? (
+            {isPurchasing ? (
               <div className="flex items-center justify-center gap-2">
                 <ArrowUp className="h-4 w-4 animate-spin" />
                 <span>Processing...</span>
