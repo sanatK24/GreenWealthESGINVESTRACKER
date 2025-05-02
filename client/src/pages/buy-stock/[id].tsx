@@ -21,7 +21,7 @@ const BuyStockPage = () => {
 
   // Find company and stock data
   const company = companiesData.find(c => c.id === parseInt(id as string));
-  const stockData = buyStockData[0]; // Using first stock data as example
+  const stockData = buyStockData.find(s => s.company_id === parseInt(id as string));
 
   useEffect(() => {
     if (stockData?.current_price) {
@@ -33,14 +33,26 @@ const BuyStockPage = () => {
 
   const purchaseMutation = useMutation({
     mutationFn: async () => {
+      // TODO: Implement actual purchase API call
+      const totalAmount = parseFloat(amount);
+      if (totalAmount < minInvestment || totalAmount > maxInvestment) {
+        throw new Error('Investment amount out of bounds');
+      }
       return { success: true };
     },
     onSuccess: () => {
       toast({
         title: 'Success',
-        description: `Purchased ${shares} shares of ${company?.name}`
+        description: `Successfully invested ₹${amount} in ${company?.name}`
       });
       navigate('/portfolio');
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: 'destructive'
+      });
     }
   });
 
