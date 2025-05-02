@@ -1,19 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
-import { 
-  ArrowUp, 
-  ArrowRight, 
-  Car as CarIcon, 
-  Sun as SunIcon, 
-  Building as BuildingIcon, 
-  Zap as ZapIcon,
-  LineChart
-} from "lucide-react";
+import { ArrowUp, LineChart } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
-import { UtensilsCrossed as HandPlatter } from "lucide-react";
-import { Link } from "react-router-dom"; //updated import
+import { Link } from "react-router-dom";
 
 // Function to get score class
 const getScoreClass = (score: number) => {
@@ -22,8 +13,19 @@ const getScoreClass = (score: number) => {
   return 'bg-red-100 text-red-800';
 };
 
+// Function to format currency
+const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount);
+};
+
 export function CompanyTable() {
   const { toast } = useToast();
+  const [shares, setShares] = useState("");
 
   const { data, error, isLoading: isCompaniesLoading } = useQuery({
     queryKey: ["/api/companies"],
@@ -53,8 +55,14 @@ export function CompanyTable() {
     );
   }
 
-  const companies = data.companies; // Assuming data.companies contains the array of companies
+  const companies = data.companies;
 
+  const handleBuy = (company: any) => {
+    if (shares && !isNaN(Number(shares))) {
+      const amount = Number(shares) * Number(company.price || 0);
+      window.open(`/certificate/${company.ticker}/${shares}/${amount}`);
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -86,17 +94,38 @@ export function CompanyTable() {
                 <span>+{company.yearlyTrend} (1Y Trend)</span>
               </div>
             </div>
-            <div className="flex flex-col space-y-2">
-              <Link to={`/company-prices?id=${company.id}`}>
+            <div className="flex flex-col space-y-4">
+              <div className="flex gap-2">
+                <input
+                  type="number"
+                  min="1"
+                  value={shares}
+                  onChange={(e) => setShares(e.target.value)}
+                  className="flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                  placeholder="Enter number of shares"
+                />
+                <div className="text-sm font-semibold text-primary">
+                  {shares ? formatCurrency(Number(shares) * Number(company.price || 0)) : formatCurrency(0)}
+                </div>
+              </div>
+              <div className="flex gap-2">
                 <Button 
-                  size="sm" 
-                  variant="outline"
-                  className="flex items-center gap-1 w-full"
+                  onClick={() => handleBuy(company)}
+                  disabled={!shares || isNaN(Number(shares))}
                 >
-                  <LineChart className="h-3 w-3" />
-                  Chart
+                  Buy
                 </Button>
-              </Link>
+                <Link to={`/company-prices?id=${company.id}`}>
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    className="flex items-center gap-1 w-full"
+                  >
+                    <LineChart className="h-3 w-3" />
+                    Chart
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>

@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { ModeToggle } from '@/components/theme-provider';
 import { useAuth } from '@/hooks/use-auth';
 
 export function Header() {
@@ -17,11 +16,6 @@ export function Header() {
             <Link to="/companies">Companies</Link>
             <Link to="/portfolio">Portfolio</Link>
           </nav>
-        </div>
-        <div className="flex flex-1 items-center justify-end space-x-2">
-          <div className="flex items-center">
-            <ModeToggle />
-          </div>
         </div>
       </div>
     </header>
