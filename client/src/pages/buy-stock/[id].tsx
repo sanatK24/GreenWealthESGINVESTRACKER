@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useQuery, useMutation } from "@tanstack/react-query";
@@ -18,13 +19,13 @@ const BuyStockPage = () => {
   const { data: companyData, isLoading } = useQuery({
     queryKey: ['company', id],
     queryFn: async () => {
-      const response = await fetch('/db-export/companies.json');
-      const companies = await response.json();
-      const company = companies.find(c => c.id === parseInt(id as string));
+      const companiesResponse = await fetch('/db-export/companies.json');
+      const companies = await companiesResponse.json();
+      const company = companies.find((c: any) => c.id === parseInt(id as string));
 
       const buyStockResponse = await fetch('/db-export/buy_stock_data.json');
       const buyStockData = await buyStockResponse.json();
-      const stockData = buyStockData.find(b => b.company_id === parseInt(id as string));
+      const stockData = buyStockData.find((b: any) => b.company_id === parseInt(id as string));
 
       if (!company || !stockData) {
         throw new Error('Company not found');
@@ -32,43 +33,23 @@ const BuyStockPage = () => {
 
       return {
         ...company,
-        buyStockData: {
-          currentPrice: stockData.current_price,
-          marketCap: stockData.market_cap,
-          weekHigh52: stockData.week_high_52,
-          weekLow52: stockData.week_low_52,
-          minInvestment: stockData.min_investment,
-          maxInvestment: stockData.max_investment
-        }
+        buyStockData: stockData
       };
     }
   });
 
   useEffect(() => {
-    if (companyData?.buyStockData?.currentPrice) {
+    if (companyData?.buyStockData?.current_price) {
       const shareCount = parseInt(shares) || 0;
-      const calculatedAmount = shareCount * parseFloat(companyData.buyStockData.currentPrice);
+      const calculatedAmount = shareCount * parseFloat(companyData.buyStockData.current_price);
       setAmount(calculatedAmount.toFixed(2));
     }
   }, [shares, companyData]);
 
   const purchaseMutation = useMutation({
     mutationFn: async () => {
-      const response = await fetch('/api/portfolio/purchase', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          companyId: parseInt(id as string),
-          shares: parseInt(shares),
-          amount: parseFloat(amount)
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Purchase failed');
-      }
-
-      return response.json();
+      // Simulate purchase success
+      return { success: true };
     },
     onSuccess: () => {
       toast({
@@ -101,8 +82,8 @@ const BuyStockPage = () => {
     );
   }
 
-  const minInvestment = parseFloat(companyData.buyStockData?.minInvestment) || 1000;
-  const maxInvestment = parseFloat(companyData.buyStockData?.maxInvestment) || 1000000;
+  const minInvestment = parseFloat(companyData.buyStockData?.min_investment) || 1000;
+  const maxInvestment = parseFloat(companyData.buyStockData?.max_investment) || 1000000;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -112,7 +93,7 @@ const BuyStockPage = () => {
             <div>
               <CardTitle>{companyData.name}</CardTitle>
               <p className="text-sm text-muted-foreground">
-                Current Price: {formatCurrency(companyData.buyStockData.currentPrice)}
+                Current Price: {formatCurrency(companyData.buyStockData.current_price)}
               </p>
             </div>
             <div className="flex gap-2">
@@ -128,15 +109,15 @@ const BuyStockPage = () => {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>Market Cap</span>
-                    <span>{formatCurrency(companyData.buyStockData.marketCap)}</span>
+                    <span>{formatCurrency(companyData.buyStockData.market_cap)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>52 Week High</span>
-                    <span>{formatCurrency(companyData.buyStockData.weekHigh52)}</span>
+                    <span>{formatCurrency(companyData.buyStockData.week_high_52)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>52 Week Low</span>
-                    <span>{formatCurrency(companyData.buyStockData.weekLow52)}</span>
+                    <span>{formatCurrency(companyData.buyStockData.week_low_52)}</span>
                   </div>
                 </div>
               </div>
@@ -162,8 +143,8 @@ const BuyStockPage = () => {
                         step={1000}
                         value={[parseFloat(amount)]}
                         onValueChange={(value) => {
-                          if (companyData?.buyStockData?.currentPrice) {
-                            const shareCount = Math.floor(value[0] / parseFloat(companyData.buyStockData.currentPrice));
+                          if (companyData?.buyStockData?.current_price) {
+                            const shareCount = Math.floor(value[0] / parseFloat(companyData.buyStockData.current_price));
                             setShares(shareCount.toString());
                           }
                         }}
