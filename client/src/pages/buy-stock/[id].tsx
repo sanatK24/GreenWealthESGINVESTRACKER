@@ -21,22 +21,37 @@ const BuyStockPage = () => {
     queryKey: ['company', id],
     queryFn: async () => {
       try {
-        // First try the combined endpoint
         const response = await fetch(`/api/companies/${id}`);
-        const data = await response.json();
-        
-        if (response.ok && data && data.buyStockData) {
-          return data;
+        if (!response.ok) {
+          throw new Error('Failed to fetch company data');
         }
         
-        // If that fails, try the dedicated buy stock data endpoint
+        const data = await response.json();
+        if (!data) {
+          throw new Error('Company not found');
+        }
+
+        // If we have both company and buy stock data, return it
+        if (data.buyStockData) {
+          return data;
+        }
+
+        // If no buy stock data in company response, fetch it separately
         const buyStockResponse = await fetch(`/api/buy-stock-data/${id}`);
         if (!buyStockResponse.ok) {
           throw new Error('Failed to fetch buy stock data');
         }
-        
+
         const buyStockData = await buyStockResponse.json();
-        return buyStockData;
+        if (!buyStockData) {
+          throw new Error('Buy stock data not found');
+        }
+
+        // Combine company and buy stock data
+        return {
+          ...data,
+          buyStockData: buyStockData.buyStockData
+        };
       } catch (err) {
         throw err instanceof Error ? err : new Error('Failed to fetch company data');
       }
