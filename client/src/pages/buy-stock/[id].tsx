@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useQuery, useMutation } from "@tanstack/react-query";
@@ -16,14 +17,14 @@ const BuyStockPage = () => {
   const [amount, setAmount] = useState('0');
   const [companyName, setCompanyName] = useState('');
 
-  // Fetch company and buy stock data in one request
+  // Fetch buy stock data
   const { data: companyData, isLoading, error } = useQuery({
-    queryKey: ['company', id],
+    queryKey: ['buyStockData', id],
     queryFn: async () => {
-      const response = await fetch(`/api/companies/${id}`);
+      const response = await fetch(`/api/buy-stock-data/${id}`);
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to fetch company data');
+        throw new Error(errorData.message || 'Failed to fetch stock data');
       }
       return response.json();
     },
@@ -46,7 +47,7 @@ const BuyStockPage = () => {
 
   const purchaseMutation = useMutation({
     mutationFn: async (data: { shares: number, amount: number }) => {
-      const response = await fetch('/api/buy-stock', {
+      const response = await fetch('/api/portfolio/purchase', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
