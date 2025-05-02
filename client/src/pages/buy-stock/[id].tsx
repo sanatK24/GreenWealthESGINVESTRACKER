@@ -18,13 +18,26 @@ const BuyStockPage = () => {
   const { data: companyData, isLoading } = useQuery({
     queryKey: ['company', id],
     queryFn: async () => {
-      const response = await fetch(`/api/company/${id}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch company data');
-      }
-      return response.json();
-    },
-    enabled: !!id
+      const response = await fetch(`/api/companies/${id}`, {
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      const company = await response.json();
+      
+      // Get buy stock data
+      const buyStockResponse = await fetch(`/api/buy-stock/${id}`, {
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      const buyStockData = await buyStockResponse.json();
+
+      return {
+        ...company,
+        buyStockData
+      };
+    }
   });
 
   useEffect(() => {
