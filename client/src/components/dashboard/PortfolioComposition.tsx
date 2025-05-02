@@ -23,7 +23,7 @@ const PortfolioComposition = () => {
     staleTime: 60000,
     refetchOnWindowFocus: false
   });
-  
+
   // Handle errors with useEffect to avoid render loops
   useEffect(() => {
     if (isLoading === false && (!data || (data as any)?.error)) {
