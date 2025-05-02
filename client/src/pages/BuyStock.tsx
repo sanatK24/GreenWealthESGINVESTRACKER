@@ -41,8 +41,9 @@ export default function BuyStock() {
   });
 
   // Format helpers
-  const formatCurrency = (num: number | null) => {
-    if (num === null || num === undefined) return '₹0.00';
+  const formatCurrency = (value: string | null) => {
+    if (!value) return '₹0.00';
+    const num = parseFloat(value);
     return '₹' + num.toLocaleString('en-IN', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
