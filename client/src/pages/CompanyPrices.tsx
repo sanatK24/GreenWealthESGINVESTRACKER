@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { StockPriceChart } from "@/components/dashboard/StockPriceChart";
+import { StockComparison } from "@/components/dashboard/StockComparison";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 
@@ -78,14 +79,25 @@ export default function CompanyPrices() {
         </div>
 
         {companyId ? (
-          <Card>
-            <CardHeader>
-              <CardTitle>Stock Price History</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <StockPriceChart companyId={companyId} className="mt-4 h-[500px]" />
-            </CardContent>
-          </Card>
+          <div className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Stock Price History</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <StockPriceChart companyId={companyId} className="mt-4 h-[500px]" />
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Stock Comparison</CardTitle>
+                <CardDescription>Compare with other companies</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <StockComparison initialCompanyIds={[companyId]} />
+              </CardContent>
+            </Card>
+          </div>
         ) : (
           <div className="flex flex-col items-center justify-center h-[400px] gap-4">
             <p className="text-muted-foreground">
