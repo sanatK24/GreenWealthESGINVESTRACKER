@@ -1,11 +1,14 @@
+
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 import { 
   Card, 
   CardContent, 
   CardHeader, 
-  CardTitle 
+  CardTitle,
+  CardFooter
 } from '@/components/ui/card';
 import { 
   Table, 
@@ -16,11 +19,15 @@ import {
   TableRow 
 } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
-import { Search } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Slider } from '@/components/ui/slider';
+import { Search, ArrowUpRight, TrendingUp } from 'lucide-react';
 
 export default function BuyStock() {
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedShares, setSelectedShares] = useState<number>(1);
 
   const { data: companies, error, isLoading } = useQuery({
     queryKey: ['companies'],
@@ -52,6 +59,14 @@ export default function BuyStock() {
 
   const formatPercentage = (num: number) => {
     return `${num > 0 ? '+' : ''}${num}%`;
+  };
+
+  const calculateTotalAmount = (price: string, shares: number) => {
+    return formatCurrency((parseFloat(price) * shares).toString());
+  };
+
+  const handleBuy = (companyId: number) => {
+    navigate(`/buy-stock/${companyId}`);
   };
 
   if (isLoading) {
@@ -100,26 +115,64 @@ export default function BuyStock() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Company</TableHead>
-                <TableHead>Ticker</TableHead>
+                <TableHead>Company Details</TableHead>
                 <TableHead>Current Price</TableHead>
                 <TableHead>Market Cap</TableHead>
-                <TableHead>52 Week High</TableHead>
-                <TableHead>52 Week Low</TableHead>
-                <TableHead>Yearly Trend</TableHead>
+                <TableHead>52 Week High/Low</TableHead>
+                <TableHead>Investment Details</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredData?.map((stock: any) => (
                 <TableRow key={stock.id}>
-                  <TableCell>{stock.name}</TableCell>
-                  <TableCell>{stock.ticker}</TableCell>
-                  <TableCell>{formatCurrency(stock.currentPrice)}</TableCell>
+                  <TableCell>
+                    <div>
+                      <p className="font-medium">{stock.name}</p>
+                      <p className="text-sm text-muted-foreground">{stock.ticker}</p>
+                      <p className="text-xs text-muted-foreground">{stock.sector}</p>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      {formatCurrency(stock.currentPrice)}
+                      <span className={stock.yearlyTrend > 0 ? 'text-green-600' : 'text-red-500'}>
+                        {formatPercentage(stock.yearlyTrend)}
+                      </span>
+                    </div>
+                  </TableCell>
                   <TableCell>{formatCurrency(stock.marketCap)}</TableCell>
-                  <TableCell>{formatCurrency(stock.weekHigh52)}</TableCell>
-                  <TableCell>{formatCurrency(stock.weekLow52)}</TableCell>
-                  <TableCell className={stock.yearlyTrend > 0 ? 'text-green-600' : 'text-red-500'}>
-                    {formatPercentage(stock.yearlyTrend)}
+                  <TableCell>
+                    <div>
+                      <p className="text-green-600">{formatCurrency(stock.yearHigh)}</p>
+                      <p className="text-red-500">{formatCurrency(stock.yearLow)}</p>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Input
+                          type="number"
+                          min="1"
+                          value={selectedShares}
+                          onChange={(e) => setSelectedShares(parseInt(e.target.value) || 1)}
+                          className="w-20"
+                        />
+                        <span>shares</span>
+                      </div>
+                      <p className="text-sm">
+                        Total: {calculateTotalAmount(stock.currentPrice, selectedShares)}
+                      </p>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Button 
+                      onClick={() => handleBuy(stock.id)}
+                      className="w-full"
+                    >
+                      <TrendingUp className="h-4 w-4 mr-2" />
+                      Buy Now
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
