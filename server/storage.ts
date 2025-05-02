@@ -421,18 +421,12 @@ export async function insertStockPriceHistory(data: InsertStockPriceHistory) {
 // Buy Stock Data Functions
 export async function getBuyStockData(companyId: number): Promise<BuyStockData | null> {
   try {
-    const result = await db
-      .select()
-      .from(buyStockData)
-      .where(eq(buyStockData.companyId, companyId))
-      .orderBy(desc(buyStockData.updatedAt))
-      .limit(1);
+    const data = await db.query.buyStockData.findFirst({
+      where: eq(buyStockData.companyId, companyId),
+      orderBy: [desc(buyStockData.updatedAt)]
+    });
     
-    if (result.length === 0) {
-      return null;
-    }
-    
-    return result[0];
+    return data;
   } catch (error) {
     console.error(`Error fetching buy stock data for company ${companyId}:`, error);
     throw new Error(`Failed to fetch buy stock data: ${error.message}`);
@@ -457,41 +451,50 @@ export async function updateBuyStockData(
   try {
     const result = await db.transaction(async (tx) => {
       // First check if company exists
-      const company = await tx
-        .select()
-        .from(companies)
-        .where(eq(companies.id, companyId))
-        .limit(1);
+      const company = await db.query.companies.findFirst({
+        where: eq(companies.id, companyId)
+      });
 
-      if (company.length === 0) {
+      if (!company) {
         throw new Error(`Company with ID ${companyId} not found`);
       }
 
-      // Insert or update buy stock data
-      const updatedData = await tx
-        .insert(buyStockData)
-        .values({
-          companyId,
-          currentPrice: data.currentPrice,
-          marketCap: data.marketCap || company[0].marketCap || 0,
-          weekHigh52: data.weekHigh52 || 0,
-          weekLow52: data.weekLow52 || 0,
-          yearlyTrend: data.yearlyTrend || 0,
-          updatedAt: new Date(),
-        })
-        .onConflictDoUpdate({
-          target: buyStockData.companyId,
-          set: {
-            currentPrice: data.currentPrice,
-            marketCap: data.marketCap || company[0].marketCap || 0,
-            weekHigh52: data.weekHigh52 || 0,
-            weekLow52: data.weekLow52 || 0,
-            yearlyTrend: data.yearlyTrend || 0,
-            updatedAt: new Date(),
-          },
-        });
+      // Check if buy stock data exists
+      const existingData = await db.query.buyStockData.findFirst({
+        where: eq(buyStockData.companyId, companyId)
+      });
 
-      return updatedData.rows?.[0];
+      if (existingData) {
+        // Update existing record
+        const [updated] = await db.update(buyStockData)
+          .set({
+            currentPrice: data.currentPrice,
+            marketCap: data.marketCap || company.marketCap || "0",
+            weekHigh52: data.weekHigh52 || "0",
+            weekLow52: data.weekLow52 || "0",
+            yearlyTrend: data.yearlyTrend || "0",
+            updatedAt: new Date(),
+          })
+          .where(eq(buyStockData.companyId, companyId))
+          .returning();
+        return updated;
+      } else {
+        // Insert new record
+        const [inserted] = await db.insert(buyStockData)
+          .values({
+            companyId,
+            currentPrice: data.currentPrice,
+            marketCap: data.marketCap || company.marketCap || "0",
+            weekHigh52: data.weekHigh52 || "0",
+            weekLow52: data.weekLow52 || "0",
+            yearlyTrend: data.yearlyTrend || "0",
+            minInvestment: "1000",
+            maxInvestment: "1000000",
+            updatedAt: new Date(),
+          })
+          .returning();
+        return inserted;
+      }
     });
 
     return result;
