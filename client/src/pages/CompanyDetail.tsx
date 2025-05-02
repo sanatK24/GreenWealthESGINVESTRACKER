@@ -62,6 +62,7 @@ const CompanyDetail = () => {
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="performance">Performance</TabsTrigger>
           <TabsTrigger value="sustainability">ESG History</TabsTrigger>
+          <TabsTrigger value="comparisons">Comparisons</TabsTrigger>
           <TabsTrigger value="news">News</TabsTrigger>
         </TabsList>
 
@@ -332,6 +333,20 @@ const CompanyDetail = () => {
                 </CardContent>
               </Card>
             </div>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="comparisons">
+          <div className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Stock Comparison</CardTitle>
+                <CardDescription>Compare with other companies</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <StockComparison initialCompanyIds={[parseInt(id!)]} />
+              </CardContent>
+            </Card>
           </div>
         </TabsContent>
 
