@@ -31,11 +31,12 @@ const BuyStockPage = () => {
   const { data: buyStockData, isLoading: isLoadingBuyStock } = useQuery({
     queryKey: ['buyStockData', id],
     queryFn: async () => {
-      const response = await fetch(`/api/buy-stock-data/${id}`);
+      const response = await fetch(`/api/companies/${id}`);
       if (!response.ok) throw new Error('Failed to fetch buy stock data');
       return response.json();
     },
     enabled: !!id, // Only run query when ID exists
+    retry: 2
   });
 
   useEffect(() => {
