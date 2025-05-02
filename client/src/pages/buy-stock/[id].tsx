@@ -17,15 +17,19 @@ const BuyStockPage = () => {
   const [companyName, setCompanyName] = useState('');
 
   // Fetch company and buy stock data in one request
-  const { data: companyData, isLoading } = useQuery({
+  const { data: companyData, isLoading, error } = useQuery({
     queryKey: ['company', id],
     queryFn: async () => {
       const response = await fetch(`/api/companies/${id}`);
-      if (!response.ok) throw new Error('Failed to fetch company data');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to fetch company data');
+      }
       return response.json();
     },
-    enabled: !!id, // Only run query when ID exists
-    retry: 2
+    enabled: !!id,
+    retry: 2,
+    retryDelay: 1000
   });
 
   useEffect(() => {
@@ -87,13 +91,31 @@ const BuyStockPage = () => {
     );
   }
 
-  if (!companyData || !companyData.buyStockData) {
+  if (error) {
     return (
       <div className="p-4">
         <Card>
           <CardContent>
             <div className="text-center">
-              <p className="text-red-500">Error loading buy stock data. Please ensure the company exists and has valid stock data.</p>
+              <p className="text-red-500">{error instanceof Error ? error.message : 'Error loading company data'}</p>
+              <div className="mt-4 space-x-4">
+                <Button onClick={() => window.location.reload()}>Try Again</Button>
+                <Button variant="outline" onClick={() => navigate('/companies')}>Back to Companies</Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!companyData?.buyStockData) {
+    return (
+      <div className="p-4">
+        <Card>
+          <CardContent>
+            <div className="text-center">
+              <p className="text-red-500">Stock data not available for this company.</p>
               <div className="mt-4 space-x-4">
                 <Button onClick={() => window.location.reload()}>Try Again</Button>
                 <Button variant="outline" onClick={() => navigate('/companies')}>Back to Companies</Button>
