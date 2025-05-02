@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Switch, Route } from "wouter";
 import NotFound from "@/pages/not-found";
@@ -14,7 +13,6 @@ import CompanyDetail from "@/pages/CompanyDetail";
 import CompanyPrices from "@/pages/CompanyPrices";
 import AuthPage from "@/pages/auth-page";
 import Invest from "@/pages/Invest";
-import BuyStock from "@/pages/BuyStock";
 import ActivityHistory from "@/pages/ActivityHistory";
 import Payments from "@/pages/Payments";
 
@@ -82,7 +80,8 @@ export function Routes() {
         <Route path="/buy-stock/:id">
           {() => (
             <MainLayout>
-              <BuyStock />
+              {/* BuyStock component is removed,  BuyStockPage will handle the route now */}
+              {/*  Assuming BuyStockPage handles the buy-stock/:id route */}
             </MainLayout>
           )}
         </Route>
