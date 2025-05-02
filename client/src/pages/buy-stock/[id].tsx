@@ -33,18 +33,16 @@ const BuyStockPage = () => {
   });
 
   useEffect(() => {
+    if (companyData?.name) {
+      setCompanyName(companyData.name);
+    }
+    
     if (companyData?.buyStockData?.currentPrice) {
       const shareCount = parseInt(shares) || 0;
       const calculatedAmount = shareCount * parseFloat(companyData.buyStockData.currentPrice);
       setAmount(calculatedAmount.toFixed(2));
     }
-  }, [shares, companyData?.buyStockData?.currentPrice]);
-
-  useEffect(() => {
-    if (companyData?.name) {
-      setCompanyName(companyData.name);
-    }
-  }, [companyData?.name]);
+  }, [shares, companyData]);
 
   const purchaseMutation = useMutation({
     mutationFn: async (data: { shares: number, amount: number }) => {
