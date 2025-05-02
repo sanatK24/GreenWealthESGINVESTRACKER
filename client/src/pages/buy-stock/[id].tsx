@@ -18,27 +18,33 @@ const BuyStockPage = () => {
 
   // Fetch buy stock data
   const { data: companyData, isLoading, error } = useQuery({
-        queryKey: ['company', id],
-        queryFn: async () => {
-          try {
-            const response = await fetch(`/api/companies/${id}`);
-            if (!response.ok) {
-              const errorData = await response.json();
-              throw new Error(errorData.error || 'Failed to fetch company data');
-            }
-            const data = await response.json();
-            if (!data || !data.buyStockData) {
-              throw new Error('Company or buy stock data not found');
-            }
-            return data;
-          } catch (err) {
-            throw err instanceof Error ? err : new Error('Failed to fetch company data');
-          }
-        },
-        enabled: !!id,
-        retry: 2,
-        retryDelay: 1000
-      });
+    queryKey: ['company', id],
+    queryFn: async () => {
+      try {
+        // First try the combined endpoint
+        const response = await fetch(`/api/companies/${id}`);
+        const data = await response.json();
+        
+        if (response.ok && data && data.buyStockData) {
+          return data;
+        }
+        
+        // If that fails, try the dedicated buy stock data endpoint
+        const buyStockResponse = await fetch(`/api/buy-stock-data/${id}`);
+        if (!buyStockResponse.ok) {
+          throw new Error('Failed to fetch buy stock data');
+        }
+        
+        const buyStockData = await buyStockResponse.json();
+        return buyStockData;
+      } catch (err) {
+        throw err instanceof Error ? err : new Error('Failed to fetch company data');
+      }
+    },
+    enabled: !!id,
+    retry: 2,
+    retryDelay: 1000
+  });
 
   useEffect(() => {
     if (companyData?.name) {
