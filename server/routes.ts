@@ -350,47 +350,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Single company endpoint (for direct /api/company/:id access)
-  app.get(`${apiPrefix}/company/:id`, async (req: Request, res: Response) => {
+  // Universal company endpoint that handles both /api/company/:id and /api/companies/:id
+  app.get([`${apiPrefix}/company/:id`, `${apiPrefix}/companies/:id`], async (req: Request, res: Response) => {
     try {
       const idParam = req.params.id;
-      const includeBuyStockData = req.query.include === 'buyStockData';
-      
       if (!idParam || isNaN(Number(idParam))) {
         return res.status(400).json({ message: "Invalid company ID" });
       }
 
       const id = parseInt(idParam);
-      const company = await storage.getCompanyById(id);
+      const [company, buyStockData] = await Promise.all([
+        storage.getCompanyById(id),
+        storage.getBuyStockData(id)
+      ]);
+
       if (!company) {
         return res.status(404).json({ error: "Company not found" });
       }
 
-      let buyStockData = null;
-      if (includeBuyStockData) {
-        buyStockData = await storage.getBuyStockData(id);
-        if (!buyStockData) {
-          return res.status(404).json({ error: "Buy stock data not found" });
-        }
-      }
-
-      // Get company data
-      const company = await storage.getCompanyById(id);
-      if (!company) {
-        return res.status(404).json({ error: "Company not found" });
+      if (!buyStockData) {
+        return res.status(404).json({ error: "Buy stock data not found" });
       }
 
       return res.json({
-        id: company.id,
-        name: company.name,
-        ticker: company.ticker,
-        sector: company.sector,
-        industry: company.industry,
-        esgScore: company.esgScore,
-        environmentalScore: company.environmentalScore,
-        socialScore: company.socialScore,
-        governanceScore: company.governanceScore,
-        description: company.description,
+        ...company,
         buyStockData: {
           currentPrice: buyStockData.currentPrice,
           marketCap: buyStockData.marketCap,
