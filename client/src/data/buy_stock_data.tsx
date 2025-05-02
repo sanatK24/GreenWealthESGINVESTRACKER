@@ -1,7 +1,7 @@
 // Auto-generated from buy_stock_data.json
 // Do not edit manually
 
-const BuyStockData = [
+export const BuyStockData = [
   {
     "id": 1,
     "company_id": 1,
@@ -237,5 +237,3 @@ const BuyStockData = [
     "updated_at": "2025-05-01T08:57:20.257Z"
   }
 ] as const;
-
-export default BuyStockData;

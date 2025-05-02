@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardHeader, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { ArrowUp, ShoppingCart, TrendingUp } from "lucide-react";
@@ -9,8 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 
 // Import data from TypeScript files
-import Companies from '@/data/companies.tsx';
-import BuyStockData from '@/data/buy_stock_data.tsx';
+import { Companies } from '@/data/companies';
+import { BuyStockData } from '@/data/buy_stock_data';
 
 const BuyStockPage = () => {
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ const BuyStockPage = () => {
         description: 'Company not found',
         variant: 'destructive'
       });
-      navigate('/portfolio');
+      navigate('/buy-stock');
     }
   }, [company, navigate, toast]);
 
@@ -60,7 +60,7 @@ const BuyStockPage = () => {
         title: 'Success',
         description: `Successfully invested ₹${amount} in ${company?.name}`
       });
-      navigate('/portfolio');
+      navigate('/buy-stock');
     },
     onError: (error) => {
       toast({
