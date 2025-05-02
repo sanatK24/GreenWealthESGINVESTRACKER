@@ -13,6 +13,13 @@ const PortfolioComposition = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ["/api/portfolio/composition"],
+    queryFn: async () => {
+      const response = await fetch("/api/portfolio/composition");
+      if (!response.ok) {
+        throw new Error("Failed to fetch portfolio composition");
+      }
+      return response.json();
+    },
     staleTime: 60000,
     refetchOnWindowFocus: false
   });
