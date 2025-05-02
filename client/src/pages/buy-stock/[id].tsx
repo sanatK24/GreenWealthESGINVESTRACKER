@@ -18,33 +18,13 @@ const BuyStockPage = () => {
   const { data: companyData, isLoading } = useQuery({
     queryKey: ['company', id],
     queryFn: async () => {
-      const response = await fetch(`/api/companies/${id}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        credentials: 'include'
-      });
-
+      const response = await fetch(`/api/company/${id}`);
       if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error('Unauthorized access');
-        }
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to fetch company data');
+        throw new Error('Failed to fetch company data');
       }
-
-      const data = await response.json();
-      if (!data || !data.buyStockData) {
-        throw new Error('Invalid company data received');
-      }
-
-      return data;
+      return response.json();
     },
-    enabled: !!id,
-    retry: false,
-    staleTime: 30000
+    enabled: !!id
   });
 
   useEffect(() => {
