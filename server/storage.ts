@@ -421,12 +421,40 @@ export async function insertStockPriceHistory(data: InsertStockPriceHistory) {
 // Buy Stock Data Functions
 export async function getBuyStockData(companyId: number): Promise<BuyStockData | null> {
   try {
-    const data = await db.query.buyStockData.findFirst({
+    const existingData = await db.query.buyStockData.findFirst({
       where: eq(buyStockData.companyId, companyId),
       orderBy: [desc(buyStockData.updatedAt)]
     });
-    
-    return data;
+
+    // If no buy stock data exists, create default data
+    if (!existingData) {
+      const company = await db.query.companies.findFirst({
+        where: eq(companies.id, companyId)
+      });
+
+      if (!company) {
+        throw new Error(`Company with ID ${companyId} not found`);
+      }
+
+      const defaultData = {
+        companyId,
+        currentPrice: company.currentPrice || "0",
+        marketCap: company.marketCap || "0",
+        weekHigh52: company.yearHigh || "0",
+        weekLow52: company.yearLow || "0",
+        yearlyTrend: "0",
+        minInvestment: "1000",
+        maxInvestment: "1000000",
+        updatedAt: new Date()
+      };
+
+      const [inserted] = await db.insert(buyStockData)
+        .values(defaultData)
+        .returning();
+
+      return inserted;
+    }
+    return existingData;
   } catch (error) {
     console.error(`Error fetching buy stock data for company ${companyId}:`, error);
     throw new Error(`Failed to fetch buy stock data: ${error.message}`);
