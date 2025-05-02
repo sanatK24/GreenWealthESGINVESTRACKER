@@ -53,9 +53,23 @@ const BuyStockPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Parse ID safely
+  const companyId = parseInt(id as string);
+  if (isNaN(companyId)) {
+    setError('Invalid company ID');
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-red-500">
+          <AlertCircle className="h-6 w-6 mr-2" />
+          Invalid company ID
+        </div>
+      </div>
+    );
+  }
+
   // Find company and stock data
-  const company = Companies.find(c => c.id === parseInt(id as string)) as Company | undefined;
-  const buyStockData = BuyStockData.find(s => s.company_id === parseInt(id as string)) as BuyStockData | undefined;
+  const company = Companies.find(c => c.id === companyId) as Company | undefined;
+  const buyStockData = BuyStockData.find(s => s.company_id === companyId) as BuyStockData | undefined;
 
   // Purchase mutation
   const purchaseMutation = useMutation({
