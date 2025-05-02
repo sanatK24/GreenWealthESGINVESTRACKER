@@ -19,20 +19,20 @@ const BuyStockPage = () => {
 
   // Fetch buy stock data
   const { data: companyData, isLoading, error } = useQuery({
-    queryKey: ['buyStockData', id],
+    queryKey: ['company', id],
     queryFn: async () => {
       try {
-        const response = await fetch(`/api/companies/${id}?include=buyStockData`);
+        const response = await fetch(`/api/companies/${id}`);
         if (!response.ok) {
           throw new Error('Failed to fetch company data');
         }
         const data = await response.json();
-        if (!data || !data.buyStockData) {
-          throw new Error('Company or buy stock data not found');
+        if (!data) {
+          throw new Error('Company not found');
         }
         return data;
       } catch (err) {
-        throw new Error('Failed to fetch stock data');
+        throw new Error('Failed to fetch company data');
       }
     },
     enabled: !!id,
