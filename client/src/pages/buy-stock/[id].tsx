@@ -9,9 +9,9 @@ import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 
-// Import JSON data directly
-import companiesData from '/db-export/companies.json';
-import buyStockData from '/db-export/buy_stock_data.json';
+// Import JSON data directly 
+import companiesData from '@/../../db-export/companies.json';
+import buyStockData from '@/../../db-export/buy_stock_data.json';
 
 const BuyStockPage = () => {
   const navigate = useNavigate();
