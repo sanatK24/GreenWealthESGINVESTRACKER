@@ -17,17 +17,31 @@ type PieChartViewType = 'sector' | 'performance' | 'esg';
 
 const PortfolioPieChart = () => {
   const [viewType, setViewType] = useState<PieChartViewType>('sector');
-  
+
   // Get portfolio composition data
   const { data: sectorData, isLoading: isLoadingSectors } = useQuery({
     queryKey: ['/api/portfolio/composition'],
+    queryFn: async () => {
+      const response = await fetch('/api/portfolio/composition');
+      if (!response.ok) {
+        throw new Error('Failed to fetch portfolio composition');
+      }
+      return response.json();
+    }
   });
-  
+
   // Get ESG portfolio data
   const { data: portfolioSummary, isLoading: isLoadingSummary } = useQuery({
     queryKey: ['/api/portfolio/summary'],
+    queryFn: async () => {
+      const response = await fetch('/api/portfolio/summary');
+      if (!response.ok) {
+        throw new Error('Failed to fetch portfolio summary');
+      }
+      return response.json();
+    }
   });
-  
+
   const getChartData = () => {
     if (viewType === 'sector' && sectorData?.sectors) {
       return sectorData.sectors.map((sector: any) => ({
@@ -46,14 +60,14 @@ const PortfolioPieChart = () => {
         const sustainableValue = parseFloat(portfolioSummary.sustainableValue || '0');
         const totalValue = parseFloat(portfolioSummary.totalValue || '0') || 100;
         const nonSustainableValue = totalValue - sustainableValue;
-        
+
         return [
           { name: 'Sustainable Investments', value: sustainableValue },
           { name: 'Other Investments', value: nonSustainableValue }
         ];
       }
     }
-    
+
     // Default data if none of the conditions are met
     return [
       { name: 'Technology', value: 35 },
@@ -62,9 +76,9 @@ const PortfolioPieChart = () => {
       { name: 'Sustainable Materials', value: 20 }
     ];
   };
-  
+
   const chartData = getChartData();
-  
+
   const getViewTypeLabel = () => {
     switch (viewType) {
       case 'sector': return 'Sector Allocation';
@@ -73,7 +87,7 @@ const PortfolioPieChart = () => {
       default: return 'Portfolio Breakdown';
     }
   };
-  
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
