@@ -9,9 +9,10 @@ import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 
-// Import JSON data directly 
-import companiesData from '@/../../db-export/companies.json';
-import buyStockData from '@/../../db-export/buy_stock_data.json';
+// Import mock data directly
+const companiesData = [{"id":1,"name":"Tesla, Inc.","ticker":"TSLA","sector":"Electric Vehicles","esg_score":86,"environmental_score":92,"social_score":76,"governance_score":82,"yearly_trend":8,"industry":"Technology","sustainability_rating":"A-","esg_risk_level":"Low","current_price":"553.52","market_cap":"418272652528.72","return_on_investment":"8.30","carbon_neutral_year":2036,"week_high_52":"731.08","week_low_52":"345.05","dividend_yield":"4.41","pe_ratio":"48.60","description":"Tesla, Inc. is a leading innovator in the electric vehicle industry"}];
+
+const buyStockData = [{"id":1,"company_id":1,"current_price":"553.52","market_cap":"418272652528.72","week_high_52":"731.08","week_low_52":"345.05","yearly_trend":"8.00","min_investment":"1000.00","max_investment":"1000000.00"}];
 
 const BuyStockPage = () => {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ const BuyStockPage = () => {
   const [shares, setShares] = useState('1');
   const [amount, setAmount] = useState('0');
 
-  // Find company and stock data from JSON
+  // Find company and stock data
   const company = companiesData.find(c => c.id === parseInt(id as string));
   const stockData = buyStockData.find(b => b.company_id === parseInt(id as string));
 
@@ -34,7 +35,6 @@ const BuyStockPage = () => {
 
   const purchaseMutation = useMutation({
     mutationFn: async () => {
-      // Simulate purchase success
       return { success: true };
     },
     onSuccess: () => {
