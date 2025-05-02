@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
@@ -19,17 +20,6 @@ export default function CompanyPrices() {
   const [_, setLocation] = useLocation();
   const [companyId, setCompanyId] = useState<number | null>(null);
 
-  const { data: companiesData } = useQuery({
-    queryKey: ["/api/companies"],
-    queryFn: async () => {
-      const response = await fetch("/api/companies");
-      if (!response.ok) {
-        throw new Error("Failed to fetch companies");
-      }
-      return response.json();
-    }
-  });
-
   // Extract the company ID from the URL query parameters
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -37,7 +27,7 @@ export default function CompanyPrices() {
     if (id) {
       setCompanyId(parseInt(id));
     }
-  }, []);
+  }, [window.location.search]);
 
   const { data: company, isLoading: isCompanyLoading } = useQuery({
     queryKey: ["/api/companies", companyId],
@@ -50,6 +40,17 @@ export default function CompanyPrices() {
       return response.json();
     },
     enabled: companyId !== null,
+  });
+
+  const { data: companiesData } = useQuery({
+    queryKey: ["/api/companies"],
+    queryFn: async () => {
+      const response = await fetch("/api/companies");
+      if (!response.ok) {
+        throw new Error("Failed to fetch companies");
+      }
+      return response.json();
+    }
   });
 
   return (
@@ -90,7 +91,10 @@ export default function CompanyPrices() {
             <p className="text-muted-foreground">
               Please select a company to view price data
             </p>
-            <Select onValueChange={(value) => setCompanyId(parseInt(value))}>
+            <Select onValueChange={(value) => {
+              setCompanyId(parseInt(value));
+              setLocation(`/company-prices?id=${value}`);
+            }}>
               <SelectTrigger className="w-[200px]">
                 <SelectValue placeholder="Select a company" />
               </SelectTrigger>
