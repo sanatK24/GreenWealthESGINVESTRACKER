@@ -16,23 +16,12 @@ const BuyStockPage = () => {
   const [amount, setAmount] = useState('0');
   const [companyName, setCompanyName] = useState('');
 
-  // Fetch company data
-  const { data: companyData, isLoading: isLoadingCompany } = useQuery({
+  // Fetch company and buy stock data in one request
+  const { data: companyData, isLoading } = useQuery({
     queryKey: ['company', id],
     queryFn: async () => {
       const response = await fetch(`/api/companies/${id}`);
-      if (!response.ok) throw new Error('Failed to fetch company');
-      return response.json();
-    },
-    enabled: !!id, // Only run query when ID exists
-  });
-
-  // Fetch buy stock data
-  const { data: buyStockData, isLoading: isLoadingBuyStock } = useQuery({
-    queryKey: ['buyStockData', id],
-    queryFn: async () => {
-      const response = await fetch(`/api/companies/${id}`);
-      if (!response.ok) throw new Error('Failed to fetch buy stock data');
+      if (!response.ok) throw new Error('Failed to fetch company data');
       return response.json();
     },
     enabled: !!id, // Only run query when ID exists
@@ -90,7 +79,7 @@ const BuyStockPage = () => {
     });
   };
 
-  if (isLoadingBuyStock || isLoadingCompany) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -98,7 +87,7 @@ const BuyStockPage = () => {
     );
   }
 
-  if (!buyStockData) {
+  if (!companyData) {
     return (
       <div className="p-4">
         <Card>
@@ -113,8 +102,8 @@ const BuyStockPage = () => {
     );
   }
 
-  const minInvestment = parseFloat(buyStockData.minInvestment) || 1000;
-  const maxInvestment = parseFloat(buyStockData.maxInvestment) || 1000000;
+  const minInvestment = parseFloat(companyData.buyStockData?.minInvestment) || 1000;
+  const maxInvestment = parseFloat(companyData.buyStockData?.maxInvestment) || 1000000;
 
   return (
     <div className="container mx-auto px-4 py-8">
