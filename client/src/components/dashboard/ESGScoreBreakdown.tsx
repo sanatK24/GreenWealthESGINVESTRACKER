@@ -5,7 +5,13 @@ import { getQueryFn } from "@/lib/queryClient";
 export function ESGScoreBreakdown() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["/api/companies/esg-breakdown"],
-    queryFn: getQueryFn(),
+    queryFn: async () => {
+      const response = await fetch("/api/companies/esg-breakdown");
+      if (!response.ok) {
+        throw new Error("Failed to fetch ESG breakdown data");
+      }
+      return response.json();
+    },
     staleTime: 60000,
     retry: 2,
   });
