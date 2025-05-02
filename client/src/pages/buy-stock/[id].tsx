@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { ArrowUp, ShoppingCart, TrendingUp, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate, useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Companies } from '@/data/companies';
@@ -79,11 +79,14 @@ const BuyStockPage = () => {
       return { success: true };
     },
     onSuccess: () => {
-      toast({
-        title: 'Success',
-        description: `Successfully invested ₹${amount} in ${company?.name}`
-      });
-      navigate('/portfolio');
+      // Wrap navigation in a timeout to avoid render cycle issues
+      setTimeout(() => {
+        toast({
+          title: 'Success',
+          description: `Successfully invested ₹${amount} in ${company?.name}`
+        });
+        navigate('/portfolio');
+      }, 0);
     },
     onError: (error) => {
       toast({
@@ -95,15 +98,15 @@ const BuyStockPage = () => {
   });
 
   // Format currency
-  const formatCurrency = (value: string) => {
+  const formatCurrency = useCallback((value: string) => {
     return '₹' + parseFloat(value).toLocaleString('en-IN', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     });
-  };
+  }, []);
 
   // Handle shares input
-  const handleSharesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSharesChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (!value || value === '') {
       setShares('0');
@@ -118,7 +121,7 @@ const BuyStockPage = () => {
         setAmount(calculatedAmount.toFixed(2));
       }
     }
-  };
+  }, [buyStockData?.current_price]);
 
   // Loading state
   useEffect(() => {
