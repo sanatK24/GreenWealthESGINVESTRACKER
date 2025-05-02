@@ -15,6 +15,7 @@ import {
 import { StockPriceChart } from "@/components/dashboard/StockPriceChart";
 import { StockComparison } from "@/components/dashboard/StockComparison";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
 
 export default function CompanyPrices() {
