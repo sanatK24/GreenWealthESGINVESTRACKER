@@ -176,7 +176,7 @@ const CompanyTable = () => {
                           Chart
                         </Button>
                       </Link>
-                      <Link href={`/buy-stock/${company.id}`}>
+                      {/* <Link href={`/buy-stock/${company.id}`}>
                         <Button 
                           size="sm" 
                           className="flex items-center gap-1 w-full"
@@ -184,7 +184,7 @@ const CompanyTable = () => {
                           <ShoppingCart className="h-3 w-3" />
                           Buy
                         </Button>
-                      </Link>
+                      </Link> */}
                     </div>
                   </TableCell>
                 </TableRow>
