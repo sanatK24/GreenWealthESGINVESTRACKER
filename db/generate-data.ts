@@ -71,5 +71,98 @@ function generateCompanyDescription(company: any): string {
     `${company.name} is a leading sustainable company in the ${company.sector} sector, with a strong commitment to environmental, social, and governance practices. Their ESG score of ${company.esgScore} demonstrates their dedication to sustainable business operations and positive environmental impact.`;
 }
 
-// Run the script
-generateData();
+async function fillNullValues() {
+  try {
+    console.log("Filling NULL values in database tables...");
+
+    // Get all companies
+    const allCompanies = await db.select().from(companies);
+
+    for (const company of allCompanies) {
+      // Generate data for NULL fields
+      const updates: any = {};
+      
+      if (!company.sustainabilityRating) {
+        updates.sustainabilityRating = ['A+', 'A', 'A-', 'B+', 'B'][Math.floor(Math.random() * 5)];
+      }
+      
+      if (!company.esgRiskLevel) {
+        updates.esgRiskLevel = ['Low', 'Medium-Low', 'Medium', 'Medium-High'][Math.floor(Math.random() * 4)];
+      }
+      
+      if (!company.currentPrice) {
+        updates.currentPrice = (Math.random() * 1000 + 50).toFixed(2);
+      }
+      
+      if (!company.marketCap) {
+        const price = company.currentPrice || updates.currentPrice;
+        const sharesOutstanding = Math.floor(Math.random() * 1000000000 + 100000000);
+        updates.marketCap = (parseFloat(price) * sharesOutstanding).toFixed(2);
+      }
+      
+      if (!company.returnOnInvestment) {
+        updates.returnOnInvestment = (Math.random() * 30 + 5).toFixed(2);
+      }
+      
+      if (!company.carbonNeutralYear) {
+        updates.carbonNeutralYear = Math.floor(Math.random() * (2050 - 2030) + 2030);
+      }
+      
+      if (!company.weekHigh52) {
+        const price = company.currentPrice || updates.currentPrice;
+        updates.weekHigh52 = (parseFloat(price) * (1 + Math.random() * 0.5)).toFixed(2);
+      }
+      
+      if (!company.weekLow52) {
+        const price = company.currentPrice || updates.currentPrice;
+        updates.weekLow52 = (parseFloat(price) * (0.6 + Math.random() * 0.2)).toFixed(2);
+      }
+      
+      if (!company.dividendYield) {
+        updates.dividendYield = (Math.random() * 5).toFixed(2);
+      }
+      
+      if (!company.peRatio) {
+        updates.peRatio = (Math.random() * 50 + 10).toFixed(2);
+      }
+      
+      if (!company.description) {
+        updates.description = generateCompanyDescription(company);
+      }
+
+      // Only update if we have changes
+      if (Object.keys(updates).length > 0) {
+        await db.update(companies)
+          .set(updates)
+          .where(eq(companies.id, company.id));
+        
+        // Also update corresponding buy stock data
+        const stockUpdates: any = {};
+        if (updates.currentPrice) stockUpdates.currentPrice = updates.currentPrice;
+        if (updates.marketCap) stockUpdates.marketCap = updates.marketCap;
+        if (updates.weekHigh52) stockUpdates.weekHigh52 = updates.weekHigh52;
+        if (updates.weekLow52) stockUpdates.weekLow52 = updates.weekLow52;
+        
+        if (Object.keys(stockUpdates).length > 0) {
+          await db.update(buyStockData)
+            .set(stockUpdates)
+            .where(eq(buyStockData.companyId, company.id));
+        }
+
+        console.log(`Updated NULL values for ${company.name}`);
+      }
+    }
+
+    console.log("Completed filling NULL values");
+  } catch (error) {
+    console.error("Error filling NULL values:", error);
+  }
+}
+
+// Run the scripts
+async function main() {
+  await generateData();
+  await fillNullValues();
+}
+
+main();
