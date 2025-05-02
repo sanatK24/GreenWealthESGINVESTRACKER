@@ -21,20 +21,30 @@ const BuyStockPage = () => {
       const response = await fetch(`/api/companies/${id}`, {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
         credentials: 'include'
       });
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Unauthorized access');
+        }
         const error = await response.json();
         throw new Error(error.message || 'Failed to fetch company data');
       }
 
-      return response.json();
+      const data = await response.json();
+      if (!data || !data.buyStockData) {
+        throw new Error('Invalid company data received');
+      }
+
+      return data;
     },
     enabled: !!id,
-    retry: 1
+    retry: false,
+    staleTime: 30000
   });
 
   useEffect(() => {
