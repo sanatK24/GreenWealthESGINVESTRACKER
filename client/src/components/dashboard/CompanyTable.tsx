@@ -23,13 +23,12 @@ const getScoreClass = (score: number) => {
 };
 
 export function CompanyTable() {
-  const [page, setPage] = useState(1);
   const { toast } = useToast();
 
   const { data, error, isLoading: isCompaniesLoading } = useQuery({
-    queryKey: ["/api/companies", page],
+    queryKey: ["/api/companies"],
     queryFn: async () => {
-      const response = await fetch(`/api/companies?page=${page}`);
+      const response = await fetch(`/api/companies`);
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       return response.json();
     },
@@ -59,7 +58,7 @@ export function CompanyTable() {
 
   return (
     <div className="space-y-4">
-      {companies.map((company) => (
+      {companies.map((company: any) => (
         <div key={company.id} className="bg-card rounded-lg p-4 shadow-sm">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
