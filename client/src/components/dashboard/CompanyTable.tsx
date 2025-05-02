@@ -57,10 +57,32 @@ export function CompanyTable() {
 
   const companies = data.companies;
 
-  const handleBuy = (company: any) => {
-    if (shares && !isNaN(Number(shares))) {
-      const amount = Number(shares) * Number(company.price || 0);
-      window.open(`/certificate/${company.ticker}/${shares}/${amount}`);
+  const handleBuy = async (company: any) => {
+    if (!shares || isNaN(Number(shares))) return;
+
+    try {
+      const response = await fetch(`/api/companies/${company.ticker}`);
+      if (!response.ok) throw new Error('Failed to fetch company data');
+      
+      const companyData = await response.json();
+      const price = companyData.price || 0;
+      const amount = Number(shares) * price;
+      
+      if (price > 0) {
+        window.open(`/certificate/${company.ticker}/${shares}/${amount}`);
+      } else {
+        toast({
+          title: "Error",
+          description: "Could not fetch current price for this company",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to process purchase",
+        variant: "destructive",
+      });
     }
   };
 
@@ -105,13 +127,16 @@ export function CompanyTable() {
                   placeholder="Enter number of shares"
                 />
                 <div className="text-sm font-semibold text-primary">
-                  {shares ? formatCurrency(Number(shares) * Number(company.price || 0)) : formatCurrency(0)}
+                  {shares && company.price ? 
+                    formatCurrency(Number(shares) * Number(company.price)) : 
+                    formatCurrency(0)
+                  }
                 </div>
               </div>
               <div className="flex gap-2">
                 <Button 
                   onClick={() => handleBuy(company)}
-                  disabled={!shares || isNaN(Number(shares))}
+                  disabled={!shares || isNaN(Number(shares)) || !company.price}
                 >
                   Buy
                 </Button>
