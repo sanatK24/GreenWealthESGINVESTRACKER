@@ -107,14 +107,10 @@ export async function getCompanyById(id: number) {
   }
 
   try {
-    const result = await db.execute(
-      `SELECT * FROM companies WHERE id = $1 LIMIT 1`,
-      [id]
-    );
-    if (!result.rows?.length) {
-      return null;
-    }
-    return result.rows[0];
+    const company = await db.query.companies.findFirst({
+      where: eq(companies.id, id)
+    });
+    return company;
   } catch (error) {
     console.error("Error in getCompanyById:", error);
     return null;
