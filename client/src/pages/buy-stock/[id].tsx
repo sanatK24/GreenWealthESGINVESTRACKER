@@ -18,11 +18,11 @@ const BuyStockPage = () => {
   const { data: companyData, isLoading } = useQuery({
     queryKey: ['company', id],
     queryFn: async () => {
-      const response = await fetch('/companies.json');
+      const response = await fetch('/db-export/companies.json');
       const companies = await response.json();
       const company = companies.find(c => c.id === parseInt(id as string));
 
-      const buyStockResponse = await fetch('/buy_stock_data.json');
+      const buyStockResponse = await fetch('/db-export/buy_stock_data.json');
       const buyStockData = await buyStockResponse.json();
       const stockData = buyStockData.find(b => b.company_id === parseInt(id as string));
 
