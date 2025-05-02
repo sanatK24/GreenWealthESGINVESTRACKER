@@ -2,6 +2,15 @@ import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { StockPriceChart } from "@/components/dashboard/StockPriceChart";
 import StockComparison from "@/components/dashboard/StockComparison";
 import { Button } from "@/components/ui/button";
@@ -80,10 +89,25 @@ export default function CompanyPrices() {
                 </CardContent>
               </Card>
             ) : (
-              <div className="flex items-center justify-center h-[400px]">
+              <div className="flex flex-col items-center justify-center h-[400px] gap-4">
                 <p className="text-muted-foreground">
                   Please select a company to view price data
                 </p>
+                <Select onValueChange={(value) => setCompanyId(parseInt(value))}>
+                  <SelectTrigger className="w-[200px]">
+                    <SelectValue placeholder="Select a company" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Companies</SelectLabel>
+                      {data?.companies?.map((company) => (
+                        <SelectItem key={company.id} value={company.id.toString()}>
+                          {company.name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </div>
             )}
           </TabsContent>
