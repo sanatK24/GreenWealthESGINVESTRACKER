@@ -10,6 +10,40 @@ import { Slider } from "@/components/ui/slider";
 import { Companies } from '@/data/companies';
 import { BuyStockData } from '@/data/buy_stock_data';
 
+// Interfaces for data types
+interface Company {
+  id: number;
+  name: string;
+  ticker: string;
+  sector: string;
+  esg_score: number;
+  environmental_score: number;
+  social_score: number;
+  governance_score: number;
+  yearly_trend: number;
+  created_at: string;
+  updated_at: string;
+  industry: string;
+  sustainability_rating: string;
+  esg_risk_level: string;
+  current_price: string;
+  market_cap: string;
+}
+
+interface BuyStockData {
+  id: number;
+  company_id: number;
+  current_price: string;
+  market_cap: string;
+  week_high_52: string;
+  week_low_52: string;
+  yearly_trend: string;
+  min_investment: string;
+  max_investment: string;
+  created_at: string;
+  updated_at: string;
+}
+
 const BuyStockPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -20,8 +54,8 @@ const BuyStockPage = () => {
   const [error, setError] = useState<string | null>(null);
 
   // Find company and stock data
-  const company = Companies.find(c => c.id === parseInt(id as string));
-  const stockData = BuyStockData.find(s => s.company_id === parseInt(id as string));
+  const company = Companies.find(c => c.id === parseInt(id as string)) as Company | undefined;
+  const buyStockData = BuyStockData.find(s => s.company_id === parseInt(id as string)) as BuyStockData | undefined;
 
   // Purchase mutation
   const purchaseMutation = useMutation({
@@ -65,8 +99,8 @@ const BuyStockPage = () => {
     const num = parseInt(value);
     if (num >= 0) {
       setShares(value);
-      if (stockData?.current_price) {
-        const calculatedAmount = num * parseFloat(stockData.current_price);
+      if (buyStockData?.current_price) {
+        const calculatedAmount = num * parseFloat(buyStockData.current_price);
         setAmount(calculatedAmount.toFixed(2));
       }
     }
@@ -74,11 +108,11 @@ const BuyStockPage = () => {
 
   // Loading state
   useEffect(() => {
-    setLoading(!company || !stockData);
+    setLoading(!company || !buyStockData);
     if (!company) {
       setError('Company not found');
     }
-  }, [company, stockData]);
+  }, [company, buyStockData]);
 
   // Error handling
   if (error) {
@@ -111,7 +145,7 @@ const BuyStockPage = () => {
             <div>
               <CardTitle>{company?.name}</CardTitle>
               <p className="text-sm text-muted-foreground">
-                Current Price: {formatCurrency(stockData?.current_price || '0')}
+                Current Price: {formatCurrency(buyStockData?.current_price || '0')}
               </p>
             </div>
             <div className="flex gap-2">
@@ -127,15 +161,15 @@ const BuyStockPage = () => {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>Market Cap</span>
-                    <span>{formatCurrency(stockData?.market_cap || '0')}</span>
+                    <span>{formatCurrency(buyStockData?.market_cap || '0')}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>52 Week High</span>
-                    <span>{formatCurrency(stockData?.week_high_52 || '0')}</span>
+                    <span>{formatCurrency(buyStockData?.week_high_52 || '0')}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>52 Week Low</span>
-                    <span>{formatCurrency(stockData?.week_low_52 || '0')}</span>
+                    <span>{formatCurrency(buyStockData?.week_low_52 || '0')}</span>
                   </div>
                   <div className="flex justify-between text-green-600">
                     <span>ESG Score</span>
@@ -166,7 +200,7 @@ const BuyStockPage = () => {
                         step={1000}
                         value={[parseFloat(amount) || 0]}
                         onValueChange={(value) => {
-                          const shareCount = Math.floor(value[0] / parseFloat(stockData?.current_price || '0'));
+                          const shareCount = Math.floor(value[0] / parseFloat(buyStockData?.current_price || '0'));
                           setShares(shareCount.toString());
                         }}
                       />
