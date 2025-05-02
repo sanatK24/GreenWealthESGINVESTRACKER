@@ -46,7 +46,15 @@ export default function CompanyPrices() {
   }, []);
 
   const { data: company, isLoading: isCompanyLoading } = useQuery({
-    queryKey: ["/api/company", companyId],
+    queryKey: ["/api/companies", companyId],
+    queryFn: async () => {
+      if (!companyId) return null;
+      const response = await fetch(`/api/companies/${companyId}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch company data");
+      }
+      return response.json();
+    },
     enabled: companyId !== null,
   });
 
