@@ -1,0 +1,1213 @@
+[vite] connecting...
+client:618 [vite] connected.
+queryClient.ts:31 
+            
+            
+           GET https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/api/user 401 (Unauthorized)
+(anonymous) @ queryClient.ts:31
+fetchFn @ @tanstack_react-query.js?v=e1f32ea0:844
+run @ @tanstack_react-query.js?v=e1f32ea0:494
+start @ @tanstack_react-query.js?v=e1f32ea0:536
+fetch @ @tanstack_react-query.js?v=e1f32ea0:931
+executeFetch_fn @ @tanstack_react-query.js?v=e1f32ea0:2248
+onSubscribe @ @tanstack_react-query.js?v=e1f32ea0:1939
+subscribe @ @tanstack_react-query.js?v=e1f32ea0:24
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:3103
+subscribeToStore @ chunk-RPCDYKBN.js?v=e1f32ea0:11984
+commitHookEffectListMount @ chunk-RPCDYKBN.js?v=e1f32ea0:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js?v=e1f32ea0:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js?v=e1f32ea0:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js?v=e1f32ea0:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js?v=e1f32ea0:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=e1f32ea0:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=e1f32ea0:19447
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:18868
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=e1f32ea0:9119
+commitRootImpl @ chunk-RPCDYKBN.js?v=e1f32ea0:19432
+commitRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:19277
+finishConcurrentRender @ chunk-RPCDYKBN.js?v=e1f32ea0:18805
+performConcurrentWorkOnRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:18718
+workLoop @ chunk-RPCDYKBN.js?v=e1f32ea0:197
+flushWork @ chunk-RPCDYKBN.js?v=e1f32ea0:176
+performWorkUntilDeadline @ chunk-RPCDYKBN.js?v=e1f32ea0:384Understand this error
+fd_content_pre_check.js:23 form detection precheck code injected
+5:1 Unchecked runtime.lastError: The message port closed before a response was received.Understand this error
+/auth:1 [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) <input data-replit-metadata=​"client/​src/​pages/​auth-page.tsx:​149:​30" data-component-name=​"Input" type=​"password" class=​"flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:​border-0 file:​bg-transparent file:​text-sm file:​font-medium file:​text-foreground placeholder:​text-muted-foreground focus-visible:​outline-none focus-visible:​ring-2 focus-visible:​ring-ring focus-visible:​ring-offset-2 disabled:​cursor-not-allowed disabled:​opacity-50" placeholder=​"Your password" name=​"password" id=​":​r9:​-form-item" aria-describedby=​":​r9:​-form-item-description" aria-invalid=​"false" value fdprocessedid=​"3m80a">​flex
+PortfolioPieChart.tsx:22 [["/api/portfolio/composition"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function Error Component Stack
+    at PortfolioPieChart (PortfolioPieChart.tsx:19:35)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at Dashboard (Dashboard.tsx:18:31)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at MainLayout (MainLayout.tsx:14:50)
+    at Route (wouter.js?v=e1f32ea0:280:16)
+    at Switch (wouter.js?v=e1f32ea0:336:17)
+    at Suspense (<anonymous>)
+    at Routes (<anonymous>)
+    at Provider (chunk-UBQ2LXDH.js?v=e1f32ea0:22:15)
+    at TooltipProvider (@radix-ui_react-tooltip.js?v=e1f32ea0:64:5)
+    at PaymentProvider (PaymentContext.tsx:23:70)
+    at AuthProvider (use-auth.tsx:24:32)
+    at V (next-themes.js?v=e1f32ea0:44:25)
+    at J (next-themes.js?v=e1f32ea0:42:18)
+    at ThemeProvider (theme-provider.tsx:8:33)
+    at QueryClientProvider (@tanstack_react-query.js?v=e1f32ea0:2879:3)
+    at Router (react-router-dom.js?v=e1f32ea0:6777:13)
+    at BrowserRouter (react-router-dom.js?v=e1f32ea0:9053:3)
+    at App (<anonymous>)
+overrideMethod @ hook.js:608
+useBaseQuery @ @tanstack_react-query.js?v=e1f32ea0:3082
+useQuery @ @tanstack_react-query.js?v=e1f32ea0:3150
+PortfolioPieChart @ PortfolioPieChart.tsx:22
+renderWithHooks @ chunk-RPCDYKBN.js?v=e1f32ea0:11548
+mountIndeterminateComponent @ chunk-RPCDYKBN.js?v=e1f32ea0:14926
+beginWork @ chunk-RPCDYKBN.js?v=e1f32ea0:15914
+beginWork$1 @ chunk-RPCDYKBN.js?v=e1f32ea0:19753
+performUnitOfWork @ chunk-RPCDYKBN.js?v=e1f32ea0:19198
+workLoopSync @ chunk-RPCDYKBN.js?v=e1f32ea0:19137
+renderRootSync @ chunk-RPCDYKBN.js?v=e1f32ea0:19116
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:18874
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=e1f32ea0:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=e1f32ea0:546
+flush @ @tanstack_react-query.js?v=e1f32ea0:570
+batch @ @tanstack_react-query.js?v=e1f32ea0:588
+dispatch_fn @ @tanstack_react-query.js?v=e1f32ea0:1001
+setData @ @tanstack_react-query.js?v=e1f32ea0:699
+setQueryData @ @tanstack_react-query.js?v=e1f32ea0:1696
+onSuccess @ use-auth.tsx:46
+execute @ @tanstack_react-query.js?v=e1f32ea0:1238
+await in execute
+mutate @ @tanstack_react-query.js?v=e1f32ea0:2659
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:3381
+onLoginSubmit @ auth-page.tsx:87
+(anonymous) @ chunk-4BFJKWC4.js?v=e1f32ea0:1465
+await in (anonymous)
+callCallback2 @ chunk-RPCDYKBN.js?v=e1f32ea0:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=e1f32ea0:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=e1f32ea0:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=e1f32ea0:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=e1f32ea0:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=e1f32ea0:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=e1f32ea0:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=e1f32ea0:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=e1f32ea0:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=e1f32ea0:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=e1f32ea0:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=e1f32ea0:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=e1f32ea0:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=e1f32ea0:5449Understand this error
+PortfolioPieChart.tsx:27 [["/api/portfolio/summary"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function Error Component Stack
+    at PortfolioPieChart (PortfolioPieChart.tsx:19:35)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at Dashboard (Dashboard.tsx:18:31)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at MainLayout (MainLayout.tsx:14:50)
+    at Route (wouter.js?v=e1f32ea0:280:16)
+    at Switch (wouter.js?v=e1f32ea0:336:17)
+    at Suspense (<anonymous>)
+    at Routes (<anonymous>)
+    at Provider (chunk-UBQ2LXDH.js?v=e1f32ea0:22:15)
+    at TooltipProvider (@radix-ui_react-tooltip.js?v=e1f32ea0:64:5)
+    at PaymentProvider (PaymentContext.tsx:23:70)
+    at AuthProvider (use-auth.tsx:24:32)
+    at V (next-themes.js?v=e1f32ea0:44:25)
+    at J (next-themes.js?v=e1f32ea0:42:18)
+    at ThemeProvider (theme-provider.tsx:8:33)
+    at QueryClientProvider (@tanstack_react-query.js?v=e1f32ea0:2879:3)
+    at Router (react-router-dom.js?v=e1f32ea0:6777:13)
+    at BrowserRouter (react-router-dom.js?v=e1f32ea0:9053:3)
+    at App (<anonymous>)
+overrideMethod @ hook.js:608
+useBaseQuery @ @tanstack_react-query.js?v=e1f32ea0:3082
+useQuery @ @tanstack_react-query.js?v=e1f32ea0:3150
+PortfolioPieChart @ PortfolioPieChart.tsx:27
+renderWithHooks @ chunk-RPCDYKBN.js?v=e1f32ea0:11548
+mountIndeterminateComponent @ chunk-RPCDYKBN.js?v=e1f32ea0:14926
+beginWork @ chunk-RPCDYKBN.js?v=e1f32ea0:15914
+beginWork$1 @ chunk-RPCDYKBN.js?v=e1f32ea0:19753
+performUnitOfWork @ chunk-RPCDYKBN.js?v=e1f32ea0:19198
+workLoopSync @ chunk-RPCDYKBN.js?v=e1f32ea0:19137
+renderRootSync @ chunk-RPCDYKBN.js?v=e1f32ea0:19116
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:18874
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=e1f32ea0:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=e1f32ea0:546
+flush @ @tanstack_react-query.js?v=e1f32ea0:570
+batch @ @tanstack_react-query.js?v=e1f32ea0:588
+dispatch_fn @ @tanstack_react-query.js?v=e1f32ea0:1001
+setData @ @tanstack_react-query.js?v=e1f32ea0:699
+setQueryData @ @tanstack_react-query.js?v=e1f32ea0:1696
+onSuccess @ use-auth.tsx:46
+execute @ @tanstack_react-query.js?v=e1f32ea0:1238
+await in execute
+mutate @ @tanstack_react-query.js?v=e1f32ea0:2659
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:3381
+onLoginSubmit @ auth-page.tsx:87
+(anonymous) @ chunk-4BFJKWC4.js?v=e1f32ea0:1465
+await in (anonymous)
+callCallback2 @ chunk-RPCDYKBN.js?v=e1f32ea0:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=e1f32ea0:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=e1f32ea0:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=e1f32ea0:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=e1f32ea0:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=e1f32ea0:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=e1f32ea0:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=e1f32ea0:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=e1f32ea0:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=e1f32ea0:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=e1f32ea0:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=e1f32ea0:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=e1f32ea0:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=e1f32ea0:5449Understand this error
+PortfolioPieChart.tsx:22 [["/api/portfolio/composition"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function Error Component Stack
+    at PortfolioPieChart (PortfolioPieChart.tsx:19:35)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at Dashboard (Dashboard.tsx:18:31)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at MainLayout (MainLayout.tsx:14:50)
+    at Route (wouter.js?v=e1f32ea0:280:16)
+    at Switch (wouter.js?v=e1f32ea0:336:17)
+    at Suspense (<anonymous>)
+    at Routes (<anonymous>)
+    at Provider (chunk-UBQ2LXDH.js?v=e1f32ea0:22:15)
+    at TooltipProvider (@radix-ui_react-tooltip.js?v=e1f32ea0:64:5)
+    at PaymentProvider (PaymentContext.tsx:23:70)
+    at AuthProvider (use-auth.tsx:24:32)
+    at V (next-themes.js?v=e1f32ea0:44:25)
+    at J (next-themes.js?v=e1f32ea0:42:18)
+    at ThemeProvider (theme-provider.tsx:8:33)
+    at QueryClientProvider (@tanstack_react-query.js?v=e1f32ea0:2879:3)
+    at Router (react-router-dom.js?v=e1f32ea0:6777:13)
+    at BrowserRouter (react-router-dom.js?v=e1f32ea0:9053:3)
+    at App (<anonymous>)
+overrideMethod @ hook.js:600
+useBaseQuery @ @tanstack_react-query.js?v=e1f32ea0:3082
+useQuery @ @tanstack_react-query.js?v=e1f32ea0:3150
+PortfolioPieChart @ PortfolioPieChart.tsx:22
+renderWithHooks @ chunk-RPCDYKBN.js?v=e1f32ea0:11548
+mountIndeterminateComponent @ chunk-RPCDYKBN.js?v=e1f32ea0:14976
+beginWork @ chunk-RPCDYKBN.js?v=e1f32ea0:15914
+beginWork$1 @ chunk-RPCDYKBN.js?v=e1f32ea0:19753
+performUnitOfWork @ chunk-RPCDYKBN.js?v=e1f32ea0:19198
+workLoopSync @ chunk-RPCDYKBN.js?v=e1f32ea0:19137
+renderRootSync @ chunk-RPCDYKBN.js?v=e1f32ea0:19116
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:18874
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=e1f32ea0:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=e1f32ea0:546
+flush @ @tanstack_react-query.js?v=e1f32ea0:570
+batch @ @tanstack_react-query.js?v=e1f32ea0:588
+dispatch_fn @ @tanstack_react-query.js?v=e1f32ea0:1001
+setData @ @tanstack_react-query.js?v=e1f32ea0:699
+setQueryData @ @tanstack_react-query.js?v=e1f32ea0:1696
+onSuccess @ use-auth.tsx:46
+execute @ @tanstack_react-query.js?v=e1f32ea0:1238
+await in execute
+mutate @ @tanstack_react-query.js?v=e1f32ea0:2659
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:3381
+onLoginSubmit @ auth-page.tsx:87
+(anonymous) @ chunk-4BFJKWC4.js?v=e1f32ea0:1465
+await in (anonymous)
+callCallback2 @ chunk-RPCDYKBN.js?v=e1f32ea0:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=e1f32ea0:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=e1f32ea0:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=e1f32ea0:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=e1f32ea0:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=e1f32ea0:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=e1f32ea0:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=e1f32ea0:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=e1f32ea0:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=e1f32ea0:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=e1f32ea0:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=e1f32ea0:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=e1f32ea0:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=e1f32ea0:5449Understand this error
+PortfolioPieChart.tsx:27 [["/api/portfolio/summary"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function Error Component Stack
+    at PortfolioPieChart (PortfolioPieChart.tsx:19:35)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at Dashboard (Dashboard.tsx:18:31)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at MainLayout (MainLayout.tsx:14:50)
+    at Route (wouter.js?v=e1f32ea0:280:16)
+    at Switch (wouter.js?v=e1f32ea0:336:17)
+    at Suspense (<anonymous>)
+    at Routes (<anonymous>)
+    at Provider (chunk-UBQ2LXDH.js?v=e1f32ea0:22:15)
+    at TooltipProvider (@radix-ui_react-tooltip.js?v=e1f32ea0:64:5)
+    at PaymentProvider (PaymentContext.tsx:23:70)
+    at AuthProvider (use-auth.tsx:24:32)
+    at V (next-themes.js?v=e1f32ea0:44:25)
+    at J (next-themes.js?v=e1f32ea0:42:18)
+    at ThemeProvider (theme-provider.tsx:8:33)
+    at QueryClientProvider (@tanstack_react-query.js?v=e1f32ea0:2879:3)
+    at Router (react-router-dom.js?v=e1f32ea0:6777:13)
+    at BrowserRouter (react-router-dom.js?v=e1f32ea0:9053:3)
+    at App (<anonymous>)
+overrideMethod @ hook.js:600
+useBaseQuery @ @tanstack_react-query.js?v=e1f32ea0:3082
+useQuery @ @tanstack_react-query.js?v=e1f32ea0:3150
+PortfolioPieChart @ PortfolioPieChart.tsx:27
+renderWithHooks @ chunk-RPCDYKBN.js?v=e1f32ea0:11548
+mountIndeterminateComponent @ chunk-RPCDYKBN.js?v=e1f32ea0:14976
+beginWork @ chunk-RPCDYKBN.js?v=e1f32ea0:15914
+beginWork$1 @ chunk-RPCDYKBN.js?v=e1f32ea0:19753
+performUnitOfWork @ chunk-RPCDYKBN.js?v=e1f32ea0:19198
+workLoopSync @ chunk-RPCDYKBN.js?v=e1f32ea0:19137
+renderRootSync @ chunk-RPCDYKBN.js?v=e1f32ea0:19116
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:18874
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=e1f32ea0:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=e1f32ea0:546
+flush @ @tanstack_react-query.js?v=e1f32ea0:570
+batch @ @tanstack_react-query.js?v=e1f32ea0:588
+dispatch_fn @ @tanstack_react-query.js?v=e1f32ea0:1001
+setData @ @tanstack_react-query.js?v=e1f32ea0:699
+setQueryData @ @tanstack_react-query.js?v=e1f32ea0:1696
+onSuccess @ use-auth.tsx:46
+execute @ @tanstack_react-query.js?v=e1f32ea0:1238
+await in execute
+mutate @ @tanstack_react-query.js?v=e1f32ea0:2659
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:3381
+onLoginSubmit @ auth-page.tsx:87
+(anonymous) @ chunk-4BFJKWC4.js?v=e1f32ea0:1465
+await in (anonymous)
+callCallback2 @ chunk-RPCDYKBN.js?v=e1f32ea0:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=e1f32ea0:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=e1f32ea0:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=e1f32ea0:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=e1f32ea0:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=e1f32ea0:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=e1f32ea0:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=e1f32ea0:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=e1f32ea0:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=e1f32ea0:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=e1f32ea0:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=e1f32ea0:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=e1f32ea0:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=e1f32ea0:5449Understand this error
+use-auth.tsx:46 Warning: validateDOMNesting(...): <div> cannot appear as a descendant of <p>. Error Component Stack
+    at div (<anonymous>)
+    at Skeleton (skeleton.tsx:4:3)
+    at p (<anonymous>)
+    at _c7 (card.tsx:50:6)
+    at div (<anonymous>)
+    at _c3 (card.tsx:23:6)
+    at div (<anonymous>)
+    at _c (card.tsx:8:6)
+    at NewsCard (NewsCard.tsx:27:38)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at Dashboard (Dashboard.tsx:18:31)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at MainLayout (MainLayout.tsx:14:50)
+    at Route (wouter.js?v=e1f32ea0:280:16)
+    at Switch (wouter.js?v=e1f32ea0:336:17)
+    at Suspense (<anonymous>)
+    at Routes (<anonymous>)
+    at Provider (chunk-UBQ2LXDH.js?v=e1f32ea0:22:15)
+    at TooltipProvider (@radix-ui_react-tooltip.js?v=e1f32ea0:64:5)
+    at PaymentProvider (PaymentContext.tsx:23:70)
+    at AuthProvider (use-auth.tsx:24:32)
+    at V (next-themes.js?v=e1f32ea0:44:25)
+    at J (next-themes.js?v=e1f32ea0:42:18)
+    at ThemeProvider (theme-provider.tsx:8:33)
+    at QueryClientProvider (@tanstack_react-query.js?v=e1f32ea0:2879:3)
+    at Router (react-router-dom.js?v=e1f32ea0:6777:13)
+    at BrowserRouter (react-router-dom.js?v=e1f32ea0:9053:3)
+    at App (<anonymous>)
+overrideMethod @ hook.js:608
+printWarning @ chunk-RPCDYKBN.js?v=e1f32ea0:521
+error @ chunk-RPCDYKBN.js?v=e1f32ea0:505
+validateDOMNesting @ chunk-RPCDYKBN.js?v=e1f32ea0:8256
+createInstance @ chunk-RPCDYKBN.js?v=e1f32ea0:8328
+completeWork @ chunk-RPCDYKBN.js?v=e1f32ea0:16290
+completeUnitOfWork @ chunk-RPCDYKBN.js?v=e1f32ea0:19224
+performUnitOfWork @ chunk-RPCDYKBN.js?v=e1f32ea0:19206
+workLoopSync @ chunk-RPCDYKBN.js?v=e1f32ea0:19137
+renderRootSync @ chunk-RPCDYKBN.js?v=e1f32ea0:19116
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:18874
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=e1f32ea0:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=e1f32ea0:546
+flush @ @tanstack_react-query.js?v=e1f32ea0:570
+batch @ @tanstack_react-query.js?v=e1f32ea0:588
+dispatch_fn @ @tanstack_react-query.js?v=e1f32ea0:1001
+setData @ @tanstack_react-query.js?v=e1f32ea0:699
+setQueryData @ @tanstack_react-query.js?v=e1f32ea0:1696
+onSuccess @ use-auth.tsx:46
+execute @ @tanstack_react-query.js?v=e1f32ea0:1238
+await in execute
+mutate @ @tanstack_react-query.js?v=e1f32ea0:2659
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:3381
+onLoginSubmit @ auth-page.tsx:87
+(anonymous) @ chunk-4BFJKWC4.js?v=e1f32ea0:1465
+await in (anonymous)
+callCallback2 @ chunk-RPCDYKBN.js?v=e1f32ea0:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=e1f32ea0:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=e1f32ea0:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=e1f32ea0:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=e1f32ea0:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=e1f32ea0:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=e1f32ea0:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=e1f32ea0:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=e1f32ea0:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=e1f32ea0:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=e1f32ea0:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=e1f32ea0:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=e1f32ea0:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=e1f32ea0:5449Understand this error
+chunk-RPCDYKBN.js?v=e1f32ea0:18625 [Violation] 'setTimeout' handler took 100ms
+PortfolioPieChart.tsx:22 [["/api/portfolio/composition"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function Error Component Stack
+    at PortfolioPieChart (PortfolioPieChart.tsx:19:35)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at Dashboard (Dashboard.tsx:18:31)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at MainLayout (MainLayout.tsx:14:50)
+    at Route (wouter.js?v=e1f32ea0:280:16)
+    at Switch (wouter.js?v=e1f32ea0:336:17)
+    at Suspense (<anonymous>)
+    at Routes (<anonymous>)
+    at Provider (chunk-UBQ2LXDH.js?v=e1f32ea0:22:15)
+    at TooltipProvider (@radix-ui_react-tooltip.js?v=e1f32ea0:64:5)
+    at PaymentProvider (PaymentContext.tsx:23:70)
+    at AuthProvider (use-auth.tsx:24:32)
+    at V (next-themes.js?v=e1f32ea0:44:25)
+    at J (next-themes.js?v=e1f32ea0:42:18)
+    at ThemeProvider (theme-provider.tsx:8:33)
+    at QueryClientProvider (@tanstack_react-query.js?v=e1f32ea0:2879:3)
+    at Router (react-router-dom.js?v=e1f32ea0:6777:13)
+    at BrowserRouter (react-router-dom.js?v=e1f32ea0:9053:3)
+    at App (<anonymous>)
+overrideMethod @ hook.js:608
+useBaseQuery @ @tanstack_react-query.js?v=e1f32ea0:3082
+useQuery @ @tanstack_react-query.js?v=e1f32ea0:3150
+PortfolioPieChart @ PortfolioPieChart.tsx:22
+renderWithHooks @ chunk-RPCDYKBN.js?v=e1f32ea0:11548
+updateFunctionComponent @ chunk-RPCDYKBN.js?v=e1f32ea0:14582
+beginWork @ chunk-RPCDYKBN.js?v=e1f32ea0:15924
+beginWork$1 @ chunk-RPCDYKBN.js?v=e1f32ea0:19753
+performUnitOfWork @ chunk-RPCDYKBN.js?v=e1f32ea0:19198
+workLoopSync @ chunk-RPCDYKBN.js?v=e1f32ea0:19137
+renderRootSync @ chunk-RPCDYKBN.js?v=e1f32ea0:19116
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:18874
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=e1f32ea0:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=e1f32ea0:546
+flush @ @tanstack_react-query.js?v=e1f32ea0:570
+batch @ @tanstack_react-query.js?v=e1f32ea0:588
+dispatch_fn @ @tanstack_react-query.js?v=e1f32ea0:1001
+setData @ @tanstack_react-query.js?v=e1f32ea0:699
+onSuccess @ @tanstack_react-query.js?v=e1f32ea0:902
+resolve @ @tanstack_react-query.js?v=e1f32ea0:456
+Promise.then
+run @ @tanstack_react-query.js?v=e1f32ea0:498
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:519
+Promise.then
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:515
+Promise.catch
+run @ @tanstack_react-query.js?v=e1f32ea0:498
+start @ @tanstack_react-query.js?v=e1f32ea0:536
+fetch @ @tanstack_react-query.js?v=e1f32ea0:931
+executeFetch_fn @ @tanstack_react-query.js?v=e1f32ea0:2248
+onSubscribe @ @tanstack_react-query.js?v=e1f32ea0:1939
+subscribe @ @tanstack_react-query.js?v=e1f32ea0:24
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:3103
+subscribeToStore @ chunk-RPCDYKBN.js?v=e1f32ea0:11984
+commitHookEffectListMount @ chunk-RPCDYKBN.js?v=e1f32ea0:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js?v=e1f32ea0:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js?v=e1f32ea0:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js?v=e1f32ea0:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js?v=e1f32ea0:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=e1f32ea0:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=e1f32ea0:19447
+commitRootImpl @ chunk-RPCDYKBN.js?v=e1f32ea0:19416
+commitRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=e1f32ea0:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=e1f32ea0:546
+flush @ @tanstack_react-query.js?v=e1f32ea0:570
+batch @ @tanstack_react-query.js?v=e1f32ea0:588
+dispatch_fn @ @tanstack_react-query.js?v=e1f32ea0:1001
+setData @ @tanstack_react-query.js?v=e1f32ea0:699
+setQueryData @ @tanstack_react-query.js?v=e1f32ea0:1696
+onSuccess @ use-auth.tsx:46
+execute @ @tanstack_react-query.js?v=e1f32ea0:1238
+await in execute
+mutate @ @tanstack_react-query.js?v=e1f32ea0:2659
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:3381
+onLoginSubmit @ auth-page.tsx:87
+(anonymous) @ chunk-4BFJKWC4.js?v=e1f32ea0:1465
+await in (anonymous)
+callCallback2 @ chunk-RPCDYKBN.js?v=e1f32ea0:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=e1f32ea0:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=e1f32ea0:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=e1f32ea0:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=e1f32ea0:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=e1f32ea0:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=e1f32ea0:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=e1f32ea0:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=e1f32ea0:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=e1f32ea0:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=e1f32ea0:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=e1f32ea0:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=e1f32ea0:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=e1f32ea0:5449Understand this error
+PortfolioPieChart.tsx:27 [["/api/portfolio/summary"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function Error Component Stack
+    at PortfolioPieChart (PortfolioPieChart.tsx:19:35)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at Dashboard (Dashboard.tsx:18:31)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at MainLayout (MainLayout.tsx:14:50)
+    at Route (wouter.js?v=e1f32ea0:280:16)
+    at Switch (wouter.js?v=e1f32ea0:336:17)
+    at Suspense (<anonymous>)
+    at Routes (<anonymous>)
+    at Provider (chunk-UBQ2LXDH.js?v=e1f32ea0:22:15)
+    at TooltipProvider (@radix-ui_react-tooltip.js?v=e1f32ea0:64:5)
+    at PaymentProvider (PaymentContext.tsx:23:70)
+    at AuthProvider (use-auth.tsx:24:32)
+    at V (next-themes.js?v=e1f32ea0:44:25)
+    at J (next-themes.js?v=e1f32ea0:42:18)
+    at ThemeProvider (theme-provider.tsx:8:33)
+    at QueryClientProvider (@tanstack_react-query.js?v=e1f32ea0:2879:3)
+    at Router (react-router-dom.js?v=e1f32ea0:6777:13)
+    at BrowserRouter (react-router-dom.js?v=e1f32ea0:9053:3)
+    at App (<anonymous>)
+overrideMethod @ hook.js:608
+useBaseQuery @ @tanstack_react-query.js?v=e1f32ea0:3082
+useQuery @ @tanstack_react-query.js?v=e1f32ea0:3150
+PortfolioPieChart @ PortfolioPieChart.tsx:27
+renderWithHooks @ chunk-RPCDYKBN.js?v=e1f32ea0:11548
+updateFunctionComponent @ chunk-RPCDYKBN.js?v=e1f32ea0:14582
+beginWork @ chunk-RPCDYKBN.js?v=e1f32ea0:15924
+beginWork$1 @ chunk-RPCDYKBN.js?v=e1f32ea0:19753
+performUnitOfWork @ chunk-RPCDYKBN.js?v=e1f32ea0:19198
+workLoopSync @ chunk-RPCDYKBN.js?v=e1f32ea0:19137
+renderRootSync @ chunk-RPCDYKBN.js?v=e1f32ea0:19116
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:18874
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=e1f32ea0:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=e1f32ea0:546
+flush @ @tanstack_react-query.js?v=e1f32ea0:570
+batch @ @tanstack_react-query.js?v=e1f32ea0:588
+dispatch_fn @ @tanstack_react-query.js?v=e1f32ea0:1001
+setData @ @tanstack_react-query.js?v=e1f32ea0:699
+onSuccess @ @tanstack_react-query.js?v=e1f32ea0:902
+resolve @ @tanstack_react-query.js?v=e1f32ea0:456
+Promise.then
+run @ @tanstack_react-query.js?v=e1f32ea0:498
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:519
+Promise.then
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:515
+Promise.catch
+run @ @tanstack_react-query.js?v=e1f32ea0:498
+start @ @tanstack_react-query.js?v=e1f32ea0:536
+fetch @ @tanstack_react-query.js?v=e1f32ea0:931
+executeFetch_fn @ @tanstack_react-query.js?v=e1f32ea0:2248
+onSubscribe @ @tanstack_react-query.js?v=e1f32ea0:1939
+subscribe @ @tanstack_react-query.js?v=e1f32ea0:24
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:3103
+subscribeToStore @ chunk-RPCDYKBN.js?v=e1f32ea0:11984
+commitHookEffectListMount @ chunk-RPCDYKBN.js?v=e1f32ea0:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js?v=e1f32ea0:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js?v=e1f32ea0:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js?v=e1f32ea0:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js?v=e1f32ea0:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=e1f32ea0:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=e1f32ea0:19447
+commitRootImpl @ chunk-RPCDYKBN.js?v=e1f32ea0:19416
+commitRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=e1f32ea0:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=e1f32ea0:546
+flush @ @tanstack_react-query.js?v=e1f32ea0:570
+batch @ @tanstack_react-query.js?v=e1f32ea0:588
+dispatch_fn @ @tanstack_react-query.js?v=e1f32ea0:1001
+setData @ @tanstack_react-query.js?v=e1f32ea0:699
+setQueryData @ @tanstack_react-query.js?v=e1f32ea0:1696
+onSuccess @ use-auth.tsx:46
+execute @ @tanstack_react-query.js?v=e1f32ea0:1238
+await in execute
+mutate @ @tanstack_react-query.js?v=e1f32ea0:2659
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:3381
+onLoginSubmit @ auth-page.tsx:87
+(anonymous) @ chunk-4BFJKWC4.js?v=e1f32ea0:1465
+await in (anonymous)
+callCallback2 @ chunk-RPCDYKBN.js?v=e1f32ea0:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=e1f32ea0:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=e1f32ea0:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=e1f32ea0:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=e1f32ea0:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=e1f32ea0:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=e1f32ea0:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=e1f32ea0:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=e1f32ea0:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=e1f32ea0:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=e1f32ea0:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=e1f32ea0:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=e1f32ea0:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=e1f32ea0:5449Understand this error
+PortfolioPieChart.tsx:22 [["/api/portfolio/composition"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function Error Component Stack
+    at PortfolioPieChart (PortfolioPieChart.tsx:19:35)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at Dashboard (Dashboard.tsx:18:31)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at MainLayout (MainLayout.tsx:14:50)
+    at Route (wouter.js?v=e1f32ea0:280:16)
+    at Switch (wouter.js?v=e1f32ea0:336:17)
+    at Suspense (<anonymous>)
+    at Routes (<anonymous>)
+    at Provider (chunk-UBQ2LXDH.js?v=e1f32ea0:22:15)
+    at TooltipProvider (@radix-ui_react-tooltip.js?v=e1f32ea0:64:5)
+    at PaymentProvider (PaymentContext.tsx:23:70)
+    at AuthProvider (use-auth.tsx:24:32)
+    at V (next-themes.js?v=e1f32ea0:44:25)
+    at J (next-themes.js?v=e1f32ea0:42:18)
+    at ThemeProvider (theme-provider.tsx:8:33)
+    at QueryClientProvider (@tanstack_react-query.js?v=e1f32ea0:2879:3)
+    at Router (react-router-dom.js?v=e1f32ea0:6777:13)
+    at BrowserRouter (react-router-dom.js?v=e1f32ea0:9053:3)
+    at App (<anonymous>)
+overrideMethod @ hook.js:600
+useBaseQuery @ @tanstack_react-query.js?v=e1f32ea0:3082
+useQuery @ @tanstack_react-query.js?v=e1f32ea0:3150
+PortfolioPieChart @ PortfolioPieChart.tsx:22
+renderWithHooks @ chunk-RPCDYKBN.js?v=e1f32ea0:11548
+updateFunctionComponent @ chunk-RPCDYKBN.js?v=e1f32ea0:14587
+beginWork @ chunk-RPCDYKBN.js?v=e1f32ea0:15924
+beginWork$1 @ chunk-RPCDYKBN.js?v=e1f32ea0:19753
+performUnitOfWork @ chunk-RPCDYKBN.js?v=e1f32ea0:19198
+workLoopSync @ chunk-RPCDYKBN.js?v=e1f32ea0:19137
+renderRootSync @ chunk-RPCDYKBN.js?v=e1f32ea0:19116
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:18874
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=e1f32ea0:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=e1f32ea0:546
+flush @ @tanstack_react-query.js?v=e1f32ea0:570
+batch @ @tanstack_react-query.js?v=e1f32ea0:588
+dispatch_fn @ @tanstack_react-query.js?v=e1f32ea0:1001
+setData @ @tanstack_react-query.js?v=e1f32ea0:699
+onSuccess @ @tanstack_react-query.js?v=e1f32ea0:902
+resolve @ @tanstack_react-query.js?v=e1f32ea0:456
+Promise.then
+run @ @tanstack_react-query.js?v=e1f32ea0:498
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:519
+Promise.then
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:515
+Promise.catch
+run @ @tanstack_react-query.js?v=e1f32ea0:498
+start @ @tanstack_react-query.js?v=e1f32ea0:536
+fetch @ @tanstack_react-query.js?v=e1f32ea0:931
+executeFetch_fn @ @tanstack_react-query.js?v=e1f32ea0:2248
+onSubscribe @ @tanstack_react-query.js?v=e1f32ea0:1939
+subscribe @ @tanstack_react-query.js?v=e1f32ea0:24
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:3103
+subscribeToStore @ chunk-RPCDYKBN.js?v=e1f32ea0:11984
+commitHookEffectListMount @ chunk-RPCDYKBN.js?v=e1f32ea0:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js?v=e1f32ea0:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js?v=e1f32ea0:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js?v=e1f32ea0:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js?v=e1f32ea0:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=e1f32ea0:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=e1f32ea0:19447
+commitRootImpl @ chunk-RPCDYKBN.js?v=e1f32ea0:19416
+commitRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=e1f32ea0:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=e1f32ea0:546
+flush @ @tanstack_react-query.js?v=e1f32ea0:570
+batch @ @tanstack_react-query.js?v=e1f32ea0:588
+dispatch_fn @ @tanstack_react-query.js?v=e1f32ea0:1001
+setData @ @tanstack_react-query.js?v=e1f32ea0:699
+setQueryData @ @tanstack_react-query.js?v=e1f32ea0:1696
+onSuccess @ use-auth.tsx:46
+execute @ @tanstack_react-query.js?v=e1f32ea0:1238
+await in execute
+mutate @ @tanstack_react-query.js?v=e1f32ea0:2659
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:3381
+onLoginSubmit @ auth-page.tsx:87
+(anonymous) @ chunk-4BFJKWC4.js?v=e1f32ea0:1465
+await in (anonymous)
+callCallback2 @ chunk-RPCDYKBN.js?v=e1f32ea0:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=e1f32ea0:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=e1f32ea0:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=e1f32ea0:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=e1f32ea0:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=e1f32ea0:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=e1f32ea0:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=e1f32ea0:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=e1f32ea0:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=e1f32ea0:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=e1f32ea0:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=e1f32ea0:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=e1f32ea0:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=e1f32ea0:5449Understand this error
+PortfolioPieChart.tsx:27 [["/api/portfolio/summary"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function Error Component Stack
+    at PortfolioPieChart (PortfolioPieChart.tsx:19:35)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at Dashboard (Dashboard.tsx:18:31)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at MainLayout (MainLayout.tsx:14:50)
+    at Route (wouter.js?v=e1f32ea0:280:16)
+    at Switch (wouter.js?v=e1f32ea0:336:17)
+    at Suspense (<anonymous>)
+    at Routes (<anonymous>)
+    at Provider (chunk-UBQ2LXDH.js?v=e1f32ea0:22:15)
+    at TooltipProvider (@radix-ui_react-tooltip.js?v=e1f32ea0:64:5)
+    at PaymentProvider (PaymentContext.tsx:23:70)
+    at AuthProvider (use-auth.tsx:24:32)
+    at V (next-themes.js?v=e1f32ea0:44:25)
+    at J (next-themes.js?v=e1f32ea0:42:18)
+    at ThemeProvider (theme-provider.tsx:8:33)
+    at QueryClientProvider (@tanstack_react-query.js?v=e1f32ea0:2879:3)
+    at Router (react-router-dom.js?v=e1f32ea0:6777:13)
+    at BrowserRouter (react-router-dom.js?v=e1f32ea0:9053:3)
+    at App (<anonymous>)
+overrideMethod @ hook.js:600
+useBaseQuery @ @tanstack_react-query.js?v=e1f32ea0:3082
+useQuery @ @tanstack_react-query.js?v=e1f32ea0:3150
+PortfolioPieChart @ PortfolioPieChart.tsx:27
+renderWithHooks @ chunk-RPCDYKBN.js?v=e1f32ea0:11548
+updateFunctionComponent @ chunk-RPCDYKBN.js?v=e1f32ea0:14587
+beginWork @ chunk-RPCDYKBN.js?v=e1f32ea0:15924
+beginWork$1 @ chunk-RPCDYKBN.js?v=e1f32ea0:19753
+performUnitOfWork @ chunk-RPCDYKBN.js?v=e1f32ea0:19198
+workLoopSync @ chunk-RPCDYKBN.js?v=e1f32ea0:19137
+renderRootSync @ chunk-RPCDYKBN.js?v=e1f32ea0:19116
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:18874
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=e1f32ea0:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=e1f32ea0:546
+flush @ @tanstack_react-query.js?v=e1f32ea0:570
+batch @ @tanstack_react-query.js?v=e1f32ea0:588
+dispatch_fn @ @tanstack_react-query.js?v=e1f32ea0:1001
+setData @ @tanstack_react-query.js?v=e1f32ea0:699
+onSuccess @ @tanstack_react-query.js?v=e1f32ea0:902
+resolve @ @tanstack_react-query.js?v=e1f32ea0:456
+Promise.then
+run @ @tanstack_react-query.js?v=e1f32ea0:498
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:519
+Promise.then
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:515
+Promise.catch
+run @ @tanstack_react-query.js?v=e1f32ea0:498
+start @ @tanstack_react-query.js?v=e1f32ea0:536
+fetch @ @tanstack_react-query.js?v=e1f32ea0:931
+executeFetch_fn @ @tanstack_react-query.js?v=e1f32ea0:2248
+onSubscribe @ @tanstack_react-query.js?v=e1f32ea0:1939
+subscribe @ @tanstack_react-query.js?v=e1f32ea0:24
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:3103
+subscribeToStore @ chunk-RPCDYKBN.js?v=e1f32ea0:11984
+commitHookEffectListMount @ chunk-RPCDYKBN.js?v=e1f32ea0:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js?v=e1f32ea0:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js?v=e1f32ea0:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js?v=e1f32ea0:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js?v=e1f32ea0:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=e1f32ea0:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=e1f32ea0:19447
+commitRootImpl @ chunk-RPCDYKBN.js?v=e1f32ea0:19416
+commitRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=e1f32ea0:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=e1f32ea0:546
+flush @ @tanstack_react-query.js?v=e1f32ea0:570
+batch @ @tanstack_react-query.js?v=e1f32ea0:588
+dispatch_fn @ @tanstack_react-query.js?v=e1f32ea0:1001
+setData @ @tanstack_react-query.js?v=e1f32ea0:699
+setQueryData @ @tanstack_react-query.js?v=e1f32ea0:1696
+onSuccess @ use-auth.tsx:46
+execute @ @tanstack_react-query.js?v=e1f32ea0:1238
+await in execute
+mutate @ @tanstack_react-query.js?v=e1f32ea0:2659
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:3381
+onLoginSubmit @ auth-page.tsx:87
+(anonymous) @ chunk-4BFJKWC4.js?v=e1f32ea0:1465
+await in (anonymous)
+callCallback2 @ chunk-RPCDYKBN.js?v=e1f32ea0:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=e1f32ea0:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=e1f32ea0:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=e1f32ea0:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=e1f32ea0:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=e1f32ea0:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=e1f32ea0:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=e1f32ea0:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=e1f32ea0:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=e1f32ea0:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=e1f32ea0:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=e1f32ea0:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=e1f32ea0:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=e1f32ea0:5449Understand this error
+PortfolioPieChart.tsx:22 [["/api/portfolio/composition"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function Error Component Stack
+    at PortfolioPieChart (PortfolioPieChart.tsx:19:35)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at Dashboard (Dashboard.tsx:18:31)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at MainLayout (MainLayout.tsx:14:50)
+    at Route (wouter.js?v=e1f32ea0:280:16)
+    at Switch (wouter.js?v=e1f32ea0:336:17)
+    at Suspense (<anonymous>)
+    at Routes (<anonymous>)
+    at Provider (chunk-UBQ2LXDH.js?v=e1f32ea0:22:15)
+    at TooltipProvider (@radix-ui_react-tooltip.js?v=e1f32ea0:64:5)
+    at PaymentProvider (PaymentContext.tsx:23:70)
+    at AuthProvider (use-auth.tsx:24:32)
+    at V (next-themes.js?v=e1f32ea0:44:25)
+    at J (next-themes.js?v=e1f32ea0:42:18)
+    at ThemeProvider (theme-provider.tsx:8:33)
+    at QueryClientProvider (@tanstack_react-query.js?v=e1f32ea0:2879:3)
+    at Router (react-router-dom.js?v=e1f32ea0:6777:13)
+    at BrowserRouter (react-router-dom.js?v=e1f32ea0:9053:3)
+    at App (<anonymous>)
+overrideMethod @ hook.js:608
+useBaseQuery @ @tanstack_react-query.js?v=e1f32ea0:3082
+useQuery @ @tanstack_react-query.js?v=e1f32ea0:3150
+PortfolioPieChart @ PortfolioPieChart.tsx:22
+renderWithHooks @ chunk-RPCDYKBN.js?v=e1f32ea0:11548
+updateFunctionComponent @ chunk-RPCDYKBN.js?v=e1f32ea0:14582
+beginWork @ chunk-RPCDYKBN.js?v=e1f32ea0:15924
+beginWork$1 @ chunk-RPCDYKBN.js?v=e1f32ea0:19753
+performUnitOfWork @ chunk-RPCDYKBN.js?v=e1f32ea0:19198
+workLoopSync @ chunk-RPCDYKBN.js?v=e1f32ea0:19137
+renderRootSync @ chunk-RPCDYKBN.js?v=e1f32ea0:19116
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:18874
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=e1f32ea0:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=e1f32ea0:546
+flush @ @tanstack_react-query.js?v=e1f32ea0:570
+batch @ @tanstack_react-query.js?v=e1f32ea0:588
+dispatch_fn @ @tanstack_react-query.js?v=e1f32ea0:1001
+setData @ @tanstack_react-query.js?v=e1f32ea0:699
+onSuccess @ @tanstack_react-query.js?v=e1f32ea0:902
+resolve @ @tanstack_react-query.js?v=e1f32ea0:456
+Promise.then
+run @ @tanstack_react-query.js?v=e1f32ea0:498
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:519
+Promise.then
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:515
+Promise.catch
+run @ @tanstack_react-query.js?v=e1f32ea0:498
+start @ @tanstack_react-query.js?v=e1f32ea0:536
+fetch @ @tanstack_react-query.js?v=e1f32ea0:931
+executeFetch_fn @ @tanstack_react-query.js?v=e1f32ea0:2248
+onSubscribe @ @tanstack_react-query.js?v=e1f32ea0:1939
+subscribe @ @tanstack_react-query.js?v=e1f32ea0:24
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:3103
+subscribeToStore @ chunk-RPCDYKBN.js?v=e1f32ea0:11984
+commitHookEffectListMount @ chunk-RPCDYKBN.js?v=e1f32ea0:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js?v=e1f32ea0:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js?v=e1f32ea0:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js?v=e1f32ea0:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js?v=e1f32ea0:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=e1f32ea0:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=e1f32ea0:19447
+commitRootImpl @ chunk-RPCDYKBN.js?v=e1f32ea0:19416
+commitRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=e1f32ea0:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=e1f32ea0:546
+flush @ @tanstack_react-query.js?v=e1f32ea0:570
+batch @ @tanstack_react-query.js?v=e1f32ea0:588
+dispatch_fn @ @tanstack_react-query.js?v=e1f32ea0:1001
+setData @ @tanstack_react-query.js?v=e1f32ea0:699
+setQueryData @ @tanstack_react-query.js?v=e1f32ea0:1696
+onSuccess @ use-auth.tsx:46
+execute @ @tanstack_react-query.js?v=e1f32ea0:1238
+await in execute
+mutate @ @tanstack_react-query.js?v=e1f32ea0:2659
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:3381
+onLoginSubmit @ auth-page.tsx:87
+(anonymous) @ chunk-4BFJKWC4.js?v=e1f32ea0:1465
+await in (anonymous)
+callCallback2 @ chunk-RPCDYKBN.js?v=e1f32ea0:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=e1f32ea0:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=e1f32ea0:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=e1f32ea0:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=e1f32ea0:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=e1f32ea0:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=e1f32ea0:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=e1f32ea0:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=e1f32ea0:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=e1f32ea0:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=e1f32ea0:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=e1f32ea0:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=e1f32ea0:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=e1f32ea0:5449Understand this error
+PortfolioPieChart.tsx:27 [["/api/portfolio/summary"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function Error Component Stack
+    at PortfolioPieChart (PortfolioPieChart.tsx:19:35)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at Dashboard (Dashboard.tsx:18:31)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at MainLayout (MainLayout.tsx:14:50)
+    at Route (wouter.js?v=e1f32ea0:280:16)
+    at Switch (wouter.js?v=e1f32ea0:336:17)
+    at Suspense (<anonymous>)
+    at Routes (<anonymous>)
+    at Provider (chunk-UBQ2LXDH.js?v=e1f32ea0:22:15)
+    at TooltipProvider (@radix-ui_react-tooltip.js?v=e1f32ea0:64:5)
+    at PaymentProvider (PaymentContext.tsx:23:70)
+    at AuthProvider (use-auth.tsx:24:32)
+    at V (next-themes.js?v=e1f32ea0:44:25)
+    at J (next-themes.js?v=e1f32ea0:42:18)
+    at ThemeProvider (theme-provider.tsx:8:33)
+    at QueryClientProvider (@tanstack_react-query.js?v=e1f32ea0:2879:3)
+    at Router (react-router-dom.js?v=e1f32ea0:6777:13)
+    at BrowserRouter (react-router-dom.js?v=e1f32ea0:9053:3)
+    at App (<anonymous>)
+overrideMethod @ hook.js:608
+useBaseQuery @ @tanstack_react-query.js?v=e1f32ea0:3082
+useQuery @ @tanstack_react-query.js?v=e1f32ea0:3150
+PortfolioPieChart @ PortfolioPieChart.tsx:27
+renderWithHooks @ chunk-RPCDYKBN.js?v=e1f32ea0:11548
+updateFunctionComponent @ chunk-RPCDYKBN.js?v=e1f32ea0:14582
+beginWork @ chunk-RPCDYKBN.js?v=e1f32ea0:15924
+beginWork$1 @ chunk-RPCDYKBN.js?v=e1f32ea0:19753
+performUnitOfWork @ chunk-RPCDYKBN.js?v=e1f32ea0:19198
+workLoopSync @ chunk-RPCDYKBN.js?v=e1f32ea0:19137
+renderRootSync @ chunk-RPCDYKBN.js?v=e1f32ea0:19116
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:18874
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=e1f32ea0:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=e1f32ea0:546
+flush @ @tanstack_react-query.js?v=e1f32ea0:570
+batch @ @tanstack_react-query.js?v=e1f32ea0:588
+dispatch_fn @ @tanstack_react-query.js?v=e1f32ea0:1001
+setData @ @tanstack_react-query.js?v=e1f32ea0:699
+onSuccess @ @tanstack_react-query.js?v=e1f32ea0:902
+resolve @ @tanstack_react-query.js?v=e1f32ea0:456
+Promise.then
+run @ @tanstack_react-query.js?v=e1f32ea0:498
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:519
+Promise.then
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:515
+Promise.catch
+run @ @tanstack_react-query.js?v=e1f32ea0:498
+start @ @tanstack_react-query.js?v=e1f32ea0:536
+fetch @ @tanstack_react-query.js?v=e1f32ea0:931
+executeFetch_fn @ @tanstack_react-query.js?v=e1f32ea0:2248
+onSubscribe @ @tanstack_react-query.js?v=e1f32ea0:1939
+subscribe @ @tanstack_react-query.js?v=e1f32ea0:24
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:3103
+subscribeToStore @ chunk-RPCDYKBN.js?v=e1f32ea0:11984
+commitHookEffectListMount @ chunk-RPCDYKBN.js?v=e1f32ea0:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js?v=e1f32ea0:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js?v=e1f32ea0:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js?v=e1f32ea0:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js?v=e1f32ea0:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=e1f32ea0:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=e1f32ea0:19447
+commitRootImpl @ chunk-RPCDYKBN.js?v=e1f32ea0:19416
+commitRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=e1f32ea0:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=e1f32ea0:546
+flush @ @tanstack_react-query.js?v=e1f32ea0:570
+batch @ @tanstack_react-query.js?v=e1f32ea0:588
+dispatch_fn @ @tanstack_react-query.js?v=e1f32ea0:1001
+setData @ @tanstack_react-query.js?v=e1f32ea0:699
+setQueryData @ @tanstack_react-query.js?v=e1f32ea0:1696
+onSuccess @ use-auth.tsx:46
+execute @ @tanstack_react-query.js?v=e1f32ea0:1238
+await in execute
+mutate @ @tanstack_react-query.js?v=e1f32ea0:2659
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:3381
+onLoginSubmit @ auth-page.tsx:87
+(anonymous) @ chunk-4BFJKWC4.js?v=e1f32ea0:1465
+await in (anonymous)
+callCallback2 @ chunk-RPCDYKBN.js?v=e1f32ea0:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=e1f32ea0:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=e1f32ea0:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=e1f32ea0:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=e1f32ea0:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=e1f32ea0:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=e1f32ea0:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=e1f32ea0:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=e1f32ea0:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=e1f32ea0:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=e1f32ea0:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=e1f32ea0:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=e1f32ea0:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=e1f32ea0:5449Understand this error
+PortfolioPieChart.tsx:22 [["/api/portfolio/composition"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function Error Component Stack
+    at PortfolioPieChart (PortfolioPieChart.tsx:19:35)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at Dashboard (Dashboard.tsx:18:31)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at MainLayout (MainLayout.tsx:14:50)
+    at Route (wouter.js?v=e1f32ea0:280:16)
+    at Switch (wouter.js?v=e1f32ea0:336:17)
+    at Suspense (<anonymous>)
+    at Routes (<anonymous>)
+    at Provider (chunk-UBQ2LXDH.js?v=e1f32ea0:22:15)
+    at TooltipProvider (@radix-ui_react-tooltip.js?v=e1f32ea0:64:5)
+    at PaymentProvider (PaymentContext.tsx:23:70)
+    at AuthProvider (use-auth.tsx:24:32)
+    at V (next-themes.js?v=e1f32ea0:44:25)
+    at J (next-themes.js?v=e1f32ea0:42:18)
+    at ThemeProvider (theme-provider.tsx:8:33)
+    at QueryClientProvider (@tanstack_react-query.js?v=e1f32ea0:2879:3)
+    at Router (react-router-dom.js?v=e1f32ea0:6777:13)
+    at BrowserRouter (react-router-dom.js?v=e1f32ea0:9053:3)
+    at App (<anonymous>)
+overrideMethod @ hook.js:600
+useBaseQuery @ @tanstack_react-query.js?v=e1f32ea0:3082
+useQuery @ @tanstack_react-query.js?v=e1f32ea0:3150
+PortfolioPieChart @ PortfolioPieChart.tsx:22
+renderWithHooks @ chunk-RPCDYKBN.js?v=e1f32ea0:11548
+updateFunctionComponent @ chunk-RPCDYKBN.js?v=e1f32ea0:14587
+beginWork @ chunk-RPCDYKBN.js?v=e1f32ea0:15924
+beginWork$1 @ chunk-RPCDYKBN.js?v=e1f32ea0:19753
+performUnitOfWork @ chunk-RPCDYKBN.js?v=e1f32ea0:19198
+workLoopSync @ chunk-RPCDYKBN.js?v=e1f32ea0:19137
+renderRootSync @ chunk-RPCDYKBN.js?v=e1f32ea0:19116
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:18874
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=e1f32ea0:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=e1f32ea0:546
+flush @ @tanstack_react-query.js?v=e1f32ea0:570
+batch @ @tanstack_react-query.js?v=e1f32ea0:588
+dispatch_fn @ @tanstack_react-query.js?v=e1f32ea0:1001
+setData @ @tanstack_react-query.js?v=e1f32ea0:699
+onSuccess @ @tanstack_react-query.js?v=e1f32ea0:902
+resolve @ @tanstack_react-query.js?v=e1f32ea0:456
+Promise.then
+run @ @tanstack_react-query.js?v=e1f32ea0:498
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:519
+Promise.then
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:515
+Promise.catch
+run @ @tanstack_react-query.js?v=e1f32ea0:498
+start @ @tanstack_react-query.js?v=e1f32ea0:536
+fetch @ @tanstack_react-query.js?v=e1f32ea0:931
+executeFetch_fn @ @tanstack_react-query.js?v=e1f32ea0:2248
+onSubscribe @ @tanstack_react-query.js?v=e1f32ea0:1939
+subscribe @ @tanstack_react-query.js?v=e1f32ea0:24
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:3103
+subscribeToStore @ chunk-RPCDYKBN.js?v=e1f32ea0:11984
+commitHookEffectListMount @ chunk-RPCDYKBN.js?v=e1f32ea0:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js?v=e1f32ea0:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js?v=e1f32ea0:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js?v=e1f32ea0:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js?v=e1f32ea0:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=e1f32ea0:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=e1f32ea0:19447
+commitRootImpl @ chunk-RPCDYKBN.js?v=e1f32ea0:19416
+commitRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=e1f32ea0:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=e1f32ea0:546
+flush @ @tanstack_react-query.js?v=e1f32ea0:570
+batch @ @tanstack_react-query.js?v=e1f32ea0:588
+dispatch_fn @ @tanstack_react-query.js?v=e1f32ea0:1001
+setData @ @tanstack_react-query.js?v=e1f32ea0:699
+setQueryData @ @tanstack_react-query.js?v=e1f32ea0:1696
+onSuccess @ use-auth.tsx:46
+execute @ @tanstack_react-query.js?v=e1f32ea0:1238
+await in execute
+mutate @ @tanstack_react-query.js?v=e1f32ea0:2659
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:3381
+onLoginSubmit @ auth-page.tsx:87
+(anonymous) @ chunk-4BFJKWC4.js?v=e1f32ea0:1465
+await in (anonymous)
+callCallback2 @ chunk-RPCDYKBN.js?v=e1f32ea0:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=e1f32ea0:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=e1f32ea0:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=e1f32ea0:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=e1f32ea0:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=e1f32ea0:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=e1f32ea0:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=e1f32ea0:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=e1f32ea0:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=e1f32ea0:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=e1f32ea0:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=e1f32ea0:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=e1f32ea0:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=e1f32ea0:5449Understand this error
+PortfolioPieChart.tsx:27 [["/api/portfolio/summary"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function Error Component Stack
+    at PortfolioPieChart (PortfolioPieChart.tsx:19:35)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at Dashboard (Dashboard.tsx:18:31)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at MainLayout (MainLayout.tsx:14:50)
+    at Route (wouter.js?v=e1f32ea0:280:16)
+    at Switch (wouter.js?v=e1f32ea0:336:17)
+    at Suspense (<anonymous>)
+    at Routes (<anonymous>)
+    at Provider (chunk-UBQ2LXDH.js?v=e1f32ea0:22:15)
+    at TooltipProvider (@radix-ui_react-tooltip.js?v=e1f32ea0:64:5)
+    at PaymentProvider (PaymentContext.tsx:23:70)
+    at AuthProvider (use-auth.tsx:24:32)
+    at V (next-themes.js?v=e1f32ea0:44:25)
+    at J (next-themes.js?v=e1f32ea0:42:18)
+    at ThemeProvider (theme-provider.tsx:8:33)
+    at QueryClientProvider (@tanstack_react-query.js?v=e1f32ea0:2879:3)
+    at Router (react-router-dom.js?v=e1f32ea0:6777:13)
+    at BrowserRouter (react-router-dom.js?v=e1f32ea0:9053:3)
+    at App (<anonymous>)
+overrideMethod @ hook.js:600
+useBaseQuery @ @tanstack_react-query.js?v=e1f32ea0:3082
+useQuery @ @tanstack_react-query.js?v=e1f32ea0:3150
+PortfolioPieChart @ PortfolioPieChart.tsx:27
+renderWithHooks @ chunk-RPCDYKBN.js?v=e1f32ea0:11548
+updateFunctionComponent @ chunk-RPCDYKBN.js?v=e1f32ea0:14587
+beginWork @ chunk-RPCDYKBN.js?v=e1f32ea0:15924
+beginWork$1 @ chunk-RPCDYKBN.js?v=e1f32ea0:19753
+performUnitOfWork @ chunk-RPCDYKBN.js?v=e1f32ea0:19198
+workLoopSync @ chunk-RPCDYKBN.js?v=e1f32ea0:19137
+renderRootSync @ chunk-RPCDYKBN.js?v=e1f32ea0:19116
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:18874
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=e1f32ea0:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=e1f32ea0:546
+flush @ @tanstack_react-query.js?v=e1f32ea0:570
+batch @ @tanstack_react-query.js?v=e1f32ea0:588
+dispatch_fn @ @tanstack_react-query.js?v=e1f32ea0:1001
+setData @ @tanstack_react-query.js?v=e1f32ea0:699
+onSuccess @ @tanstack_react-query.js?v=e1f32ea0:902
+resolve @ @tanstack_react-query.js?v=e1f32ea0:456
+Promise.then
+run @ @tanstack_react-query.js?v=e1f32ea0:498
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:519
+Promise.then
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:515
+Promise.catch
+run @ @tanstack_react-query.js?v=e1f32ea0:498
+start @ @tanstack_react-query.js?v=e1f32ea0:536
+fetch @ @tanstack_react-query.js?v=e1f32ea0:931
+executeFetch_fn @ @tanstack_react-query.js?v=e1f32ea0:2248
+onSubscribe @ @tanstack_react-query.js?v=e1f32ea0:1939
+subscribe @ @tanstack_react-query.js?v=e1f32ea0:24
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:3103
+subscribeToStore @ chunk-RPCDYKBN.js?v=e1f32ea0:11984
+commitHookEffectListMount @ chunk-RPCDYKBN.js?v=e1f32ea0:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js?v=e1f32ea0:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js?v=e1f32ea0:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js?v=e1f32ea0:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js?v=e1f32ea0:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=e1f32ea0:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=e1f32ea0:19447
+commitRootImpl @ chunk-RPCDYKBN.js?v=e1f32ea0:19416
+commitRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:19277
+performSyncWorkOnRoot @ chunk-RPCDYKBN.js?v=e1f32ea0:18895
+flushSyncCallbacks @ chunk-RPCDYKBN.js?v=e1f32ea0:9119
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:18627
+setTimeout
+defaultScheduler @ @tanstack_react-query.js?v=e1f32ea0:546
+flush @ @tanstack_react-query.js?v=e1f32ea0:570
+batch @ @tanstack_react-query.js?v=e1f32ea0:588
+dispatch_fn @ @tanstack_react-query.js?v=e1f32ea0:1001
+setData @ @tanstack_react-query.js?v=e1f32ea0:699
+setQueryData @ @tanstack_react-query.js?v=e1f32ea0:1696
+onSuccess @ use-auth.tsx:46
+execute @ @tanstack_react-query.js?v=e1f32ea0:1238
+await in execute
+mutate @ @tanstack_react-query.js?v=e1f32ea0:2659
+(anonymous) @ @tanstack_react-query.js?v=e1f32ea0:3381
+onLoginSubmit @ auth-page.tsx:87
+(anonymous) @ chunk-4BFJKWC4.js?v=e1f32ea0:1465
+await in (anonymous)
+callCallback2 @ chunk-RPCDYKBN.js?v=e1f32ea0:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=e1f32ea0:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=e1f32ea0:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=e1f32ea0:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=e1f32ea0:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=e1f32ea0:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=e1f32ea0:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=e1f32ea0:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=e1f32ea0:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=e1f32ea0:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=e1f32ea0:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=e1f32ea0:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=e1f32ea0:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=e1f32ea0:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=e1f32ea0:5449Understand this error
+chunk-RPCDYKBN.js?v=e1f32ea0:18625 [Violation] 'setTimeout' handler took 60ms
