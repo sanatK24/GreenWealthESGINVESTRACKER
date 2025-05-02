@@ -1,0 +1,62 @@
+The above error occurred in the <NewsCard> component:
+
+    at NewsCard (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/src/components/dashboard/NewsCard.tsx:27:14)
+    at div
+    at div
+    at div
+    at Dashboard (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/src/pages/Dashboard.tsx:42:31)
+    at div
+    at div
+    at div
+    at MainLayout (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/src/components/layout/MainLayout.tsx:26:23)
+    at Route (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=8f30c240:280:16)
+    at Switch (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=8f30c240:336:17)
+    at Suspense
+    at Routes
+    at Provider (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UBQ2LXDH.js?v=8f30c240:22:15)
+    at TooltipProvider (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=8f30c240:63:5)
+    at PaymentProvider (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/src/context/PaymentContext.tsx:21:35)
+    at AuthProvider (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/src/hooks/use-auth.tsx:26:32)
+    at V (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/next-themes.js?v=8f30c240:44:25)
+    at J (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/next-themes.js?v=8f30c240:42:18)
+    at ThemeProvider (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/src/components/theme-provider.tsx:19:33)
+    at QueryClientProvider (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=8f30c240:2879:3)
+    at Router (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-router-dom.js?v=8f30c240:6777:13)
+    at BrowserRouter (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-router-dom.js?v=8f30c240:9053:3)
+    at App
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+at NewsCard (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/src/components/dashboard/NewsCard.tsx:27:14)
+at div
+at div
+at div
+at Dashboard (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/src/pages/Dashboard.tsx:42:31)
+at div
+at div
+at div
+at MainLayout (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/src/components/layout/MainLayout.tsx:26:23)
+at Route (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=8f30c240:280:16)
+at Switch (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=8f30c240:336:17)
+at Suspense
+at Routes
+at Provider (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UBQ2LXDH.js?v=8f30c240:22:15)
+at TooltipProvider (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=8f30c240:63:5)
+at PaymentProvider (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/src/context/PaymentContext.tsx:21:35)
+at AuthProvider (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/src/hooks/use-auth.tsx:26:32)
+at V (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/next-themes.js?v=8f30c240:44:25)
+at J (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/next-themes.js?v=8f30c240:42:18)
+at ThemeProvider (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/src/components/theme-provider.tsx:19:33)
+at QueryClientProvider (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=8f30c240:2879:3)
+at Router (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-router-dom.js?v=8f30c240:6777:13)
+at BrowserRouter (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-router-dom.js?v=8f30c240:9053:3)
+at App
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+at t.value (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:17465)
+at new t (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:12630)
+at t.value (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:32766)
+at https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:34400
+getQueryFn is not defined
