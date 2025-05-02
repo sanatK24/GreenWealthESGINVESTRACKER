@@ -2,6 +2,7 @@ import React from "react";
 import { Switch, Route } from "wouter";
 import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/Dashboard";
+import BuyStockPage from "@/pages/buy-stock/[id]";
 import MainLayout from "@/components/layout/MainLayout";
 import { ProtectedRoute } from "@/lib/protected-route";
 import Companies from "@/pages/Companies";
@@ -12,6 +13,9 @@ import Portfolio from "@/pages/Portfolio";
 import CompanyDetail from "@/pages/CompanyDetail";
 import CompanyPrices from "@/pages/CompanyPrices";
 import AuthPage from "@/pages/auth-page";
+import Invest from "@/pages/Invest";
+import ActivityHistory from "@/pages/ActivityHistory";
+import Payments from "@/pages/Payments";
 
 export function Routes() {
   return (
@@ -67,17 +71,24 @@ export function Routes() {
             </MainLayout>
           )}
         </Route>
+        <Route path="/invest">
+          {() => (
+            <MainLayout>
+              <Invest />
+            </MainLayout>
+          )}
+        </Route>
+        <Route path="/buy-stock/:id">
+          {() => (
+            <MainLayout>
+              <BuyStockPage />
+            </MainLayout>
+          )}
+        </Route>
         <Route path="/company-prices">
           {() => (
             <MainLayout>
               <CompanyPrices />
-            </MainLayout>
-          )}
-        </Route>
-        {/* <Route path="/invest">
-          {() => (
-            <MainLayout>
-              <Invest />
             </MainLayout>
           )}
         </Route>
@@ -94,8 +105,7 @@ export function Routes() {
               <Payments />
             </MainLayout>
           )}
-        </Route> */}
-        <Route path="/not-found" component={NotFound} />
+        </Route>
         <Route component={NotFound} />
       </Switch>
     </React.Suspense>

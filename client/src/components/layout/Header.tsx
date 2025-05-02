@@ -85,7 +85,19 @@ const Header = () => {
               <Link href="/company-prices" className="hover:text-primary transition-colors">
                 Stock Prices
               </Link>
+              <Link href="/activity-history" className="hover:text-primary transition-colors">
+                Recent Activity
+              </Link>
+              <Link href="/payments" className="hover:text-primary transition-colors">
+                Payments
+              </Link>
 
+              {user && (
+                <Link href="/invest" className="text-primary font-semibold flex items-center">
+                  <span className="font-bold mr-1">₹</span>
+                  Invest
+                </Link>
+              )}
             </div>
 
             {!user ? (
@@ -114,6 +126,10 @@ const Header = () => {
                   <DropdownMenuItem onClick={() => navigate('/portfolio')}>
                     <User className="w-4 h-4 mr-2" />
                     My Portfolio
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate('/invest')}>
+                    <span className="font-bold mr-1">₹</span>
+                    Invest
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout}>
@@ -153,6 +169,10 @@ const Header = () => {
                   <DropdownMenuItem onClick={() => navigate('/portfolio')}>
                     <User className="w-4 h-4 mr-2" />
                     My Portfolio
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate('/invest')}>
+                    <span className="font-bold mr-1">₹</span>
+                    Invest
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout}>
@@ -201,6 +221,13 @@ const Header = () => {
               onClick={() => setMobileMenuOpen(false)}
             >
               Stock Prices
+            </Link>
+            <Link 
+              href="/payments" 
+              className="block px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-100"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Payments
             </Link>
             {user && (
               <Link 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Link, useLocation } from 'wouter';
-import { BarChart3, LineChart, TreeDeciduous, Building2, CircleDollarSign, LayoutDashboard, Menu, X, DollarSign } from 'lucide-react';
+import { BarChart3, LineChart, TreeDeciduous, Building2, CircleDollarSign, LayoutDashboard, Menu, X, History } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useMobile } from '@/hooks/use-mobile';
@@ -23,6 +23,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     { path: '/sectors', label: 'Sectors', icon: LineChart },
     { path: '/green-stocks', label: 'Green Stocks', icon: TreeDeciduous },
     { path: '/portfolio', label: 'My Portfolio', icon: CircleDollarSign },
+    { path: '/activity-history', label: 'Recent Activity', icon: History },
   ];
 
   const toggleSidebar = () => {
