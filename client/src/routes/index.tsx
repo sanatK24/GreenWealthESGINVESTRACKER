@@ -106,7 +106,7 @@ export function Routes() {
             </MainLayout>
           )}
         </Route>
-        <Route component={NotFound} />
+        <Route path="/" component={NotFound} />
       </Switch>
     </React.Suspense>
   );
