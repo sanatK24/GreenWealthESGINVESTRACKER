@@ -1,9 +1,9 @@
-
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { Company } from '@shared/schema';
 import { queryClient } from '@/lib/queryClient';
 
-interface PaymentData {
+export interface PaymentData {
+  id?: string;
   amount: number;
   currency: string;
   payment_method: string;
@@ -13,22 +13,16 @@ interface PaymentData {
 }
 
 interface PaymentContextType {
-  paymentData: PaymentData;
+  paymentData: PaymentData | null;
   setPaymentData: (data: Partial<PaymentData>) => void;
   savePayment: (data: PaymentData) => Promise<PaymentData>;
+  resetPayment: () => void;
 }
 
 const PaymentContext = createContext<PaymentContextType | undefined>(undefined);
 
 export const PaymentProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [paymentData, setPaymentData] = useState<PaymentData>({
-    amount: 0,
-    currency: 'USD',
-    payment_method: 'card',
-    status: 'pending',
-    created_at: new Date().toISOString(),
-    company: null
-  });
+  const [paymentData, setPaymentData] = useState<PaymentData | null>(null);
 
   const savePayment = async (data: PaymentData) => {
     try {
@@ -49,19 +43,22 @@ export const PaymentProvider: React.FC<{ children: ReactNode }> = ({ children })
       await queryClient.invalidateQueries({ queryKey: ['payments'] });
       return payment;
     } catch (error) {
-      console.error('Error saving payment:', error);
+      console.error('Payment error:', error);
       throw error;
     }
   };
 
+  const resetPayment = () => {
+    setPaymentData(null);
+  };
+
   return (
-    <PaymentContext.Provider 
-      value={{
-        paymentData,
-        setPaymentData: (data) => setPaymentData(prev => ({ ...prev, ...data })),
-        savePayment
-      }}
-    >
+    <PaymentContext.Provider value={{
+      paymentData,
+      setPaymentData: (data) => setPaymentData(prev => prev ? { ...prev, ...data } : data),
+      savePayment,
+      resetPayment
+    }}>
       {children}
     </PaymentContext.Provider>
   );
