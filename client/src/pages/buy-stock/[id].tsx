@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
@@ -96,6 +95,10 @@ const BuyStockPage = () => {
                   <div className="flex justify-between">
                     <span>52 Week Low</span>
                     <span>{formatCurrency(stockData.week_low_52)}</span>
+                  </div>
+                  <div className="flex justify-between text-green-600">
+                    <span>ESG Score</span>
+                    <span>{company.esg_score}</span>
                   </div>
                 </div>
               </div>
