@@ -417,7 +417,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const buyStockData = await storage.getBuyStockData(id);
-      
+
       return res.json({
         ...company,
         buyStockData: buyStockData || {
@@ -428,40 +428,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
           yearlyTrend: company.yearlyTrend,
           minInvestment: "1000",
           maxInvestment: "1000000"
-        }
-      });
-
-      const id = parseInt(idParam);
-      const buyStockData = await storage.getBuyStockData(id);
-      if (!buyStockData) {
-        return res.status(404).json({ error: "Buy stock data not found" });
-      }
-
-      // Get company data
-      const company = await storage.getCompanyById(id);
-      if (!company) {
-        return res.status(404).json({ error: "Company not found" });
-      }
-
-      return res.json({
-        id: company.id,
-        name: company.name,
-        ticker: company.ticker,
-        sector: company.sector,
-        industry: company.industry,
-        esgScore: company.esgScore,
-        environmentalScore: company.environmentalScore,
-        socialScore: company.socialScore,
-        governanceScore: company.governanceScore,
-        description: company.description,
-        buyStockData: {
-          currentPrice: buyStockData.currentPrice,
-          marketCap: buyStockData.marketCap,
-          weekHigh52: buyStockData.weekHigh52,
-          weekLow52: buyStockData.weekLow52,
-          yearlyTrend: buyStockData.yearlyTrend,
-          minInvestment: buyStockData.minInvestment,
-          maxInvestment: buyStockData.maxInvestment
         }
       });
     } catch (error) {
