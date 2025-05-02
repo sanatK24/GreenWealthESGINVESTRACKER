@@ -3,6 +3,7 @@ import StatCard from "@/components/dashboard/StatCard";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
+import { getQueryFn } from "@/lib/queryClient";
 import { 
   LineChart, Sprout, Building2, Recycle, TrendingUp, 
   ArrowUp, ArrowDown, PieChart, BarChart, ShoppingCart
