@@ -25,6 +25,17 @@ export default function CompanyPrices() {
   const [activeTab, setActiveTab] = useState("single");
   const [companyId, setCompanyId] = useState<number | null>(null);
 
+  const { data: companiesData } = useQuery({
+    queryKey: ["/api/companies"],
+    queryFn: async () => {
+      const response = await fetch("/api/companies");
+      if (!response.ok) {
+        throw new Error("Failed to fetch companies");
+      }
+      return response.json();
+    }
+  });
+
   // Extract the company ID from the URL query parameters
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -100,7 +111,7 @@ export default function CompanyPrices() {
                   <SelectContent>
                     <SelectGroup>
                       <SelectLabel>Companies</SelectLabel>
-                      {data?.companies?.map((company) => (
+                      {companiesData?.companies?.map((company) => (
                         <SelectItem key={company.id} value={company.id.toString()}>
                           {company.name}
                         </SelectItem>
