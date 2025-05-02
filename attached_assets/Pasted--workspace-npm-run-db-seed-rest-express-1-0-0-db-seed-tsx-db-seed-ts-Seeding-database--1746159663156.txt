@@ -1,0 +1,115 @@
+~/workspace$ npm run db:seed
+
+> rest-express@1.0.0 db:seed
+> tsx db/seed.ts
+
+Seeding database...
+Proceeding with seeding...
+Database connection established
+Company with ticker TSLA already exists, skipping
+Company with ticker FSLR already exists, skipping
+Company with ticker BYND already exists, skipping
+Company with ticker MSFT already exists, skipping
+Company with ticker ORSTED.CO already exists, skipping
+Company with ticker ADG already exists, skipping
+Company with ticker NEE already exists, skipping
+Company with ticker IBE.MC already exists, skipping
+Company with ticker VWS.CO already exists, skipping
+Company with ticker ENPH already exists, skipping
+Company with ticker CSIQ already exists, skipping
+Company with ticker CWEN already exists, skipping
+Company with ticker BEPC already exists, skipping
+Company with ticker SEDG already exists, skipping
+Company with ticker RUN already exists, skipping
+Company with ticker SPWR already exists, skipping
+Company with ticker REGI already exists, skipping
+Company with ticker PLUG already exists, skipping
+Buy stock data for company ID 1 already exists, skipping
+Buy stock data for company ID 2 already exists, skipping
+Buy stock data for company ID 3 already exists, skipping
+Buy stock data for company ID 4 already exists, skipping
+Buy stock data for company ID 5 already exists, skipping
+Buy stock data for company ID 8 already exists, skipping
+Buy stock data for company ID 9 already exists, skipping
+Buy stock data for company ID 10 already exists, skipping
+Buy stock data for company ID 11 already exists, skipping
+Buy stock data for company ID 12 already exists, skipping
+Buy stock data for company ID 13 already exists, skipping
+Buy stock data for company ID 14 already exists, skipping
+Buy stock data for company ID 15 already exists, skipping
+Buy stock data for company ID 16 already exists, skipping
+Buy stock data for company ID 17 already exists, skipping
+Buy stock data for company ID 18 already exists, skipping
+Buy stock data for company ID 19 already exists, skipping
+Buy stock data for company ID 20 already exists, skipping
+Seeded 0 new buy stock data entries
+Sector Energy already exists, skipping
+Sector Technology already exists, skipping
+Sector Consumer already exists, skipping
+Sector Healthcare already exists, skipping
+Sector Materials already exists, skipping
+Seeded 0 new sectors
+Portfolio composition for sector Renewable Energy already exists, skipping
+Portfolio composition for sector Electric Vehicles already exists, skipping
+Portfolio composition for sector Sustainable Food already exists, skipping
+Portfolio composition for sector Clean Technology already exists, skipping
+Portfolio composition for sector Other already exists, skipping
+Seeded 0 new portfolio composition items
+Portfolio summary already exists, updating instead of inserting
+Updated portfolio summary
+Sustainability trend for month Jan already exists, skipping
+Sustainability trend for month Feb already exists, skipping
+Sustainability trend for month Mar already exists, skipping
+Sustainability trend for month Apr already exists, skipping
+Sustainability trend for month May already exists, skipping
+Sustainability trend for month Jun already exists, skipping
+Sustainability trend for month Jul already exists, skipping
+Sustainability trend for month Aug already exists, skipping
+Sustainability trend for month Sep already exists, skipping
+Sustainability trend for month Oct already exists, skipping
+Sustainability trend for month Nov already exists, skipping
+Sustainability trend for month Dec already exists, skipping
+Seeded 0 new sustainability trends
+Seeding stock price history...
+Processing price history for Tesla, Inc....
+All price history timeframes exist for Tesla, Inc., skipping
+Processing price history for First Solar...
+All price history timeframes exist for First Solar, skipping
+Processing price history for Beyond Meat...
+All price history timeframes exist for Beyond Meat, skipping
+Processing price history for Microsoft...
+All price history timeframes exist for Microsoft, skipping
+Processing price history for Ørsted...
+All price history timeframes exist for Ørsted, skipping
+Completed batch 1
+Processing price history for Adani Green Energy...
+All price history timeframes exist for Adani Green Energy, skipping
+Processing price history for NextEra Energy...
+All price history timeframes exist for NextEra Energy, skipping
+Processing price history for Iberdrola...
+All price history timeframes exist for Iberdrola, skipping
+Processing price history for Vestas Wind Systems...
+All price history timeframes exist for Vestas Wind Systems, skipping
+Processing price history for Enphase Energy...
+All price history timeframes exist for Enphase Energy, skipping
+Completed batch 2
+Processing price history for Canadian Solar...
+All price history timeframes exist for Canadian Solar, skipping
+Processing price history for Clearway Energy...
+All price history timeframes exist for Clearway Energy, skipping
+Processing price history for Brookfield Renewable...
+All price history timeframes exist for Brookfield Renewable, skipping
+Processing price history for SolarEdge Technologies...
+All price history timeframes exist for SolarEdge Technologies, skipping
+Processing price history for Sunrun...
+All price history timeframes exist for Sunrun, skipping
+Completed batch 3
+Processing price history for SunPower...
+All price history timeframes exist for SunPower, skipping
+Processing price history for Renewable Energy Group...
+All price history timeframes exist for Renewable Energy Group, skipping
+Processing price history for Plug Power...
+All price history timeframes exist for Plug Power, skipping
+Completed batch 4
+Stock price history seeding completed successfully
+Database seeding completed successfully
