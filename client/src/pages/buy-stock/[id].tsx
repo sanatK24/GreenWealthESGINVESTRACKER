@@ -23,13 +23,18 @@ const BuyStockPage = () => {
   const company = Companies.find(c => c.id === parseInt(id as string));
   const stockData = BuyStockData.find(s => s.company_id === parseInt(id as string));
 
+  useEffect(() => {
+    if (!company) {
+      toast({
+        title: 'Error',
+        description: 'Company not found',
+        variant: 'destructive'
+      });
+      navigate('/portfolio');
+    }
+  }, [company, navigate, toast]);
+
   if (!company) {
-    navigate('/portfolio');
-    toast({
-      title: 'Error',
-      description: 'Company not found',
-      variant: 'destructive'
-    });
     return null;
   }
 
