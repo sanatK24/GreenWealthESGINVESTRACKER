@@ -29,18 +29,18 @@ const BuyStockPage = () => {
   });
 
   useEffect(() => {
-    if (buyStockData?.currentPrice) {
+    if (companyData?.buyStockData?.currentPrice) {
       const shareCount = parseInt(shares) || 0;
-      const calculatedAmount = shareCount * parseFloat(buyStockData.currentPrice);
+      const calculatedAmount = shareCount * parseFloat(companyData.buyStockData.currentPrice);
       setAmount(calculatedAmount.toFixed(2));
     }
-  }, [shares, buyStockData?.currentPrice]);
+  }, [shares, companyData?.buyStockData?.currentPrice]);
 
   useEffect(() => {
-    if (buyStockData?.name) {
-      setCompanyName(buyStockData.name);
+    if (companyData?.name) {
+      setCompanyName(companyData.name);
     }
-  }, [buyStockData?.name]);
+  }, [companyData?.name]);
 
   const purchaseMutation = useMutation({
     mutationFn: async (data: { shares: number, amount: number }) => {
@@ -113,7 +113,7 @@ const BuyStockPage = () => {
             <div>
               <CardTitle>{companyName}</CardTitle>
               <p className="text-sm text-muted-foreground">
-                Current Price: {formatCurrency(buyStockData.currentPrice)}
+                Current Price: {formatCurrency(companyData.buyStockData.currentPrice)}
               </p>
             </div>
             <div className="flex gap-2">
@@ -129,15 +129,15 @@ const BuyStockPage = () => {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>Market Cap</span>
-                    <span>{formatCurrency(buyStockData.marketCap)}</span>
+                    <span>{formatCurrency(companyData.buyStockData.marketCap)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>52 Week High</span>
-                    <span>{formatCurrency(buyStockData.weekHigh52)}</span>
+                    <span>{formatCurrency(companyData.buyStockData.weekHigh52)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>52 Week Low</span>
-                    <span>{formatCurrency(buyStockData.weekLow52)}</span>
+                    <span>{formatCurrency(companyData.buyStockData.weekLow52)}</span>
                   </div>
                 </div>
               </div>
