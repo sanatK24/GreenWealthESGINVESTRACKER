@@ -16,6 +16,7 @@ import { NewsCard } from "@/components/dashboard/NewsCard";
 const Dashboard = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["/api/portfolio/summary"],
+    queryFn: getQueryFn()
   });
 
   const portfolioStats = {

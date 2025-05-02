@@ -25,6 +25,7 @@ interface NewsApiResponse {
 export function NewsCard() {
   const { data, isLoading, error } = useQuery<NewsApiResponse>({
     queryKey: ["/api/news"],
+    queryFn: getQueryFn()
   });
 
   if (isLoading) {
