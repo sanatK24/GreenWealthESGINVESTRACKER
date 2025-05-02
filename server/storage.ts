@@ -130,9 +130,9 @@ export async function insertCompany(data: InsertCompany) {
 export async function getCompanyESGBreakdown(limit = 5) {
   try {
     const result = await db.execute(
-      `SELECT name, "environmentalScore", "socialScore", "governanceScore"
+      `SELECT name, environmental_score, social_score, governance_score
        FROM companies 
-       ORDER BY "esgScore" DESC 
+       ORDER BY esg_score DESC 
        LIMIT ${limit}`
     );
     const companiesData = result.rows;
@@ -140,9 +140,9 @@ export async function getCompanyESGBreakdown(limit = 5) {
     return {
       companies: companiesData.map(company => ({
         name: company.name,
-        environmental: company.environmentalScore,
-        social: company.socialScore,
-        governance: company.governanceScore,
+        environmental: company.environmental_score,
+        social: company.social_score,
+        governance: company.governance_score,
       })),
     };
   } catch (error) {
