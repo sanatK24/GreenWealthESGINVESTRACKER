@@ -256,12 +256,12 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 gap-4">
-                <Link href="/invest">
+                {/* <Link href="/invest">
                   <Button variant="default" className="w-full flex items-center justify-center gap-2">
                     <ShoppingCart className="h-4 w-4 flex-shrink-0" />
                     <span className="truncate">Invest in ESG Portfolio</span>
                   </Button>
-                </Link>
+                </Link> */}
                 <Link href="/companies">
                   <Button variant="outline" className="w-full flex items-center justify-center gap-2">
                     <BarChart className="h-4 w-4 flex-shrink-0" />

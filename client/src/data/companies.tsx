@@ -1,7 +1,7 @@
 // Auto-generated from companies.json
 // Do not edit manually
 
-const Companies = [
+export const Companies = [
   {
     "id": 1,
     "name": "Tesla, Inc.",
@@ -453,5 +453,3 @@ const Companies = [
     "description": "Plug Power is pioneering the development of green hydrogen solutions, contributing to the clean energy transition. With an environmental score of 81, they are committed to developing sustainable energy alternatives. Their innovative hydrogen technologies are paving the way for a carbon-neutral future."
   }
 ] as const;
-
-export default Companies;
