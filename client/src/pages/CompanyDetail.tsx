@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { StockPriceChart } from '@/components/dashboard/StockPriceChart';
 import { StockNews } from '@/components/dashboard/StockNews';
+import { StockComparison } from '@/components/dashboard/StockComparison';
 import { Info, ArrowUpRight } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
