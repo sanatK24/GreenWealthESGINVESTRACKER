@@ -372,11 +372,11 @@ async function seed() {
     // Create buy stock data from companies
     const buyStockData = companies.map(company => ({
       companyId: company.id,
-      currentPrice: company.currentPrice ? parseFloat(company.currentPrice) : 0,
-      marketCap: company.marketCap ? parseFloat(company.marketCap) : 0,
-      weekHigh52: company.yearHigh ? parseFloat(company.yearHigh) : 0,
-      weekLow52: company.yearLow ? parseFloat(company.yearLow) : 0,
-      yearlyTrend: company.yearlyTrend || 0,
+      currentPrice: company.currentPrice?.toString() || "5425.00",
+      marketCap: company.marketCap?.toString() || "1725750000000",
+      weekHigh52: company.weekHigh52?.toString() || "6100.50",
+      weekLow52: company.weekLow52?.toString() || "4500.00",
+      yearlyTrend: company.yearlyTrend?.toString() || "8.00",
       minInvestment: "1000",
       maxInvestment: "1000000"
     }));

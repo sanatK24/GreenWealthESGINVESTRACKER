@@ -1,0 +1,43 @@
+[["/api/portfolio/composition"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function
+[["/api/portfolio/summary"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function
+[["/api/portfolio/composition"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function
+[["/api/portfolio/summary"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function
+[["/api/portfolio/composition"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function
+[["/api/portfolio/summary"]]: No queryFn was passed as an option, and no default queryFn was found. The queryFn parameter is only optional when using a default queryFn. More info here: https://tanstack.com/query/latest/docs/framework/react/guides/default-query-function
+at t.value (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:17465)
+at new t (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:12630)
+at t.value (https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:32766)
+at https://830d60e5-57dd-4d0f-a6e6-70f0c5bf5a0d-00-3khkte6b6uti.pike.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:34400
+GreenWealth
+Login
+
+Menu
+Back
+Stock Price Analysis
+Single Stock
+Compare Stocks
+Price History
+Select timeframe to view different periods
+Stock Price Chart↑ 0%
+Refresh
+1D
+1W
+1M
+6M
+1Y
+5Y
+Max
+Error loading price data. Please try again.
+
+About GreenWealth
+Helping investors track and analyze sustainable investments across environmental, social, and governance factors.
+
+Resources
+ESG Methodology
+Sustainability Blog
+Market Insights
+Contact
+support@esginvest.com
++1 (555) 123-4567
+© 2025 GreenWealth. All rights reserved.
+

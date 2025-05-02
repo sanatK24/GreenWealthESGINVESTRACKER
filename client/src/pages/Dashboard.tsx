@@ -3,6 +3,7 @@ import StatCard from "@/components/dashboard/StatCard";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
+import { getQueryFn } from "@/lib/queryClient";
 import { 
   LineChart, Sprout, Building2, Recycle, TrendingUp, 
   ArrowUp, ArrowDown, PieChart, BarChart, ShoppingCart
@@ -16,6 +17,19 @@ import { NewsCard } from "@/components/dashboard/NewsCard";
 const Dashboard = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["/api/portfolio/summary"],
+    queryFn: async () => {
+      const response = await fetch("/api/portfolio/summary", {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch portfolio summary');
+      }
+      return response.json();
+    }
   });
 
   const portfolioStats = {

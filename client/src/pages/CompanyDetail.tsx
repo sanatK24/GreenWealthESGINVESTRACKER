@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { StockPriceChart } from '@/components/dashboard/StockPriceChart';
 import { StockNews } from '@/components/dashboard/StockNews';
+import { StockComparison } from '@/components/dashboard/StockComparison';
 import { Info, ArrowUpRight } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
@@ -62,6 +63,7 @@ const CompanyDetail = () => {
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="performance">Performance</TabsTrigger>
           <TabsTrigger value="sustainability">ESG History</TabsTrigger>
+          <TabsTrigger value="comparisons">Comparisons</TabsTrigger>
           <TabsTrigger value="news">News</TabsTrigger>
         </TabsList>
 
@@ -332,6 +334,20 @@ const CompanyDetail = () => {
                 </CardContent>
               </Card>
             </div>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="comparisons">
+          <div className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Stock Comparison</CardTitle>
+                <CardDescription>Compare with other companies</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <StockComparison initialCompanyIds={[parseInt(id!)]} />
+              </CardContent>
+            </Card>
           </div>
         </TabsContent>
 

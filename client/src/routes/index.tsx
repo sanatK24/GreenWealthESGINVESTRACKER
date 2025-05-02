@@ -1,8 +1,8 @@
-
 import React from "react";
 import { Switch, Route } from "wouter";
 import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/Dashboard";
+import BuyStockPage from "@/pages/buy-stock/[id]";
 import MainLayout from "@/components/layout/MainLayout";
 import { ProtectedRoute } from "@/lib/protected-route";
 import Companies from "@/pages/Companies";
@@ -14,7 +14,6 @@ import CompanyDetail from "@/pages/CompanyDetail";
 import CompanyPrices from "@/pages/CompanyPrices";
 import AuthPage from "@/pages/auth-page";
 import Invest from "@/pages/Invest";
-import BuyStock from "@/pages/BuyStock";
 import ActivityHistory from "@/pages/ActivityHistory";
 import Payments from "@/pages/Payments";
 
@@ -82,7 +81,7 @@ export function Routes() {
         <Route path="/buy-stock/:id">
           {() => (
             <MainLayout>
-              <BuyStock />
+              <BuyStockPage />
             </MainLayout>
           )}
         </Route>

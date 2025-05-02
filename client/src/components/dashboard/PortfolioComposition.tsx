@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
+import { getQueryFn } from "@/lib/queryClient";
 import { PieChart, Pie, ResponsiveContainer, Cell, Tooltip, Legend, PolarRadiusAxis, PolarAngleAxis, PolarGrid, RadarChart, Radar } from "recharts";
 import { useToast } from "@/hooks/use-toast";
 
@@ -13,10 +14,11 @@ const PortfolioComposition = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ["/api/portfolio/composition"],
+    queryFn: getQueryFn(),
     staleTime: 60000,
     refetchOnWindowFocus: false
   });
-  
+
   // Handle errors with useEffect to avoid render loops
   useEffect(() => {
     if (isLoading === false && (!data || (data as any)?.error)) {
