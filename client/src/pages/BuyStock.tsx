@@ -22,19 +22,19 @@ export default function BuyStock() {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
 
-  const { data: buyStockData, error, isLoading } = useQuery({
-    queryKey: ['/api/buy-stock-data'],
+  const { data: companies, error, isLoading } = useQuery({
+    queryKey: ['companies'],
     queryFn: async () => {
-      const res = await fetch('/api/buy-stock-data');
+      const res = await fetch('/api/companies');
       if (!res.ok) {
-        throw new Error('Failed to fetch buy stock data');
+        throw new Error('Failed to fetch companies data');
       }
       return res.json();
     },
     onError: () => {
       toast({
         title: 'Error',
-        description: 'Failed to fetch buy stock data. Please try again.',
+        description: 'Failed to fetch companies data. Please try again.',
         variant: 'destructive'
       });
     }
@@ -74,9 +74,9 @@ export default function BuyStock() {
     );
   }
 
-  const filteredData = buyStockData?.filter((stock: any) =>
-    stock.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    stock.ticker.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredData = companies?.companies?.filter((company: any) =>
+    company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    company.ticker.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
