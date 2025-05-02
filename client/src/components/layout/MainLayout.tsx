@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Header from '@/components/layout/Header';
+import { Header } from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Link, useLocation } from 'wouter';
 import { BarChart3, LineChart, TreeDeciduous, Building2, CircleDollarSign, LayoutDashboard, Menu, X, DollarSign } from 'lucide-react';
