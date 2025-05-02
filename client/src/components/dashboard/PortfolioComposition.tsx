@@ -47,15 +47,18 @@ const PortfolioComposition = () => {
     },
     staleTime: 60000,
     refetchOnWindowFocus: false,
-    onError: (error: any) => {
-      console.error("Portfolio composition API error:", error);
+  });
+
+  useEffect(() => {
+    if (error) {
+      console.error("Portfolio composition error:", error);
       toast({
         title: "Error",
         description: "Failed to load portfolio composition data",
         variant: "destructive",
       });
-    },
-  });
+    }
+  }, [error, toast]);
 
   const COLORS = [
     "hsl(var(--chart-1))",
