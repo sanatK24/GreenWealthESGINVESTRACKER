@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useQuery, useMutation } from "@tanstack/react-query";
@@ -19,32 +18,33 @@ const BuyStockPage = () => {
 
   // Fetch buy stock data
   const { data: companyData, isLoading, error } = useQuery({
-    queryKey: ['company', id],
-    queryFn: async () => {
-      try {
-        const response = await fetch(`/api/companies/${id}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch company data');
-        }
-        const data = await response.json();
-        if (!data) {
-          throw new Error('Company not found');
-        }
-        return data;
-      } catch (err) {
-        throw new Error('Failed to fetch company data');
-      }
-    },
-    enabled: !!id,
-    retry: 2,
-    retryDelay: 1000
-  });
+        queryKey: ['company', id],
+        queryFn: async () => {
+          try {
+            const response = await fetch(`/api/companies/${id}`);
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.error || 'Failed to fetch company data');
+            }
+            const data = await response.json();
+            if (!data || !data.buyStockData) {
+              throw new Error('Company or buy stock data not found');
+            }
+            return data;
+          } catch (err) {
+            throw err instanceof Error ? err : new Error('Failed to fetch company data');
+          }
+        },
+        enabled: !!id,
+        retry: 2,
+        retryDelay: 1000
+      });
 
   useEffect(() => {
     if (companyData?.name) {
       setCompanyName(companyData.name);
     }
-    
+
     if (companyData?.buyStockData?.currentPrice) {
       const shareCount = parseInt(shares) || 0;
       const calculatedAmount = shareCount * parseFloat(companyData.buyStockData.currentPrice);
