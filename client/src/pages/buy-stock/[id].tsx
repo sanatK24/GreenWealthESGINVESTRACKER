@@ -14,58 +14,23 @@ const BuyStockPage = () => {
   const { toast } = useToast();
   const [shares, setShares] = useState('1');
   const [amount, setAmount] = useState('0');
-  const [companyName, setCompanyName] = useState('');
 
-  // Fetch buy stock data
-  const { data: companyData, isLoading, error } = useQuery({
+  const { data: companyData, isLoading } = useQuery({
     queryKey: ['company', id],
     queryFn: async () => {
-      try {
-        const response = await fetch(`/api/companies/${id}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch company data');
-        }
-        
-        const data = await response.json();
-        if (!data) {
-          throw new Error('Company not found');
-        }
+      const response = await fetch(`/api/companies/${id}`);
+      const data = await response.json();
 
-        // If we have both company and buy stock data, return it
-        if (data.buyStockData) {
-          return data;
-        }
-
-        // If no buy stock data in company response, fetch it separately
-        const buyStockResponse = await fetch(`/api/buy-stock-data/${id}`);
-        if (!buyStockResponse.ok) {
-          throw new Error('Failed to fetch buy stock data');
-        }
-
-        const buyStockData = await buyStockResponse.json();
-        if (!buyStockData) {
-          throw new Error('Buy stock data not found');
-        }
-
-        // Combine company and buy stock data
-        return {
-          ...data,
-          buyStockData: buyStockData.buyStockData
-        };
-      } catch (err) {
-        throw err instanceof Error ? err : new Error('Failed to fetch company data');
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to fetch company data');
       }
+
+      return data;
     },
-    enabled: !!id,
-    retry: 2,
-    retryDelay: 1000
+    enabled: !!id
   });
 
   useEffect(() => {
-    if (companyData?.name) {
-      setCompanyName(companyData.name);
-    }
-
     if (companyData?.buyStockData?.currentPrice) {
       const shareCount = parseInt(shares) || 0;
       const calculatedAmount = shareCount * parseFloat(companyData.buyStockData.currentPrice);
@@ -74,7 +39,7 @@ const BuyStockPage = () => {
   }, [shares, companyData]);
 
   const purchaseMutation = useMutation({
-    mutationFn: async (data: { shares: number, amount: number }) => {
+    mutationFn: async () => {
       const response = await fetch('/api/portfolio/purchase', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -84,13 +49,17 @@ const BuyStockPage = () => {
           amount: parseFloat(amount)
         })
       });
-      if (!response.ok) throw new Error('Purchase failed');
+
+      if (!response.ok) {
+        throw new Error('Purchase failed');
+      }
+
       return response.json();
     },
     onSuccess: () => {
       toast({
         title: 'Success',
-        description: `Purchased ${shares} shares of ${companyName}`
+        description: `Purchased ${shares} shares of ${companyData?.name}`
       });
       navigate('/portfolio');
     },
@@ -110,45 +79,10 @@ const BuyStockPage = () => {
     });
   };
 
-  if (isLoading) {
+  if (isLoading || !companyData) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="p-4">
-        <Card>
-          <CardContent>
-            <div className="text-center">
-              <p className="text-red-500">{error instanceof Error ? error.message : 'Error loading company data'}</p>
-              <div className="mt-4 space-x-4">
-                <Button onClick={() => window.location.reload()}>Try Again</Button>
-                <Button variant="outline" onClick={() => navigate('/companies')}>Back to Companies</Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  if (!companyData) {
-    return (
-      <div className="p-4">
-        <Card>
-          <CardContent>
-            <div className="text-center">
-              <p className="text-red-500">Company data not found. Please try another company.</p>
-              <div className="mt-4 space-x-4">
-                <Button variant="outline" onClick={() => navigate('/companies')}>Back to Companies</Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     );
   }
@@ -162,7 +96,7 @@ const BuyStockPage = () => {
         <CardHeader>
           <div className="flex justify-between items-center">
             <div>
-              <CardTitle>{companyName}</CardTitle>
+              <CardTitle>{companyData.name}</CardTitle>
               <p className="text-sm text-muted-foreground">
                 Current Price: {formatCurrency(companyData.buyStockData.currentPrice)}
               </p>
@@ -243,10 +177,7 @@ const BuyStockPage = () => {
         <CardFooter>
           <Button 
             className="w-full"
-            onClick={() => purchaseMutation.mutate({
-              shares: parseInt(shares),
-              amount: parseFloat(amount)
-            })}
+            onClick={() => purchaseMutation.mutate()}
             disabled={purchaseMutation.isPending || parseFloat(amount) === 0}
           >
             {purchaseMutation.isPending ? (
