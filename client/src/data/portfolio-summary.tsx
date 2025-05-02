@@ -1,0 +1,20 @@
+// Auto-generated from portfolio-summary.json
+// Do not edit manually
+
+const PortfolioSummary = [
+  {
+    "id": 1,
+    "portfolioScore": 80,
+    "scoreChange": "4.50",
+    "sustainablePercentage": 75,
+    "sustainableValue": "35750.00",
+    "totalValue": "47666.67",
+    "carbonOffset": "15.80",
+    "offsetChange": "3.20",
+    "esgCompanies": 18,
+    "totalCompanies": 24,
+    "lastUpdated": "2025-04-26T09:48:17.029Z"
+  }
+] as const;
+
+export default PortfolioSummary;
